@@ -34,4 +34,6 @@ public:
     bool pointInHotspot(ofPoint hotspot, ofPoint point);
 
     ofShader myShader;
+    
+    ofPoint lastFaceCenter;
 };

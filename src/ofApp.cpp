@@ -82,7 +82,7 @@ void ofApp::update(){
             findFaceZoom = 1.0;
     }
     if(findFaceZoom > 0.0 && CLMFT.faceEnergy < 0.1){
-        findFaceZoomVelocity = (findFaceZoom) * .02;
+        findFaceZoomVelocity = (findFaceZoom) * .02*.3333;
         findFaceZoom -= findFaceZoomVelocity;
         if(findFaceZoom < 0.0)
             findFaceZoom = 0.0;
@@ -97,6 +97,9 @@ void ofApp::draw(){
     for(int i = 0; i < CLMFT.pts.size(); i++)
         poly.addVertex(CLMFT.pts[i]);
     ofRectangle rect = poly.getBoundingBox();
+    
+    
+    ofBackground(0);
 
     
     ofPushMatrix();
@@ -119,7 +122,8 @@ void ofApp::draw(){
     
     // MASKS
 //    ofBackground(0);
-    ofSetColor( 255 - maskEnergy * 200);
+//    ofSetColor( 255 - maskEnergy * 200);
+    ofSetColor( 255, 255 );
     CLMFT.grabber.draw(0,0);
     ofSetColor(255);
 //    CLMFT.draw();
@@ -137,7 +141,7 @@ void ofApp::draw(){
 //    ofFill();
     
     ofPopMatrix();
-    ofSetColor(0, 100 * findFaceZoom);
+    ofSetColor(0, 190 * findFaceZoom);
     ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
     
     // SCENES
@@ -146,6 +150,7 @@ void ofApp::draw(){
     
     ofSetColor(255,255,255,255);
     ofDrawBitmapString(ofToString(findFaceZoom), 20, 40);
+    ofDrawBitmapString(ofToString(rect.getCenter().x), 20, 60);
 
 }
 

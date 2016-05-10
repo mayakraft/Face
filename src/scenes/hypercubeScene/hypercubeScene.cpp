@@ -38,13 +38,16 @@ void HypercubeScene::reset(){
 
 //--------------------------------------------------------------
 void HypercubeScene::update(){
+    
+    
+    
     if (ofGetFrameNum() % 60 == 0){
         myShader.load("gradient");
     }
     
     float SCALE = .002;
     for(int i = 0; i < NUM_POLY; i++){
-        polychron[i].rotate4DOnly(SCALE * sinf(ofGetElapsedTimef() * rotations[i].x),
+        polychron[i].rotate4DOnly(SCALE * sinf(ofGetElapsedTimef() * rotations[i].x) + (lastFaceCenter.x - faceCenter.x)*.004,
                                   SCALE * sinf(ofGetElapsedTimef() * rotations[i].y),
                                   SCALE * sinf(ofGetElapsedTimef() * rotations[i].z) );
     }
@@ -73,6 +76,8 @@ void HypercubeScene::update(){
             }
         }
     }
+    
+    lastFaceCenter = faceCenter;
 }
 
 ofVec3f HypercubeScene::worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform) {

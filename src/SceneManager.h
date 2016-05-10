@@ -38,8 +38,8 @@ public:
 
     ofShader dimmerShader;
     
-    float SCENE_INTERVAL = 5.0; // seconds
-    float FADE_DURATION = 1.0;  // shorter than SCENE_INTERVAL
+    float SCENE_INTERVAL; // seconds
+    float FADE_DURATION;  // shorter than SCENE_INTERVAL
 
     bool isFading;
     unsigned long fadeStartTime;

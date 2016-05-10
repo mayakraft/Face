@@ -63,8 +63,8 @@ void SceneManager::setup(){
     }
     
     
-    SCENE_INTERVAL = 5;
-    FADE_DURATION = 1.0;
+    SCENE_INTERVAL = 20;
+    FADE_DURATION = 3.0;
 
     currentScene = 0;
     startScene(currentScene);
@@ -176,7 +176,7 @@ void SceneManager::draw(){
     sceneFbo.draw(0, 0);
     
     ofSetColor(255, 255);
-    ofDrawSphere(faceCenter, 10);
+//    ofDrawSphere(faceCenter, 10);
     
     gui.draw();
 }

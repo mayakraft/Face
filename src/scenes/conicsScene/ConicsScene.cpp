@@ -4,7 +4,10 @@
 
 void ConicsScene::setup(){
     for(int i = 0; i < NUM_CONES; i++){
-        conics[i].setRadius(50 + i);
+        conics[i].setPosition( ofPoint(0, 100, -10 ) );
+        conics[i].setLookAt( ofPoint(0, 0, 0) );
+
+        conics[i].setRadius(20 + i*5);
     }
     numCones = 1;
 }
@@ -14,11 +17,19 @@ void ConicsScene::update(){
     float SPEED = .2;
     float diff = .3 * sinf(ofGetElapsedTimef()*.2);
     for(int i = 0 ;i < numCones; i++){
-        conics[i].setPosition( ofPoint(i * 10,0, 200 + 190 * sin(ofGetElapsedTimef() + i/100.0)));
+
+        conics[i].setPosition( ofPoint(faceCenter.x-300 + i * 10,
+                                       0,
+                                       200 + 190 * sin(ofGetElapsedTimef() + i/100.0)));
+        conics[i].setLookAt( ofPoint(-(faceCenter.x-300) * .2,
+                                     0,
+                                     0) );
+//        conics[i].setPosition( ofPoint(i * 10,0, 200 + 190 * sin(ofGetElapsedTimef() + i/100.0)));
         //conics[i].setHeight(300 + 250 * sinf(2*i+ofGetElapsedTimef()));
 //        conics[i].setRadius(ofGetMouseX() + (ofGetMouseX()*0.9) * ofSignedNoise(ofGetElapsedTimef()*.3, i/10.0));
         
-        conics[i].setLookAt( ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0), 0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0)));
+//        conics[i].setLookAt( ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0), 0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0)));
+//        conics[i].setLookAt( ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0), 0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0)));
     }
     if(numCones < NUM_CONES)
         numCones++;
@@ -39,7 +50,7 @@ void ConicsScene::draw(){
     cam.begin();
     ofScale(2, 2, 2);
     
-    ofDrawSphere(ofVec3f(0, 0, 0), 10);
+//    ofDrawSphere(ofVec3f(0, 0, 0), 10);
     
     //    ofDrawAxis(20);
     
@@ -47,8 +58,8 @@ void ConicsScene::draw(){
     //    for(int i = 0 ;i < NUM_CONES; i++)
     //        conics[i].draw();
     
-    plane = ofVec3f(faceCenter.x, faceCenter.y, 0);
-    planeNormal = ofVec3f(0, 0, 1);
+    plane = ofVec3f(0, 0, 0);
+    planeNormal = ofVec3f(0, 0 + 2, 1);
     for(int i = 0 ;i < numCones; i++)
         conics[i].drawIntersectionsWithPlane(plane, planeNormal);
     

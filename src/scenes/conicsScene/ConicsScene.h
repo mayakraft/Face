@@ -5,7 +5,7 @@
 #include "Conics.h"
 #include "ofxGui.h"
 
-#define NUM_CONES 64
+#define NUM_CONES 32
 #define NUM_PLANES 3
 
 class ConicsScene : public BaseScene{
