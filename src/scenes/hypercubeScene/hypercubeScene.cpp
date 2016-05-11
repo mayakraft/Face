@@ -105,6 +105,9 @@ void HypercubeScene::draw(){
     ofSetColor(255);
     ofDrawBitmapString(ofToString(ofGetFrameRate()),20,20);
     
+    
+    ofMultMatrix(faceScaleMatrix);
+
     float camRadius = 100;
     float camSpeed = .1;
     cam.lookAt(ofPoint(0,0,0));

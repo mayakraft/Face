@@ -38,25 +38,33 @@ public:
 
     ofShader dimmerShader;
     
+    
+    // scene transition stuff
     float SCENE_INTERVAL; // seconds
     float FADE_DURATION;  // shorter than SCENE_INTERVAL
-
-    bool isFading;
-    unsigned long fadeStartTime;
+    bool isSceneTransition;
+    unsigned long sceneTransitionStartTime;
+    float sceneTransitionTween;
     
-    ofxPanel gui;
-    ofParameter<bool>drawFacePoints, enableParameterSounds;
-    ofParameter<float> autoadvanceDelay, ofSmoothing;
-    float lastAutoadvanceTime;
     
-    float masterFade; // 0 to 1
-    
+    // face stuff
+    bool faceFound;
     ofPoint faceLeftEye;
     ofPoint faceRightEye;
     ofPoint faceMouth;
     ofPoint faceNose;
-    
     ofMatrix4x4 faceScaleMatrix;
+    
+private:
+    
+    float masterFade; // 0 to 1
+
+
+
+    // nothing here for now
+    ofxPanel gui;
+    ofParameter<bool>drawFacePoints, enableParameterSounds;
+    ofParameter<float> autoadvanceDelay, ofSmoothing;
 
 };
 

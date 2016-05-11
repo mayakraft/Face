@@ -54,15 +54,9 @@ void ConicsScene::draw(){
     
     ofClear(0);
     
+    ofMultMatrix(faceScaleMatrix);
     
-//    ofMultMatrix(faceScaleMatrix);
-    
-//    ofTranslate(ofGetWidth()*.5, ofGetHeight()*.5);
-
     ofSetLineWidth(1);
-    
-//    cam.begin();
-//    ofScale(2, 2, 2);
     
     ofSetColor(255, 255);
     ofDrawAxis(20);
@@ -114,5 +108,4 @@ void ConicsScene::draw(){
 //        conics[i].drawIntersectionsWithPlane(plane, planeNormal);
 //    }
     
-//    cam.end();
 }

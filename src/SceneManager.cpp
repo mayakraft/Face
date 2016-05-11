@@ -25,6 +25,13 @@ SceneManager::~SceneManager(){
 }
 //-----------------------------------------------------------------------------------
 void SceneManager::setup(){
+    
+    
+    SCENE_INTERVAL = 10;
+    
+    FADE_DURATION = 3.0;
+    
+
  
     // add all possible scenes to the scenes array
 //    scenes.push_back(new CirclesScene());
@@ -63,13 +70,11 @@ void SceneManager::setup(){
     }
     
     
-    SCENE_INTERVAL = 20;
-    FADE_DURATION = 3.0;
-
     currentScene = 0;
     startScene(currentScene);
     
-    masterFade = 0.0;
+    masterFade = 1.0;
+    faceFound = false;
     
     faceLeftEye = ofPoint(0, 0);
     faceRightEye = ofPoint(0, 0);
@@ -77,8 +82,6 @@ void SceneManager::setup(){
     faceNose = ofPoint(0, 0);
 }
 //-----------------------------------------------------------------------------------
-
-static float fadeAmnt;
 
 void SceneManager::startScene(int whichScene){
     scenes[currentScene]->reset();
@@ -93,25 +96,31 @@ void SceneManager::nextScene(bool forward){
 }
 //-----------------------------------------------------------------------------------
 void SceneManager::update(){
-    if(ofGetElapsedTimef() > fadeStartTime + SCENE_INTERVAL){
+    if(faceFound)
+        masterFade = masterFade * .95 + .05;
+    else
+        masterFade = masterFade * .95;
+    
+    
+    if(ofGetElapsedTimef() > sceneTransitionStartTime + SCENE_INTERVAL){
         // begin fade transition
-        fadeStartTime = ofGetElapsedTimef();
+        sceneTransitionStartTime = ofGetElapsedTimef();
         lastScene = currentScene;
         currentScene = (currentScene + 1)%NUM_SCENES;
-        isFading = true;
+        isSceneTransition = true;
         scenes[currentScene]->reset();
     }
-    if(isFading){
-        fadeAmnt = (ofGetElapsedTimef() - fadeStartTime) / FADE_DURATION;
-        if(fadeAmnt > 1.0)
-            fadeAmnt = 1.0;
-        if(fadeAmnt < 0.0)
-            fadeAmnt = 0.0;
-        if(ofGetElapsedTimef() > fadeStartTime + FADE_DURATION)
-            isFading = false;
+    if(isSceneTransition){
+        sceneTransitionTween = (ofGetElapsedTimef() - sceneTransitionStartTime) / FADE_DURATION;
+        if(sceneTransitionTween > 1.0)
+            sceneTransitionTween = 1.0;
+        if(sceneTransitionTween < 0.0)
+            sceneTransitionTween = 0.0;
+        if(ofGetElapsedTimef() > sceneTransitionStartTime + FADE_DURATION)
+            isSceneTransition = false;
     }
     
-    if(isFading){
+    if(isSceneTransition){
         scenes[lastScene]->faceLeftEye = faceLeftEye;
         scenes[lastScene]->faceRightEye = faceRightEye;
         scenes[lastScene]->faceMouth = faceMouth;
@@ -146,7 +155,7 @@ void SceneManager::draw(){
         ofPopStyle();
         sceneFbo.end();
         
-        if(isFading){
+        if(isSceneTransition){
             lastSceneFbo.begin();
             ofClear(0,0,0,255);
             ofPushStyle();
@@ -178,12 +187,12 @@ void SceneManager::draw(){
     // DRAW THE SCENES
     ofSetColor(255, 255 * masterFade);
 
-    if(isFading){
+    if(isSceneTransition){
         // draw previous scene fading out
-        ofSetColor(255, masterFade * 255*(1-fadeAmnt) );
+        ofSetColor(255, masterFade * 255*(1-sceneTransitionTween) );
         lastSceneFbo.draw(0, 0);
         // set current screen fade in color
-        ofSetColor(255, masterFade * 255*fadeAmnt);
+        ofSetColor(255, masterFade * 255*sceneTransitionTween);
     }
     
     sceneFbo.draw(0, 0);

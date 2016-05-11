@@ -3,10 +3,6 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "clmFaceTracker.h"
-
-//#include "springyShape.h"
-
-
 #include "SceneManager.h"
 
 class ofApp : public ofBaseApp{
@@ -28,36 +24,28 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    // SCENES
-    
-    SceneManager sceneManager;
-
-    
-    // MASKS
-    
-    clmFaceTracker CLMFT;
+    ofPoint windowCenter;
 
     ofParameterGroup group;
     ofxPanel panel;
     
-    //vector < springyShape > shapes;
+    ofVec3f worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform);
 
+    // SCENES
+    SceneManager sceneManager;
+    
+    // MASKS
+    clmFaceTracker CLMFT;
     float maskEnergy;
-    
-    //vector <particle *> myParticles;
-    
-    float findFaceZoom;  // 0 to 1, 0:not zoomed, 1:fully zoomed
+    bool faceFound; // empirical based on feeling from mask energy
     ofRectangle faceRect;
     ofMatrix4x4 faceScaleMatrix;
 
-    
-    ofVec3f worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform);
-
-    ofPoint faceCenterNow;
+    ofPoint faceCenterNow;  // the smoothed position of the face as it tracks
+    float faceScaleNow;   //  same, but for zooming
     
     ofPoint faceMouth;
     ofPoint faceRightEye;
     ofPoint faceLeftEye;
     ofPoint faceNose;
-
 };

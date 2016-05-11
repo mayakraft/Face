@@ -11,6 +11,11 @@ void ofApp::setup(){
     ofSetFrameRate(60);
     ofSetVerticalSync(false);
     maskEnergy = 0;
+    
+    faceScaleNow = 1.0;
+    faceCenterNow = ofPoint(ofGetWidth() * .5, ofGetHeight()*.5);
+    
+    windowCenter = ofPoint(ofGetWidth()*.5, ofGetHeight()*.5);
 }
 
 //--------------------------------------------------------------
@@ -30,13 +35,13 @@ void ofApp::update(){
             if (i >= 36 && i <= 41){
                 faceLeftEye += CLMFT.pts[i];
             }
-            if (i >= 42 && i <= 47){
+            else if (i >= 42 && i <= 47){
                 faceRightEye += CLMFT.pts[i];
             }
-            if (i >= 48 && i <= 60){
+            else if (i >= 48 && i <= 60){
                 faceMouth += CLMFT.pts[i];
             }
-            if (i >= 29 && i <= 35){
+            else if (i >= 29 && i <= 35){
                 faceNose += CLMFT.pts[i];
             }
             avg += CLMFT.pts[i];
@@ -49,7 +54,7 @@ void ofApp::update(){
         
         avg /= (float) CLMFT.pts.size();
         //ofCircle(CLMFT.pts[ mouseX % 68 ], 2);
-        ofPoint diff = CLMFT.pts[0] - avg;
+//        ofPoint diff = CLMFT.pts[0] - avg;
     }
     
     CLMFT.update();
@@ -60,21 +65,12 @@ void ofApp::update(){
         maskEnergy = 0.9f * maskEnergy + 0.1 * 0.0;
     }
     
+    if(maskEnergy > 0.1)
+        faceFound = true;
+    else
+        faceFound = false;
     
-//    for (int i = 0; i < shapes.size(); i++){
-//        shapes[i].update();
-//    }
     
-    if(findFaceZoom < 1.0 && CLMFT.faceEnergy > 0.1){
-        findFaceZoom += (1.0-findFaceZoom) * .05;
-        if(findFaceZoom > 1.0)
-            findFaceZoom = 1.0;
-    }
-    if(findFaceZoom > 0.0 && CLMFT.faceEnergy < 0.1){
-        findFaceZoom -= (findFaceZoom) * .02*.3333;
-        if(findFaceZoom < 0.0)
-            findFaceZoom = 0.0;
-    }
     
     // get face bouding box
     // to be replaced by smallest enclosing circle
@@ -84,35 +80,31 @@ void ofApp::update(){
     faceRect = poly.getBoundingBox();
     
     
-    ofPoint center = ofPoint(ofGetWidth()*.5, ofGetHeight()*.5);
-
     // build face rotation/scale matrix to put the face in the center of the screen
-    float scaleAmnt = 1.0;
-    if(faceRect.getHeight() != 0)
-        scaleAmnt = ofGetHeight()*.7 / faceRect.getHeight();
-    scaleAmnt = (scaleAmnt)*(findFaceZoom) + 1.0*(1-findFaceZoom);
     
-    ofPoint faceNoseCenter;
-    if(maskEnergy > .1)
-        faceNoseCenter = -(faceNose - center);
-    else
-        faceNoseCenter = ofPoint(0, 0);
-
-
-    faceCenterNow = faceCenterNow * .97 + faceNoseCenter * .03;
+    // smooth face zooming scale
+    float targetScale = 1.0;
+    if(faceFound && faceRect.getHeight() > 0)
+        targetScale = ofGetHeight()*.7 / faceRect.getHeight();
+    faceScaleNow = faceScaleNow * .95 + targetScale * 0.05;
+    
+    // smooth face x y tracking
+    ofPoint faceNoseCenter = ofPoint(0, 0);
+    if(faceFound)
+        faceNoseCenter = -(faceNose - windowCenter);
+    faceCenterNow = faceCenterNow * .95 + faceNoseCenter * .05;
 
     faceScaleMatrix.makeIdentityMatrix();
-    faceScaleMatrix.translate(-center);
-    faceScaleMatrix.scale(scaleAmnt, scaleAmnt, scaleAmnt);
-    faceScaleMatrix.translate(center);
+    faceScaleMatrix.translate(-windowCenter);
+    faceScaleMatrix.scale(faceScaleNow, faceScaleNow, faceScaleNow);
+    faceScaleMatrix.translate(windowCenter);
     faceScaleMatrix.translate( faceCenterNow );
     
 
     // deliver info to the scene manager
-//    sceneManager.faceCenter = faceRect.getCenter();
-    sceneManager.masterFade = findFaceZoom;
+    sceneManager.faceFound = faceFound;
     sceneManager.faceScaleMatrix = faceScaleMatrix;
- 
+    // face parts
     sceneManager.faceNose = faceNose;// - center;
     sceneManager.faceMouth = faceMouth;// - center;
     sceneManager.faceLeftEye = faceLeftEye;// - center;
@@ -122,20 +114,9 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
-//    ofPoint center = ofPoint(ofGetWidth()*.5, ofGetHeight()*.5);
-//    if(maskEnergy > 0.5){
-//        ofTranslate(center);
-//        ofScale(1.0 + ofGetMouseX() / (float)ofGetWidth(),
-//                1.0 + ofGetMouseX() / (float)ofGetWidth() );
-//        ofTranslate(-center);
-//    }
 
     ofPushMatrix();
-//    cam.begin();
-//    ofTranslate(-center);
         ofMultMatrix(faceScaleMatrix);
-    
     
         // MASKS
         ofBackground(0);
@@ -153,21 +134,19 @@ void ofApp::draw(){
 //        ofDrawSphere(sceneManager.faceRightEye, 10);
 
 
-    
-        // SCENES
-        sceneManager.draw();
-
     ofPopMatrix();
+    
+    // SCENES
+    sceneManager.draw();
 
     
     // DEBUG TEXT
     ofSetColor(255,255,255,255);
-//    ofDrawBitmapString(ofToString(pt.x), 20, 40);
-//    ofDrawBitmapString(ofToString(pt.y), 20, 60);
-//    ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);
-//    ofDrawBitmapString(ofToString(maskEnergy), 20, 40);
+    ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);
+    ofDrawBitmapString(ofToString(faceFound), 20, 40);
+    ofDrawBitmapString(ofToString(maskEnergy), 20, 60);
 //    ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 20, 60);
-    ofDrawBitmapString(ofToString(findFaceZoom), 20, 80);
+    ofDrawBitmapString(ofToString(faceScaleNow), 20, 80);
     ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
     ofDrawBitmapString(ofToString(ofGetWidth()*.5), 20, 120);
 }

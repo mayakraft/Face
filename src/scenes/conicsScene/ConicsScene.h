@@ -22,8 +22,6 @@ public:
     ofVec3f plane, planeNormal;
     
     ofVec3f movingPlane, movingPlaneNormal;
-
-    ofEasyCam cam;
     
     int numCones;
 };
