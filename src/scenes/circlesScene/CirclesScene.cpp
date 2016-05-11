@@ -232,7 +232,7 @@ void CirclesScene::draw(){
     
     for (int i = 0; i < circles.size(); i++){
         int i_p_1 = (i+1) % circles.size();
-        ofLine(circles[i].pos, circles[i_p_1].pos);
+        ofDrawLine(circles[i].pos, circles[i_p_1].pos);
     }
 //
 //    ofSetColor(255,0,0);
@@ -266,8 +266,6 @@ void CirclesScene::draw(){
         i_p_1 %= circles.size();
         
         traceAngleToAngle(circles[i], circles[i_m_1].pos, circles[i_p_1].pos, tempLine, i %2 == 1 ? ofGetMousePressed() : !ofGetMousePressed() , "0");
-        
-
     }
     
     ofSetColor(255,255,255,90);

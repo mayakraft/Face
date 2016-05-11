@@ -34,24 +34,30 @@ class ofApp : public ofBaseApp{
 
     
     // MASKS
-		
-        clmFaceTracker CLMFT;
     
-       
-    
-        ofParameterGroup group;
-        ofxPanel panel;
-    
-    
-        //vector < springyShape > shapes;
-    
+    clmFaceTracker CLMFT;
 
+    ofParameterGroup group;
+    ofxPanel panel;
     
-        float maskEnergy;
+    //vector < springyShape > shapes;
+
+    float maskEnergy;
     
-        
-        //vector <particle *> myParticles;
+    //vector <particle *> myParticles;
     
     float findFaceZoom;  // 0 to 1, 0:not zoomed, 1:fully zoomed
-    float findFaceZoomVelocity;
+    ofRectangle faceRect;
+    ofMatrix4x4 faceScaleMatrix;
+
+    
+    ofVec3f worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform);
+
+    ofPoint faceCenterNow;
+    
+    ofPoint faceMouth;
+    ofPoint faceRightEye;
+    ofPoint faceLeftEye;
+    ofPoint faceNose;
+
 };

@@ -18,21 +18,30 @@ void ConicsScene::update(){
     float diff = .3 * sinf(ofGetElapsedTimef()*.2);
     for(int i = 0 ;i < numCones; i++){
 
-        conics[i].setPosition( ofPoint(faceCenter.x-300 + i * 10,
+        conics[i].setPosition( ofPoint(0 + i * 10,
                                        0,
-                                       200 + 190 * sin(ofGetElapsedTimef() + i/100.0)));
-        conics[i].setLookAt( ofPoint(-(faceCenter.x-300) * .2,
+                                       200 + 190 * sin(ofGetElapsedTimef() + i/100.0)) );
+        conics[i].setLookAt( ofPoint(0,
                                      0,
                                      0) );
+        
 //        conics[i].setPosition( ofPoint(i * 10,0, 200 + 190 * sin(ofGetElapsedTimef() + i/100.0)));
         //conics[i].setHeight(300 + 250 * sinf(2*i+ofGetElapsedTimef()));
 //        conics[i].setRadius(ofGetMouseX() + (ofGetMouseX()*0.9) * ofSignedNoise(ofGetElapsedTimef()*.3, i/10.0));
         
 //        conics[i].setLookAt( ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0), 0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0)));
 //        conics[i].setLookAt( ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0), 0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0)));
+        
     }
     if(numCones < NUM_CONES)
         numCones++;
+    
+//    ofPoint center = ofPoint(ofGetWidth()*.5, ofGetHeight()*.5);
+//    faceNose = faceNose - center;
+//    faceMouth = faceMouth - center;
+//    faceLeftEye = faceLeftEye - center;
+//    faceRightEye = faceRightEye - center;
+ 
 }
 
 void ConicsScene::reset(){
@@ -45,12 +54,27 @@ void ConicsScene::draw(){
     
     ofClear(0);
     
+    
+//    ofMultMatrix(faceScaleMatrix);
+    
+//    ofTranslate(ofGetWidth()*.5, ofGetHeight()*.5);
+
     ofSetLineWidth(1);
     
-    cam.begin();
-    ofScale(2, 2, 2);
+//    cam.begin();
+//    ofScale(2, 2, 2);
     
+    ofSetColor(255, 255);
+    ofDrawAxis(20);
+//    ofSetColor(0, 255, 0, 255);
 //    ofDrawSphere(ofVec3f(0, 0, 0), 10);
+    
+    ofSetColor(0, 0, 255, 180);
+    ofDrawSphere(faceNose, 10);
+    ofDrawSphere(faceMouth, 10);
+    ofDrawSphere(faceLeftEye, 10);
+    ofDrawSphere(faceRightEye, 10);
+//    printf("%f", faceNose.x);
     
     //    ofDrawAxis(20);
     
@@ -58,7 +82,10 @@ void ConicsScene::draw(){
     //    for(int i = 0 ;i < NUM_CONES; i++)
     //        conics[i].draw();
     
-    plane = ofVec3f(0, 0, 0);
+    ofSetColor(255, 255);
+    
+    plane = faceMouth;
+//    plane = ofVec3f(0, 0, 0);
     planeNormal = ofVec3f(0, 0 + 2, 1);
     for(int i = 0 ;i < numCones; i++)
         conics[i].drawIntersectionsWithPlane(plane, planeNormal);
@@ -87,5 +114,5 @@ void ConicsScene::draw(){
 //        conics[i].drawIntersectionsWithPlane(plane, planeNormal);
 //    }
     
-    cam.end();
+//    cam.end();
 }

@@ -71,7 +71,10 @@ void SceneManager::setup(){
     
     masterFade = 0.0;
     
-    faceCenter = ofPoint(0, 0);
+    faceLeftEye = ofPoint(0, 0);
+    faceRightEye = ofPoint(0, 0);
+    faceMouth = ofPoint(0, 0);
+    faceNose = ofPoint(0, 0);
 }
 //-----------------------------------------------------------------------------------
 
@@ -109,12 +112,22 @@ void SceneManager::update(){
     }
     
     if(isFading){
-        scenes[lastScene]->faceCenter = faceCenter;
+        scenes[lastScene]->faceLeftEye = faceLeftEye;
+        scenes[lastScene]->faceRightEye = faceRightEye;
+        scenes[lastScene]->faceMouth = faceMouth;
+        scenes[lastScene]->faceNose = faceNose;
         scenes[lastScene]->update();
+
+        scenes[lastScene]->faceScaleMatrix = faceScaleMatrix;
+
     }
-    scenes[currentScene]->faceCenter = faceCenter;
+    scenes[currentScene]->faceLeftEye = faceLeftEye;
+    scenes[currentScene]->faceRightEye = faceRightEye;
+    scenes[currentScene]->faceMouth = faceMouth;
+    scenes[currentScene]->faceNose = faceNose;
     scenes[currentScene]->update();
     
+    scenes[currentScene]->faceScaleMatrix = faceScaleMatrix;
 }
 
 //-----------------------------------------------------------------------------------

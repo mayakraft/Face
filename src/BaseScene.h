@@ -38,7 +38,12 @@ public:
     // the surface you are drawing into.
     
     // face stuff
-    ofPoint faceCenter;
+    ofPoint faceLeftEye;
+    ofPoint faceRightEye;
+    ofPoint faceMouth;
+    ofPoint faceNose;
+    
+    ofMatrix4x4 faceScaleMatrix;
 };
 
 #endif /* BaseScene_hpp */

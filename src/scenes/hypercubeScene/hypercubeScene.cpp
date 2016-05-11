@@ -39,6 +39,10 @@ void HypercubeScene::reset(){
 //--------------------------------------------------------------
 void HypercubeScene::update(){
     
+    hotSpots[0] = faceLeftEye;
+    hotSpots[1] = faceRightEye;
+    hotSpots[2] = faceMouth;
+    
     
     
     if (ofGetFrameNum() % 60 == 0){
@@ -47,7 +51,7 @@ void HypercubeScene::update(){
     
     float SCALE = .002;
     for(int i = 0; i < NUM_POLY; i++){
-        polychron[i].rotate4DOnly(SCALE * sinf(ofGetElapsedTimef() * rotations[i].x) + (lastFaceCenter.x - faceCenter.x)*.004,
+        polychron[i].rotate4DOnly(SCALE * sinf(ofGetElapsedTimef() * rotations[i].x) + (lastFaceNose.x - faceNose.x)*.004,
                                   SCALE * sinf(ofGetElapsedTimef() * rotations[i].y),
                                   SCALE * sinf(ofGetElapsedTimef() * rotations[i].z) );
     }
@@ -77,7 +81,7 @@ void HypercubeScene::update(){
         }
     }
     
-    lastFaceCenter = faceCenter;
+    lastFaceNose = faceNose;
 }
 
 ofVec3f HypercubeScene::worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform) {
@@ -114,6 +118,11 @@ void HypercubeScene::draw(){
     }
     ofDrawLine(ofGetWidth()*.5, 0, ofGetWidth()*.5, ofGetHeight());
     ofFill();
+    ofSetColor(255, 180);
+    ofDrawCircle(hotSpots[0], 30);
+    ofDrawCircle(hotSpots[1], 30);
+    ofDrawCircle(hotSpots[2], 30);
+    
     ofSetColor(255);
     
     

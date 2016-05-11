@@ -35,5 +35,5 @@ public:
 
     ofShader myShader;
     
-    ofPoint lastFaceCenter;
+    ofPoint lastFaceNose;
 };

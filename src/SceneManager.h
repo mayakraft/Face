@@ -51,7 +51,13 @@ public:
     
     float masterFade; // 0 to 1
     
-    ofPoint faceCenter;
+    ofPoint faceLeftEye;
+    ofPoint faceRightEye;
+    ofPoint faceMouth;
+    ofPoint faceNose;
+    
+    ofMatrix4x4 faceScaleMatrix;
+
 };
 
 #endif /* SceneManager_hpp */
