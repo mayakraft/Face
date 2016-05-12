@@ -16,6 +16,8 @@ public:
     void reset();
 
     ofEasyCam cam;
+    
+    int numPoly;
 
     Polychron polychron[NUM_POLY];
     vector<unsigned int> highlighted[NUM_POLY];

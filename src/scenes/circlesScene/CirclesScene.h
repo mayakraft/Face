@@ -10,33 +10,14 @@ public:
     CircleFromThreePoints(){}
     
     //typedef Basic2DVector<float>   Vector2D;
-    
-    /** Construct from three points (see class description).
-     *  The order of points is not essential, but accuracy should be better if
-     *  the second point lies between the other two on the circle.
-     *  The optional argument "precision" specifies how accurately the
-     *  straight line check has to be satisfied for setting the curvature
-     *  to zero and the center position to "undefined".
-     */
+
     CircleFromThreePoints( const ofPoint& inner,
                           const ofPoint& mid,
                           const ofPoint& outer,
                           double precision = 1.e-7);
-    
-    
-    /** Returns the curvature (1/radius), in cm^(-1).
-     *  The curvature is precomputed, this is just access method (takes no time).
-     *  If curvature is zero the center is undefined
-     *  (see description of presicion above).
-     */
+
     float curvature() const { return theCurvature;}
-    
-    /** returns the position of the center of the circle.
-     *  If curvature is zero, center() throws an exception to avoid use of
-     *  undefined position.
-     *  If the curvature is very small the position of the center will
-     *  be very inaccurate.
-     */
+
     ofPoint center() const { return theCenter; }
     
 private:
@@ -100,7 +81,6 @@ public:
     void draw();
     
     void reset();
-    
     void keyPressed(int key);
     
     void traceAngleToAngle(circle & circle, ofPoint from, ofPoint to, ofPolyline & line, bool bClockwise, string name);
@@ -112,4 +92,5 @@ public:
 
     ofPoint smoothed;
     vector < circle > circles;
+ 
 };

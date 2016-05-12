@@ -1,15 +1,18 @@
 {
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "5F63BBBF36EC113235B16B5301F6B3973BEEF176",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "37526DA425E5430474A14FBFA1BC4525160B5FC1" : 0,
-    "BB48781AAC70C89AED1A649A93F25300AFE948DD" : 0
+    "BB48781AAC70C89AED1A649A93F25300AFE948DD" : 0,
+    "5F63BBBF36EC113235B16B5301F6B3973BEEF176" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "F02DD7BF-76DE-43EA-A041-071B1733C5F1",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "37526DA425E5430474A14FBFA1BC4525160B5FC1" : "..\/..\/addons\/ofxCv",
-    "BB48781AAC70C89AED1A649A93F25300AFE948DD" : "..\/..\/addons\/ofxWatchdog"
+    "BB48781AAC70C89AED1A649A93F25300AFE948DD" : "..\/..\/addons\/ofxWatchdog",
+    "5F63BBBF36EC113235B16B5301F6B3973BEEF176" : "liveFace\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "faceTrackerWork",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -19,6 +22,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kylemcdonald\/ofxCv.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "37526DA425E5430474A14FBFA1BC4525160B5FC1"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/robbykraft\/Face.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5F63BBBF36EC113235B16B5301F6B3973BEEF176"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/toolbits\/ofxWatchdog.git",

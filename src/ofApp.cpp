@@ -12,8 +12,8 @@ void ofApp::setup(){
     ofSetVerticalSync(false);
     maskEnergy = 0;
     
-    faceScaleNow = 1.0;
-    faceCenterNow = ofPoint(ofGetWidth() * .5, ofGetHeight()*.5);
+    faceScaleSmooth = 1.0;
+    faceCenterSmooth = ofPoint(ofGetWidth() * .5, ofGetHeight()*.5);
     
     windowCenter = ofPoint(ofGetWidth()*.5, ofGetHeight()*.5);
 }
@@ -86,24 +86,26 @@ void ofApp::update(){
     float targetScale = 1.0;
     if(faceFound && faceRect.getHeight() > 0)
         targetScale = ofGetHeight()*.7 / faceRect.getHeight();
-    faceScaleNow = faceScaleNow * .95 + targetScale * 0.05;
+    faceScaleSmooth = faceScaleSmooth * .95 + targetScale * 0.05;
     
     // smooth face x y tracking
     ofPoint faceNoseCenter = ofPoint(0, 0);
     if(faceFound)
         faceNoseCenter = -(faceNose - windowCenter);
-    faceCenterNow = faceCenterNow * .95 + faceNoseCenter * .05;
+    faceCenterSmooth = faceCenterSmooth * .95 + faceNoseCenter * .05;
 
     faceScaleMatrix.makeIdentityMatrix();
     faceScaleMatrix.translate(-windowCenter);
-    faceScaleMatrix.scale(faceScaleNow, faceScaleNow, faceScaleNow);
+    faceScaleMatrix.scale(faceScaleSmooth, faceScaleSmooth, faceScaleSmooth);
     faceScaleMatrix.translate(windowCenter);
-    faceScaleMatrix.translate( faceCenterNow );
+    faceScaleMatrix.translate( faceCenterSmooth );
     
 
     // deliver info to the scene manager
     sceneManager.faceFound = faceFound;
     sceneManager.faceScaleMatrix = faceScaleMatrix;
+    sceneManager.faceCenterSmooth = faceCenterSmooth;
+    sceneManager.faceScaleSmooth = faceScaleSmooth;
     // face parts
     sceneManager.faceNose = faceNose;// - center;
     sceneManager.faceMouth = faceMouth;// - center;
@@ -111,10 +113,9 @@ void ofApp::update(){
     sceneManager.faceRightEye = faceRightEye;// - center;
 }
 
-
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    
     ofPushMatrix();
         ofMultMatrix(faceScaleMatrix);
     
@@ -124,7 +125,7 @@ void ofApp::draw(){
 //        ofSetColor( 255, 255 );
         CLMFT.grabber.draw(0,0);
         ofSetColor(255);
-//        CLMFT.draw();
+        CLMFT.draw();
     
     
 //        ofSetColor(0, 255, 0, 100);
@@ -138,7 +139,7 @@ void ofApp::draw(){
     
     // SCENES
     sceneManager.draw();
-
+    
     
     // DEBUG TEXT
     ofSetColor(255,255,255,255);
@@ -146,7 +147,7 @@ void ofApp::draw(){
     ofDrawBitmapString(ofToString(faceFound), 20, 40);
     ofDrawBitmapString(ofToString(maskEnergy), 20, 60);
 //    ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 20, 60);
-    ofDrawBitmapString(ofToString(faceScaleNow), 20, 80);
+    ofDrawBitmapString(ofToString(faceScaleSmooth), 20, 80);
     ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
     ofDrawBitmapString(ofToString(ofGetWidth()*.5), 20, 120);
 }

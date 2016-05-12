@@ -16,7 +16,7 @@
 #include "ArcsScene.h"
 
 
-#define NUM_SCENES 2
+#define NUM_SCENES 1
 
 
 //-----------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ SceneManager::~SceneManager(){
 void SceneManager::setup(){
     
     
-    SCENE_INTERVAL = 10;
+    SCENE_INTERVAL = 20;
     
     FADE_DURATION = 3.0;
     
@@ -37,7 +37,7 @@ void SceneManager::setup(){
 //    scenes.push_back(new CirclesScene());
 //    scenes.push_back(new ArcsScene());
     scenes.push_back(new ConicsScene());
-    scenes.push_back(new HypercubeScene());
+//    scenes.push_back(new HypercubeScene());
 
     sceneFbo.allocate(VISUALS_WIDTH, VISUALS_HEIGHT, GL_RGBA, 4);
     lastSceneFbo.allocate(VISUALS_WIDTH, VISUALS_HEIGHT, GL_RGBA, 4);
@@ -127,6 +127,8 @@ void SceneManager::update(){
         scenes[lastScene]->faceNose = faceNose;
         scenes[lastScene]->update();
 
+        scenes[lastScene]->faceCenterSmooth = faceCenterSmooth;
+        scenes[lastScene]->faceScaleSmooth = faceScaleSmooth;
         scenes[lastScene]->faceScaleMatrix = faceScaleMatrix;
 
     }
@@ -136,6 +138,8 @@ void SceneManager::update(){
     scenes[currentScene]->faceNose = faceNose;
     scenes[currentScene]->update();
     
+    scenes[currentScene]->faceCenterSmooth = faceCenterSmooth;
+    scenes[currentScene]->faceScaleSmooth = faceScaleSmooth;
     scenes[currentScene]->faceScaleMatrix = faceScaleMatrix;
 }
 

@@ -37,13 +37,17 @@ public:
     ofRectangle dimensions;     // this is the dimensions of
     // the surface you are drawing into.
     
+    // face orientation stuff
+    ofMatrix4x4 faceScaleMatrix;
+    ofPoint faceCenterSmooth;
+    float faceScaleSmooth;
+    
     // face stuff
     ofPoint faceLeftEye;
     ofPoint faceRightEye;
     ofPoint faceMouth;
     ofPoint faceNose;
     
-    ofMatrix4x4 faceScaleMatrix;
 };
 
 #endif /* BaseScene_hpp */

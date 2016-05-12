@@ -4,7 +4,7 @@
 #include "BaseScene.h"
 #include "particle.h"
 #include "spring.h"
-
+/*
 class arcCircle {
     public :
     ofPoint pos;
@@ -42,3 +42,4 @@ class ArcsScene : public BaseScene{
 
     
 };
+*/

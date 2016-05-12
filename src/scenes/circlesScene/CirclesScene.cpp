@@ -1,5 +1,12 @@
 #include "CirclesScene.h"
-
+//void CirclesScene::setup(){
+//}
+//void CirclesScene::update(){
+//}
+//void CirclesScene::draw(){
+//}
+//void CirclesScene::reset(){
+//}
 
 CircleFromThreePoints::CircleFromThreePoints( const ofPoint& inner,
                                              const ofPoint& mid,
@@ -224,7 +231,8 @@ void CirclesScene::traceAngleToAngle(circle & circle, ofPoint from, ofPoint to, 
 void CirclesScene::draw(){
 
 //    ofBackground(0);
-    
+    ofClear(0);
+ 
     ofSetColor(255,255,255,90);
     for (int i = 0; i < circles.size(); i++){
         circles[i].draw();
@@ -351,7 +359,7 @@ void CirclesScene::draw(){
 //    }
 //    
 //    
-    
+ 
 }
 
 //--------------------------------------------------------------
@@ -371,3 +379,5 @@ void CirclesScene::keyPressed(int key){
     }
 
 }
+
+

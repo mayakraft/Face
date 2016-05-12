@@ -47,13 +47,17 @@ public:
     float sceneTransitionTween;
     
     
-    // face stuff
+    // face orientation stuff
+    ofMatrix4x4 faceScaleMatrix;
+    ofPoint faceCenterSmooth;
+    float faceScaleSmooth;
     bool faceFound;
+    
+    // face stuff
     ofPoint faceLeftEye;
     ofPoint faceRightEye;
     ofPoint faceMouth;
     ofPoint faceNose;
-    ofMatrix4x4 faceScaleMatrix;
     
 private:
     

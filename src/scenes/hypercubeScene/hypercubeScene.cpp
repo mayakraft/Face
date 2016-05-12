@@ -29,10 +29,13 @@ void HypercubeScene::setup(){
         polyMatrix[i].rotate( (floor(i/2)*45), 0, 0, 1);
         polyMatrix[i].scale(1+i*0.5, 1+i*0.5, 1+i*0.5);
     }
+    
+    numPoly = NUM_POLY;
 }
 
 void HypercubeScene::reset(){
     resetMoment = ofGetElapsedTimef();
+    numPoly = 0;
 }
 
 
@@ -133,7 +136,7 @@ void HypercubeScene::draw(){
 
     ofPushMatrix();
 
-    for(int i = 0; i < NUM_POLY; i++){
+    for(int i = 0; i < numPoly; i++){
         ofPushMatrix();
         
         myShader.begin();

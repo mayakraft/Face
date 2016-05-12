@@ -41,8 +41,8 @@ class ofApp : public ofBaseApp{
     ofRectangle faceRect;
     ofMatrix4x4 faceScaleMatrix;
 
-    ofPoint faceCenterNow;  // the smoothed position of the face as it tracks
-    float faceScaleNow;   //  same, but for zooming
+    ofPoint faceCenterSmooth;  // the smoothed position of the face as it tracks
+    float faceScaleSmooth;   //  same, but for zooming
     
     ofPoint faceMouth;
     ofPoint faceRightEye;

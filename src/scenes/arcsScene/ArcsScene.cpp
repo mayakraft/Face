@@ -1,6 +1,6 @@
 #include "ArcsScene.h"
 #include "CirclesScene.h"
-
+/*
 int ArcsScene::ClockWise(vector < ofPoint > pts){
     int i,j,k;
     int count = 0;
@@ -334,3 +334,6 @@ void ArcsScene::draw(){
     }
 
 }
+
+
+*/
