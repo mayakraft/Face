@@ -93,4 +93,6 @@ public:
     ofPoint smoothed;
     vector < circle > circles;
  
+    void ofCircleSlice(float x,float y, float radius, float lowAngle, float highAngle, bool closed, bool radians);
+
 };

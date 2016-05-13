@@ -17,6 +17,8 @@ void HypercubeScene::setup(){
         rotations[i].x = ofRandom(.01, 0.3);
         rotations[i].y = ofRandom(.01, 0.3);
         rotations[i].z = ofRandom(.01, 0.3);
+        
+        brightnesses[i] = 50;
     }
     
     for(int i = 0 ;i < NUM_POLY; i++){
@@ -83,8 +85,31 @@ void HypercubeScene::update(){
             }
         }
     }
+
+    
+    static float dBrightness = -4;
+    for(int i = 0; i < NUM_POLY; i++){
+        if(brightnesses[i] > 50){
+            brightnesses[i] += dBrightness;
+        }
+        if(brightnesses[i] < 50)
+            brightnesses[i] = 50;
+    }
+    
+    
     
     lastFaceNose = faceNose;
+    
+    if(numPoly < NUM_POLY){
+        int newNumPoly = powf((ofGetElapsedTimef() - (float)resetMoment),2) * 2.0;
+        if(numPoly != newNumPoly){
+            numPoly = newNumPoly;
+            if(numPoly - 1 >= 0 && numPoly - 1 < NUM_POLY)
+                brightnesses[numPoly-1] = 255;
+        }
+    }
+    else
+        numPoly = NUM_POLY;
 }
 
 ofVec3f HypercubeScene::worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform) {
@@ -117,17 +142,17 @@ void HypercubeScene::draw(){
     cam.setPosition(camRadius * sin(ofGetElapsedTimef()*camSpeed), camRadius * cosf(ofGetElapsedTimef()*camSpeed), 100);
     
     
-    ofSetColor(255, 50);
-    ofNoFill();
-    for(int i = 0 ;i < 3; i++){
-        ofDrawCircle(hotSpots[i].x, hotSpots[i].y, hotSpotRadius);
-    }
-    ofDrawLine(ofGetWidth()*.5, 0, ofGetWidth()*.5, ofGetHeight());
-    ofFill();
-    ofSetColor(255, 180);
-    ofDrawCircle(hotSpots[0], 30);
-    ofDrawCircle(hotSpots[1], 30);
-    ofDrawCircle(hotSpots[2], 30);
+//    ofSetColor(255, 50);
+//    ofNoFill();
+//    for(int i = 0 ;i < 3; i++){
+//        ofDrawCircle(hotSpots[i].x, hotSpots[i].y, hotSpotRadius);
+//    }
+//    ofDrawLine(ofGetWidth()*.5, 0, ofGetWidth()*.5, ofGetHeight());
+//    ofFill();
+//    ofSetColor(255, 180);
+//    ofDrawCircle(hotSpots[0], 30);
+//    ofDrawCircle(hotSpots[1], 30);
+//    ofDrawCircle(hotSpots[2], 30);
     
     ofSetColor(255);
     
@@ -145,7 +170,7 @@ void HypercubeScene::draw(){
         myShader.setUniform2f("ptToFadeFrom3", ofVec2f(hotSpots[2].x, ofGetHeight() - hotSpots[2].y));
         ofMultMatrix(polyMatrix[i]);
 
-        ofSetColor(255, 50);
+        ofSetColor(255, brightnesses[i]);
         polychron[i].drawWireframe();
         myShader.end();
         

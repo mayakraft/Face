@@ -5,7 +5,7 @@
 #include "Conics.h"
 #include "ofxGui.h"
 
-#define NUM_CONES 3
+#define NUM_CONES 64
 #define NUM_PLANES 1
 
 class ConicsScene : public BaseScene{
@@ -17,14 +17,14 @@ public:
     
     void reset();
 		
-    Conics conicsL[NUM_CONES];
-    Conics conicsR[NUM_CONES];
+    Conics conics[NUM_CONES];
     
     ofVec3f plane, planeNormal;
     
     ofVec3f movingPlane, movingPlaneNormal;
     
     int numCones;
+    float numConesFloat;
     
     ofPoint center;
 };

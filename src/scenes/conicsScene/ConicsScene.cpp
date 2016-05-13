@@ -4,29 +4,35 @@
 
 void ConicsScene::setup(){
     for(int i = 0; i < NUM_CONES; i++){
-        conicsL[i].setRadius(20 + i*5);
-        conicsR[i].setRadius(20 + i*5);
+        conics[i].setRadius(20 + i*5);
     }
     numCones = 1;
 
     center = ofPoint(ofGetWidth()*.5, ofGetHeight()*.5);
 
-    plane = center;
-    planeNormal = ofVec3f(0, 100, 40);
+    plane = center + ofVec3f(0, 100 * sinf(ofGetElapsedTimef()), 0);
+    planeNormal = ofVec3f(0, 100, -60);
 }
 
 //--------------------------------------------------------------
 void ConicsScene::update(){
     
-    plane = plane * .95 + faceCenterSmooth * .05;
-
+//    plane = plane * .95 + faceCenterSmooth * .05;
+//    plane = faceCenterSmooth + ofVec3f(0, 0, 0 );
+//    planeNormal = ofVec3f(0, 100, -19);
+    
+//    printf("%f, %f\n", faceCenterSmooth.x, faceCenterSmooth.y);
+    
+//    faceCenterSmooth.y = 0;
+//    plane = faceCenterSmooth + ofVec3f(0, -43, 0);
+    plane = faceCenterSmooth;// + ofVec3f( 0, -43, 0);
+//    printf("%d\n", -100 + 200*ofGetMouseX() / ofGetWidth());
+    
     float SPEED = .2;
     float diff = .3 * sinf(ofGetElapsedTimef()*.2);
     for(int i = 0; i < numCones; i++){
-        conicsL[i].setPosition( center + ofVec3f(-50 + 50*sinf(ofGetElapsedTimef()), 50, 0) );
-        conicsL[i].setLookAt( center + ofVec3f(0, 0, 0) );
-        conicsR[i].setPosition( center + ofVec3f(50, 50, 0) );
-        conicsR[i].setLookAt( center + ofVec3f(0, 0, 0) );
+        conics[i].setPosition( center + ofVec3f(-50 + 50*sinf(ofGetElapsedTimef()), 50, 0) );
+        conics[i].setLookAt( center + ofVec3f(0, 0, 0) );
 
 //        conicsL[i].setPosition( faceLeftEye + ofVec3f(50, 50, 200) );
 //        conicsL[i].setLookAt( faceLeftEye );
@@ -50,13 +56,18 @@ void ConicsScene::update(){
 //        conics[i].setLookAt( ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0), 0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0)));
         
     }
-    if(numCones < NUM_CONES)
-        numCones++;
+    if(numCones < NUM_CONES){
+        numConesFloat *= 1.2;
+        numCones = numConesFloat;
+        if(numCones > NUM_CONES)
+            numCones = NUM_CONES;
+    }
 }
 
 void ConicsScene::reset(){
     resetMoment = ofGetElapsedTimef();
     numCones = 1;
+    numConesFloat = 1.0;
 }
 
 //--------------------------------------------------------------
@@ -93,10 +104,9 @@ void ConicsScene::draw(){
     ofSetColor(255, 255);
     
 //    plane = faceNose;
-//    for(int i = 0 ;i < numCones; i++){
-//        conicsL[i].drawIntersectionsWithPlane(center + plane, planeNormal);
-//        conicsR[i].drawIntersectionsWithPlane(center + plane, planeNormal);
-//    }
+    for(int i = 0 ;i < numCones; i++){
+        conics[i].drawIntersectionsWithPlane(center + plane, planeNormal);
+    }
     //    ofSetColor(255, 0, 0, 255);
     //    for(int i = 0 ;i < NUM_CONES; i++)
     //        conics[i].drawIntersectionsWithPlane(movingPlane, movingPlaneNormal);

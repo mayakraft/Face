@@ -1,12 +1,55 @@
 #include "CirclesScene.h"
-//void CirclesScene::setup(){
-//}
-//void CirclesScene::update(){
-//}
-//void CirclesScene::draw(){
-//}
-//void CirclesScene::reset(){
-//}
+
+void CirclesScene::ofCircleSlice(float x,float y, float radius, float lowAngle, float highAngle, bool closed, bool radians){
+//    if (!bSetupCircle) setupCircle();
+    
+    // use smoothness, if requested:
+//    if (bSmoothHinted && drawMode == OF_OUTLINE)
+//        startSmoothing();
+    
+    bool angleWrap = (lowAngle > highAngle); // are we doing the 0/360 wrap?
+    
+    if(!radians){
+        lowAngle = ofDegToRad(lowAngle);
+        highAngle = ofDegToRad(highAngle);
+    }
+    
+    int numCirclePts = 100;
+    float circlePtsScaled[numCirclePts*2];
+    int res = numCirclePts;
+    float angle = lowAngle;
+    float angleRange = ((!angleWrap)?(highAngle - lowAngle):(M_TWO_PI - lowAngle + highAngle));
+    float angleAdder = angleRange / (float)res;
+    int k = 0;
+    for (int i = 0; i < numCirclePts; i++){
+        circlePtsScaled[k] = x + cos(angle) * radius;
+        circlePtsScaled[k+1] = y - sin(angle) * radius;
+        angle += angleAdder;
+        k+=2;
+    }
+    
+    //initial points
+//    circlePtsScaled[0] = x;
+//    circlePtsScaled[1] = y;
+    k = 0;
+    // now all the points around the circumference
+    for (int i = 2; i < numCirclePts; i++){
+        circlePtsScaled[k] = circlePtsScaled[k];
+        circlePtsScaled[k+1] = circlePtsScaled[k+1];
+        k+=2;
+    }
+    
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(2, GL_FLOAT, 0, &circlePtsScaled[0]);
+//    glDrawArrays( (drawMode == OF_FILLED) ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, numCirclePts);
+    glDrawArrays( GL_LINE_STRIP, 0, numCirclePts);
+    
+    
+    // back to normal, if smoothness is on  
+//    if (bSmoothHinted && drawMode == OF_OUTLINE) endSmoothing();  
+}
+
+
 
 CircleFromThreePoints::CircleFromThreePoints( const ofPoint& inner,
                                              const ofPoint& mid,
@@ -24,6 +67,7 @@ void CircleFromThreePoints::init( const ofPoint& b, const ofPoint& c,
 {
     double b2 = b.lengthSquared();
     double c2 = c.lengthSquared();
+
     
     double oX(0), oY(0);
     bool solved = false;
@@ -232,6 +276,9 @@ void CirclesScene::draw(){
 
 //    ofBackground(0);
     ofClear(0);
+    
+//    ofScale(0.5, 0.5);
+    ofTranslate(-70, -100);
  
     ofSetColor(255,255,255,90);
     for (int i = 0; i < circles.size(); i++){
@@ -286,7 +333,25 @@ void CirclesScene::draw(){
     
     ofSetColor(255,255,255);
     tempLine.draw();
-//    
+    
+    
+    ofPoint slope = circles[0].pos - (faceLeftEye + ofPoint(70, 100));
+    float angle = atan2(-slope.y, slope.x);
+    
+    ofSetColor(255,255,255, 50);
+
+    ofDrawLine(faceLeftEye, faceLeftEye + slope * 800);
+
+    ofSetColor(255,255,255);
+
+    glLineStipple(1, 0x00FF);
+    glEnable(GL_LINE_STIPPLE);
+    
+    ofCircleSlice(circles[0].pos.x, circles[0].pos.y, circles[0].radius * .8, angle - .3, angle + .3, false, true);
+
+    glDisable(GL_LINE_STIPPLE);
+    
+//
 //    ofPoint ptEnd = tempLine.getVertices()[tempLine.getVertices().size()-1];
 //    
 //    ofCircle(ptEnd,  3);

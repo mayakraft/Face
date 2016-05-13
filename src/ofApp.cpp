@@ -16,6 +16,8 @@ void ofApp::setup(){
     faceCenterSmooth = ofPoint(ofGetWidth() * .5, ofGetHeight()*.5);
     
     windowCenter = ofPoint(ofGetWidth()*.5, ofGetHeight()*.5);
+    
+    ofSetFullscreen(true);
 }
 
 //--------------------------------------------------------------
@@ -116,16 +118,24 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+//    ofTranslate(ofGetScreenHeight() * .5, ofGetScreenWidth()*.5);
+//    ofRotate(90);
+//    ofTranslate(-ofGetScreenWidth() * .5, -ofGetScreenHeight()*.5);
+    ofPushMatrix();
+    
+    ofScale(-1, 1, 1);
+    ofTranslate(-ofGetScreenWidth() * .5, 0);
+    
     ofPushMatrix();
         ofMultMatrix(faceScaleMatrix);
     
         // MASKS
         ofBackground(0);
-        ofSetColor( 255 - maskEnergy * 100);//200);
+        ofSetColor( 255 - maskEnergy * 200);
 //        ofSetColor( 255, 255 );
         CLMFT.grabber.draw(0,0);
         ofSetColor(255);
-        CLMFT.draw();
+//        CLMFT.draw();
     
     
 //        ofSetColor(0, 255, 0, 100);
@@ -140,16 +150,18 @@ void ofApp::draw(){
     // SCENES
     sceneManager.draw();
     
+    ofPushMatrix();
+    
     
     // DEBUG TEXT
-    ofSetColor(255,255,255,255);
-    ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);
-    ofDrawBitmapString(ofToString(faceFound), 20, 40);
-    ofDrawBitmapString(ofToString(maskEnergy), 20, 60);
-//    ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 20, 60);
-    ofDrawBitmapString(ofToString(faceScaleSmooth), 20, 80);
-    ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
-    ofDrawBitmapString(ofToString(ofGetWidth()*.5), 20, 120);
+//    ofSetColor(255,255,255,255);
+//    ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);
+//    ofDrawBitmapString(ofToString(faceFound), 20, 40);
+//    ofDrawBitmapString(ofToString(maskEnergy), 20, 60);
+////    ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 20, 60);
+//    ofDrawBitmapString(ofToString(faceScaleSmooth), 20, 80);
+//    ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
+//    ofDrawBitmapString(ofToString(ofGetWidth()*.5), 20, 120);
 }
 
 
