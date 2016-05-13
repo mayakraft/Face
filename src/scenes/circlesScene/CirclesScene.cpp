@@ -335,80 +335,99 @@ void CirclesScene::draw(){
     tempLine.draw();
     
     
-    ofPoint slope = circles[0].pos - (faceLeftEye + ofPoint(70, 100));
-    float angle = atan2(-slope.y, slope.x);
-    
-    ofSetColor(255,255,255, 50);
+    ofSetColor(255,255,255, 100);
 
-    ofDrawLine(faceLeftEye, faceLeftEye + slope * 800);
-
-    ofSetColor(255,255,255);
-
+    ofPoint slope;
+    float angle;
+    for(int i = 0; i< circles.size(); i++){
+        slope = circles[i].pos - (faceLeftEye + ofPoint(70, 100));
+        angle = atan2(-slope.y, slope.x);
+        ofSetColor(255,255,255, 100);
+        ofDrawLine(faceLeftEye, faceLeftEye + slope * 800);
+        ofSetColor(255,255,255, 180);
+        ofCircleSlice(circles[i].pos.x, circles[i].pos.y, circles[i].radius * 1.1, angle - .3, angle + .3, false, true);
+        
+        slope = circles[i].pos - (faceRightEye + ofPoint(70, 100));
+        angle = atan2(-slope.y, slope.x);
+        ofSetColor(255,255,255, 100);
+        ofDrawLine(faceRightEye, faceRightEye + slope * 800);
+        ofSetColor(255,255,255, 180);
+        ofCircleSlice(circles[i].pos.x, circles[i].pos.y, circles[i].radius * 1.1, angle - .3, angle + .3, false, true);
+        
+        slope = circles[i].pos - (faceMouth + ofPoint(70, 100));
+        angle = atan2(-slope.y, slope.x);
+        ofSetColor(255,255,255, 100);
+        ofDrawLine(faceMouth, faceMouth + slope * 800);
+        ofSetColor(255,255,255, 180);
+        ofCircleSlice(circles[i].pos.x, circles[i].pos.y, circles[i].radius * 1.1, angle - .3, angle + .3, false, true);
+    }
     glLineStipple(1, 0x00FF);
     glEnable(GL_LINE_STIPPLE);
     
-    ofCircleSlice(circles[0].pos.x, circles[0].pos.y, circles[0].radius * .8, angle - .3, angle + .3, false, true);
+//
+    ofPoint ptEnd = tempLine.getVertices()[tempLine.getVertices().size()-1];
+    
+    ofDrawCircle(ptEnd,  3);
+    
+    
+    ofPoint ptBegin = tempLine.getVertices()[0];
+    
+    ofDrawCircle(ptBegin,  3);
+    
+    
+    ofPoint linePt = circles[0].pos + (circles[2].pos - circles[0].pos)*(0.5+0.5 *sin(ofGetElapsedTimef()));
+    ofDrawCircle(linePt,  3);
+    
+    
+    ofPoint midPt = (circles[1].pos + circles[0].pos) / 2.0;
+    ofDrawCircle(midPt,  3);
+    
+
+    smoothed = 0.7f * smoothed + 0.3 * linePt + (linePt-midPt)*1;
+    ofDrawLine(linePt, smoothed);
 
     glDisable(GL_LINE_STIPPLE);
+
     
 //
-//    ofPoint ptEnd = tempLine.getVertices()[tempLine.getVertices().size()-1];
 //    
-//    ofCircle(ptEnd,  3);
-//    
-//    
-//    ofPoint ptBegin = tempLine.getVertices()[0];
-//    
-//    ofCircle(ptBegin,  3);
-//    
-//    
-//    ofPoint linePt = circles[0].pos + (circles[2].pos - circles[0].pos)*(0.5+0.5 *sin(ofGetElapsedTimef()));
-//    ofCircle(linePt,  3);
-//    
-//    
-//    ofPoint midPt = (circles[1].pos + circles[0].pos) / 2.0;
-//    ofCircle(midPt,  3);
-//    
-//    
-//    smoothed = 0.7f * smoothed + 0.3 * linePt + (linePt-midPt)*1;
-//    ofLine(linePt, smoothed);
-//    
-//    
-//    CircleFromThreePoints CFT(ptEnd,smoothed, ptBegin);
-//    
-//    ofPoint center = CFT.center();
-//    float radius = 1.0 / CFT.curvature();
-//    
+    CircleFromThreePoints CFT(ptEnd,smoothed, ptBegin);
+//
+    ofPoint center = CFT.center();
+    float radius = 1.0 / CFT.curvature();
+//
 //    
 //    ofSetColor(255,255,255,90);
 //    ofCircle(center, radius);
 //    
 //    
-//    circle c;
-//    c.pos = center;
-//    c.radius =1.0 / CFT.curvature();
-//    traceAngleToAngle(c, ptEnd, ptBegin, tempLine,  false, "0");
-//    tempLine.setClosed(true);
-//    
-//    ofFill();
-//    ofSetColor(255, 255, 255, 120);
-//    
-//    
-//    
-//    //tempLine.draw();
-//    
+    circle c;
+    c.pos = center;
+    c.radius =1.0 / CFT.curvature();
+    traceAngleToAngle(c, ptEnd, ptBegin, tempLine,  false, "0");
+    tempLine.setClosed(true);
+
+    ofFill();
+    ofSetColor(255, 255, 255, 120);
+
+    
+//
+//
+//
+    tempLine.draw();
+
 //    ofBeginShape();
 //    for (int i = 0; i < tempLine.size(); i++){
 //        ofVertex(tempLine[i].x, tempLine[i].y);
 //    }
-//    
+//
 //    ofEndShape();
     
-   // tempLine.getVertices().erase(tempLine.getVertices().begin() + 200, tempLine.getVertices().end());
-    
-    //tempLine.setClosed(true);
-    //traceAngleToAngle(circles[1], circles[0].pos, circles[2].pos, tempLine, !ofGetMousePressed());
-    //traceAngleToAngle(circles[2], circles[1].pos, circles[0].pos, tempLine, ofGetMousePressed());
+//    tempLine.getVertices().erase(tempLine.getVertices().begin() + 200, tempLine.getVertices().end());
+//
+//    tempLine.setClosed(true);
+//    traceAngleToAngle(circles[1], circles[0].pos, circles[2].pos, tempLine, !ofGetMousePressed());
+//    traceAngleToAngle(circles[2], circles[1].pos, circles[0].pos, tempLine, ofGetMousePressed());
     
 //    traceAngleToAngle(circles[1], circles[0].pos, circles[2].pos, tempLine, true);
 //    

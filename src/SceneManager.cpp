@@ -34,10 +34,11 @@ void SceneManager::setup(){
 
  
     // add all possible scenes to the scenes array
-    scenes.push_back(new CirclesScene());
-//    scenes.push_back(new ArcsScene());
-    scenes.push_back(new ConicsScene());
+    //    scenes.push_back(new ArcsScene());
+
     scenes.push_back(new HypercubeScene());
+    scenes.push_back(new CirclesScene());
+    scenes.push_back(new ConicsScene());
 
     sceneFbo.allocate(VISUALS_WIDTH, VISUALS_HEIGHT, GL_RGBA, 4);
     lastSceneFbo.allocate(VISUALS_WIDTH, VISUALS_HEIGHT, GL_RGBA, 4);
@@ -194,7 +195,7 @@ void SceneManager::draw(){
     if(isSceneTransition){
         // draw previous scene fading out
         ofSetColor(255, masterFade * 255*(1-sceneTransitionTween) );
-        lastSceneFbo.draw(0, 0);
+        lastSceneFbo.draw(0, -100);
         // set current screen fade in color
         // nope. make scene appear
 //        ofSetColor(255, masterFade * 255*sceneTransitionTween);
@@ -202,7 +203,7 @@ void SceneManager::draw(){
     
     ofSetColor(255, 255 * masterFade);
     
-    sceneFbo.draw(0, 0);
+    sceneFbo.draw(0, -100);
     
     ofSetColor(255, 255);
 //    ofDrawSphere(faceCenter, 10);

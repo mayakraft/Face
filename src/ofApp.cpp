@@ -87,7 +87,7 @@ void ofApp::update(){
     // smooth face zooming scale
     float targetScale = 1.0;
     if(faceFound && faceRect.getHeight() > 0)
-        targetScale = ofGetHeight()*.7 / faceRect.getHeight();
+        targetScale = ofGetHeight()*.1 / faceRect.getHeight();
     faceScaleSmooth = faceScaleSmooth * .95 + targetScale * 0.05;
     
     // smooth face x y tracking
@@ -117,11 +117,20 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+   
+//    ofTranslate(ofGetMouseX() * 3, ofGetMouseY() * 3);
+
     
 //    ofTranslate(ofGetScreenHeight() * .5, ofGetScreenWidth()*.5);
 //    ofRotate(90);
 //    ofTranslate(-ofGetScreenWidth() * .5, -ofGetScreenHeight()*.5);
     ofPushMatrix();
+    ofTranslate(ofGetScreenWidth()*.55,
+                -ofGetScreenHeight()*2.1);
+    ofScale(4, 4, 4);
+    ofRotate(90);
+    ofTranslate(-CLMFT.grabber.getWidth()*.5,
+                -CLMFT.grabber.getHeight()*.5);
     
     ofScale(-1, 1, 1);
     ofTranslate(-ofGetScreenWidth() * .5, 0);
@@ -147,10 +156,21 @@ void ofApp::draw(){
 
     ofPopMatrix();
     
-    // SCENES
-    sceneManager.draw();
+    ofPopMatrix();
+
     
     ofPushMatrix();
+    // SCENES
+    ofScale(4.2, 4.2, 4.2);
+
+    ofTranslate(900, 0);
+    ofRotate(90);
+    
+//    ofTranslate(0, 900-800);
+    
+    sceneManager.draw();
+    
+    ofPopMatrix();
     
     
     // DEBUG TEXT

@@ -131,7 +131,7 @@ void HypercubeScene::draw(){
     ofClear(0);
 
     ofSetColor(255);
-    ofDrawBitmapString(ofToString(ofGetFrameRate()),20,20);
+//    ofDrawBitmapString(ofToString(ofGetFrameRate()),20,20);
     
     
     ofMultMatrix(faceScaleMatrix);
@@ -161,7 +161,7 @@ void HypercubeScene::draw(){
 
     ofPushMatrix();
 
-    for(int i = 0; i < numPoly; i++){
+    for(int i = 0; i < NUM_POLY; i++){
         ofPushMatrix();
         
         myShader.begin();

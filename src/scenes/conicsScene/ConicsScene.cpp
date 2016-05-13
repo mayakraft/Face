@@ -30,10 +30,24 @@ void ConicsScene::update(){
     
     float SPEED = .2;
     float diff = .3 * sinf(ofGetElapsedTimef()*.2);
-    for(int i = 0; i < numCones; i++){
-        conics[i].setPosition( center + ofVec3f(-50 + 50*sinf(ofGetElapsedTimef()), 50, 0) );
-        conics[i].setLookAt( center + ofVec3f(0, 0, 0) );
-
+    for(int i = 0 ;i < numCones; i++){
+        conics[i].setPosition( ofPoint(i * 10,
+                                       0,
+                                       200 + 190 * sin(ofGetElapsedTimef() + i/100.0)));
+//        conics[i].setHeight(300 + 250 * sinf(2*i+ofGetElapsedTimef()));
+//                conics[i].setRadius(ofGetMouseX() + (ofGetMouseX()*0.9) * ofSignedNoise(ofGetElapsedTimef()*.3, i/10.0));
+        
+        conics[i].setLookAt( ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0),
+                                     0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0),
+                                     0 + 300 * cos(ofGetElapsedTimef() + i/10.0)));
+    }
+    
+//    float SPEED = .2;
+//    float diff = .3 * sinf(ofGetElapsedTimef()*.2);
+//    for(int i = 0; i < numCones; i++){
+//        conics[i].setPosition( center + ofVec3f(-50 + 50*sinf(ofGetElapsedTimef()), 50, 0) );
+//        conics[i].setLookAt( center + ofVec3f(0, 0, 0) );
+//    }
 //        conicsL[i].setPosition( faceLeftEye + ofVec3f(50, 50, 200) );
 //        conicsL[i].setLookAt( faceLeftEye );
 //        conicsR[i].setPosition( faceRightEye + ofVec3f(-50, 50, 200) );
@@ -55,7 +69,7 @@ void ConicsScene::update(){
 //        conics[i].setLookAt( ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0), 0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0)));
 //        conics[i].setLookAt( ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0), 0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0)));
         
-    }
+//    }
     if(numCones < NUM_CONES){
         numConesFloat *= 1.2;
         numCones = numConesFloat;
