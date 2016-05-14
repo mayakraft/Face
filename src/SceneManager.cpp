@@ -27,7 +27,7 @@ SceneManager::~SceneManager(){
 void SceneManager::setup(){
     
     
-    SCENE_INTERVAL = 20;
+    SCENE_INTERVAL = 10;
     
     FADE_DURATION = 3.0;
     

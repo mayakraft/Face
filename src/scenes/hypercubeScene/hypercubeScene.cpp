@@ -170,7 +170,8 @@ void HypercubeScene::draw(){
         myShader.setUniform2f("ptToFadeFrom3", ofVec2f(hotSpots[2].x, ofGetHeight() - hotSpots[2].y));
         ofMultMatrix(polyMatrix[i]);
 
-        ofSetColor(255, brightnesses[i]);
+//        ofSetColor(255, brightnesses[i]);
+        ofSetColor(255, 50);
         polychron[i].drawWireframe();
         myShader.end();
         

@@ -1698,9 +1698,9 @@
 				924F22931C9A7F7100B772CD /* Miniball.hpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
-				D5838B8D1CDFDB5800AC2911 /* Scene */,
-				924306DC1BFC3F2A00D53428 /* clmFaceTracker.cpp */,
 				924306DD1BFC3F2A00D53428 /* clmFaceTracker.h */,
+				924306DC1BFC3F2A00D53428 /* clmFaceTracker.cpp */,
+				D5838B8D1CDFDB5800AC2911 /* Scene */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

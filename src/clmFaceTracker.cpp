@@ -27,18 +27,12 @@ Mat_<float> depth_image;
 //----------------------------------------------------------------
 void clmFaceTracker::setup(){
     
+    camWidth = 1920;
+    camHeight = 1080;
     
-    fbo.allocate(640,480);
+    fbo.allocate(camWidth, camHeight);
     
-//   
-//    player.load("face.mov");
-// 
-//    player.play();
-//       player.setSpeed(0.3);
-    
-    
-    grabber.setup(640, 480);
-
+    grabber.setup(camWidth, camHeight);
     
     vector < string > tempStrings;
     clm_parameters = new CLMTracker::CLMParameters();
@@ -178,7 +172,7 @@ void DrawBox(ofVideoGrabber grabber, Vec6d pose, Scalar color, int thickness, fl
         // Only draw the line if one of the points is inside the image
         if(p1.inside(image_rect) || p2.inside(image_rect))
         {
-            ofLine(p1.x, p1.y, p2.x, p2.y);
+            ofDrawLine(p1.x, p1.y, p2.x, p2.y);
             //cv::line(image, p1, p2, color, thickness);
         }
         
@@ -208,7 +202,7 @@ void Draw(const Mat_<double>& shape2D, Mat_<int>& visibilities)
                 //                cv::circle(img, featurePoint, 1, Scalar(0,0,255), thickness);
                 //                cv::circle(img, featurePoint, 1, Scalar(255,0,0), thickness_2);
                 
-                ofCircle(featurePoint.x, featurePoint.y, 3);
+                ofDrawCircle(featurePoint.x, featurePoint.y, 3);
                 
             }
         }
@@ -239,7 +233,7 @@ void Draw(const Mat_<double>& shape2D, Mat_<int>& visibilities)
                 ;
             //cv::line(img, featurePoint, nextFeaturePoint, Scalar(0, 0, 255), thickness_2);
             
-            ofCircle(featurePoint.x, featurePoint.y, 3);
+            ofDrawCircle(featurePoint.x, featurePoint.y, 3);
             
             //cv::circle(img, featurePoint, 1, Scalar(0,255,0), thickness);
             //cv::circle(img, featurePoint, 1, Scalar(0,0,255), thickness_2);
@@ -260,7 +254,7 @@ void Draw(const Mat_<double>& shape2D, Mat_<int>& visibilities)
             //cv::circle(img, featurePoint, 1, Scalar(0,255,0), thickness);
             //cv::circle(img, featurePoint, 1, Scalar(0,0,255), thickness_2);
             
-            ofCircle(featurePoint.x, featurePoint.y, 3);
+            ofDrawCircle(featurePoint.x, featurePoint.y, 3);
             
             
             int next_point = i + 1;
@@ -363,7 +357,4 @@ void clmFaceTracker::draw(){
     //ofViewport(0,0,ofGetWidth(), ofGetHeight());
     
 }
-
-
-
 

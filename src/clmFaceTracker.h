@@ -18,10 +18,9 @@ public:
     void update();
     void draw();
     
-    
-    //ofVideoPlayer player;
-    
     ofVideoGrabber grabber;
+    
+    int camWidth, camHeight;
     
     
     //ofNode myNode;
@@ -35,7 +34,6 @@ public:
     ofImage face;
     
     ofFbo fbo;
-    
-    
+        
 };
 //----------------------------------------------------------------
