@@ -5,6 +5,8 @@
 #include "clmFaceTracker.h"
 #include "SceneManager.h"
 
+#include "appConstants.h"
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -36,16 +38,5 @@ class ofApp : public ofBaseApp{
     
     // MASKS
     clmFaceTracker CLMFT;
-    float maskEnergy;
-    bool faceFound; // empirical based on feeling from mask energy
-    ofRectangle faceRect;
-    ofMatrix4x4 faceScaleMatrix;
-
-    ofPoint faceCenterSmooth;  // the smoothed position of the face as it tracks
-    float faceScaleSmooth;   //  same, but for zooming
-    
-    ofPoint faceMouth;
-    ofPoint faceRightEye;
-    ofPoint faceLeftEye;
-    ofPoint faceNose;
+    ofMatrix4x4 faceScaleMatrix;    
 };

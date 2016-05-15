@@ -544,7 +544,7 @@
 		D5838B881CDFDB5400AC2911 /* BaseScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseScene.h; sourceTree = "<group>"; };
 		D5838B891CDFDB5400AC2911 /* SceneManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneManager.cpp; sourceTree = "<group>"; };
 		D5838B8A1CDFDB5400AC2911 /* SceneManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneManager.h; sourceTree = "<group>"; };
-		D5838B8F1CDFDB7800AC2911 /* appConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = appConstants.h; sourceTree = "<group>"; };
+		D5838B8F1CDFDB7800AC2911 /* appConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = appConstants.h; path = scenes/appConstants.h; sourceTree = "<group>"; };
 		D5838B921CDFDB7800AC2911 /* particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particle.cpp; sourceTree = "<group>"; };
 		D5838B931CDFDB7800AC2911 /* particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
 		D5838B941CDFDB7800AC2911 /* spring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spring.cpp; sourceTree = "<group>"; };
@@ -1588,7 +1588,6 @@
 		D5838B8E1CDFDB7800AC2911 /* scenes */ = {
 			isa = PBXGroup;
 			children = (
-				D5838B8F1CDFDB7800AC2911 /* appConstants.h */,
 				D5838B901CDFDB7800AC2911 /* arcsScene */,
 				D5838B981CDFDB7800AC2911 /* circlesScene */,
 				D5838B9B1CDFDB7800AC2911 /* conicsScene */,
@@ -1693,6 +1692,7 @@
 			isa = PBXGroup;
 			children = (
 				924306CC1BFC3A8400D53428 /* CLM */,
+				D5838B8F1CDFDB7800AC2911 /* appConstants.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				D5838BB21CE0CB2D00AC2911 /* circlen.cpp */,
 				924F22931C9A7F7100B772CD /* Miniball.hpp */,

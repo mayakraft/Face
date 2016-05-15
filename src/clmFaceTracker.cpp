@@ -1,9 +1,10 @@
 
 #include "clmFaceTracker.h"
 
-
 #include "ofxCv.h"
 #include "CLM_core.h"
+
+#include "appConstants.h"
 
 #include <fstream>
 #include <sstream>
@@ -21,84 +22,6 @@ float fx = 500, fy = 500, cx = 0, cy = 0;
 bool use_camera_plane_pose;
 Mat_<uchar> grayscale_image;
 Mat_<float> depth_image;
-
-
-
-//----------------------------------------------------------------
-void clmFaceTracker::setup(){
-    
-    camWidth = 1920;
-    camHeight = 1080;
-    
-    fbo.allocate(camWidth, camHeight);
-    
-    grabber.setup(camWidth, camHeight);
-    
-    vector < string > tempStrings;
-    clm_parameters = new CLMTracker::CLMParameters();
-    system("pwd");
-    clm_model = new CLMTracker::CLM(clm_parameters->model_location);
-    //clm_parameters->validation_boundary = -0.2;
-    
-    
-    cout << clm_parameters->curr_face_detector << endl;
-    cout << clm_parameters->sigma << endl;
-    cout << clm_parameters->reinit_video_every << endl;
-
-    bDetectionSuccess = false;
-    
-    faceEnergy = 0;
-    //face.loadImage("face.png");
-}
-
-//----------------------------------------------------------------
-void clmFaceTracker::update(){
-    
-    
-    grabber.update();
-    if (grabber.isFrameNew()){
-        cvtColor( ofxCv::toCv(grabber), grayscale_image, CV_BGR2GRAY);
-        bool detection_success = CLMTracker::DetectLandmarksInVideo(grayscale_image, depth_image, *clm_model, *clm_parameters);
-        //cout << detection_success << " " << endl;
-        
-        
-        if (detection_success == true){
-            bDetectionSuccess = true;
-            
-            
-            //cout << pts.size()  << endl;
-        } else {
-            bDetectionSuccess = false;
-        }
-        
-        int n = clm_model->detected_landmarks.rows/2;
-        
-        pts.clear();
-        
-        for( int i = 0; i < (int)(clm_model->detected_landmarks.rows/2); ++i){
-            cv::Point featurePoint((int)clm_model->detected_landmarks.at<double>(i),
-                                   (int)clm_model->detected_landmarks.at<double>(i +n));
-            pts.push_back( ofPoint(featurePoint.x, featurePoint.y));
-        }
-        
-        
-        
-        detection_certainty = clm_model->detection_certainty;
-        
-        if (detection_certainty < -0.2){
-            faceEnergy = faceEnergy * 0.9 + 0.1 * 1.0;
-        } else {
-            faceEnergy = faceEnergy * 0.9 + 0.1 * 0.0;
-        }
-        //cout << clm_model->detection_certainty << " cert " << endl;
-        
-        
-
-    }
-    
-    
-}
-
 
 void DrawBox(ofVideoGrabber grabber, Vec6d pose, Scalar color, int thickness, float fx, float fy, float cx, float cy)
 {
@@ -286,75 +209,196 @@ ofQuaternion eulerToQuat(const ofVec3f & rotationEuler) {
 }
 
 
+
+
+
+
+
 //----------------------------------------------------------------
-void clmFaceTracker::draw(){
+void clmFaceTracker::setup(){
     
-    fbo.begin();
-    grabber.draw(0,0);
-   
-    ofCamera cam;
-    cam.setupPerspective();
+    camWidth = RESOLUTION_CAMERA_WIDTH;
+    camHeight = RESOLUTION_CAMERA_HEIGHT;
     
-    int idx = clm_model->patch_experts.GetViewIdx(clm_model->params_global, 0);
+    fbo.allocate(RESOLUTION_SCREEN_WIDTH, RESOLUTION_SCREEN_HEIGHT);
     
-    // Because we only draw visible points, need to find which points patch experts consider visible at a certain orientation
-   Draw(clm_model->detected_landmarks, clm_model->patch_experts.visibilities[0][idx]);
+    grabber.setup(camWidth, camHeight);
+    videoRotatedPixels.allocate(camHeight, camWidth, OF_PIXELS_RGB);
+
+    vector < string > tempStrings;
+    clm_parameters = new CLMTracker::CLMParameters();
+    system("pwd");
+    clm_model = new CLMTracker::CLM(clm_parameters->model_location);
+    //clm_parameters->validation_boundary = -0.2;
     
+    cout << clm_parameters->curr_face_detector << endl;
+    cout << clm_parameters->sigma << endl;
+    cout << clm_parameters->reinit_video_every << endl;
+
+    bDetectionSuccess = false;
     
-   
+    faceScaleSmooth = 1.0;
+    faceCenterSmooth = ofPoint(camWidth * .5, camHeight*.5);
+
+    faceEnergy = 0;
+    faceFound = false;
     
-    
-    Vec6d pose_estimate_to_draw = CLMTracker::GetCorrectedPoseCameraPlane(*clm_model, cam.getPosition().z, cam.getPosition().z, grabber.getWidth()/2, grabber.getHeight()/2);
-    
-//    
-//    ofPushMatrix();
-//    
-//    ofNoFill();
-//    ofTranslate(grabber.getWidth()/2, grabber.getHeight()/2);
-//    
-//    //cam.begin();
-//    ofDrawBox(pose_estimate_to_draw[0], pose_estimate_to_draw[1], (cam.getPosition().z - pose_estimate_to_draw[2]), 150,150,150);
-//    //cam.end();
-//    
-//    ofTranslate(pose_estimate_to_draw[0], pose_estimate_to_draw[1], (cam.getPosition().z - pose_estimate_to_draw[2]));
-//    
-//    ofQuaternion q = eulerToQuat( ofVec3f(   pose_estimate_to_draw[3], pose_estimate_to_draw[4],  pose_estimate_to_draw[5] ));
-//    //    cout << mouseX/5.0 << endl;
-////    ofRotate(1, pose_estimate_to_draw[3] * RAD_TO_DEG, pose_estimate_to_draw[4] * RAD_TO_DEG, pose_estimate_to_draw[5] * RAD_TO_DEG);
-//    
-//    ofScale(1,1,-1); //(mouseX/5.0);
-//    ofMultMatrix(q);
-////
-////    
-////    
-////    ofDrawBox(0,0,0, 150,150,50);
-//    
-//    
-////    ofEnableBlendMode(OF_BLENDMODE_ADD);
-////    ofSetRectMode(OF_RECTMODE_CENTER);
-////    face.draw(0,0,-50, 190,190);
-////    ofSetRectMode(OF_RECTMODE_CORNER);
-////    ofEnableAlphaBlending();
-////    
-//    
-//    //cout << pose_estimate_to_draw[2] << " " << cam.getPosition().z <<  endl;
-//    
-//    
-//    
-//    ofPopMatrix();
-    
-//    for (int i = 0; i < pts.size(); i++){
-//        if (clm_model->patch_experts.visibilities[0][idx][i]){
-//            ofDrawCircle(pts[i].x, pts[i].y, 3);
-//        }
-//    }
-    
-    ofDrawBitmapStringHighlight("certainty: " + ofToString(detection_certainty), 20,40);
-    ofDrawBitmapStringHighlight("faceEnergy: " + ofToString(faceEnergy), 20,60);
-    
-    fbo.end();
-    fbo.draw(0,0);
-    //ofViewport(0,0,ofGetWidth(), ofGetHeight());
+//    center = ofPoint(camWidth * .5, camHeight * .5);
     
 }
+
+//----------------------------------------------------------------
+void clmFaceTracker::update(){
+    
+    grabber.update();
+    if (grabber.isFrameNew()){
+
+        ofPixels pixels = grabber.getPixels();
+        // rotate pixels, switch widths and heights
+        pixels.rotate90To(videoRotatedPixels, SCREEN_ROTATION);
+//        videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_HEIGHT, RESOLUTION_FACE_DETECTOR_WIDTH);
+        //        videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_WIDTH, RESOLUTION_FACE_DETECTOR_HEIGHT);
+        // also mirror it
+//        videoRotatedPixels.mirror(1, 0);
+        
+        cvtColor( ofxCv::toCv(videoRotatedPixels), grayscale_image, CV_BGR2GRAY);
+        bool detection_success = CLMTracker::DetectLandmarksInVideo(grayscale_image, depth_image, *clm_model, *clm_parameters);
+        
+        if (detection_success == true){
+            bDetectionSuccess = true;
+            //cout << pts.size()  << endl;
+        } else {
+            bDetectionSuccess = false;
+        }
+        
+        int n = clm_model->detected_landmarks.rows/2;
+        
+        pts.clear();
+        
+        for( int i = 0; i < (int)(clm_model->detected_landmarks.rows/2); ++i){
+            cv::Point featurePoint((int)clm_model->detected_landmarks.at<double>(i),
+                                   (int)clm_model->detected_landmarks.at<double>(i +n));
+            pts.push_back( ofPoint(featurePoint.x, featurePoint.y));
+        }
+        
+        detection_certainty = clm_model->detection_certainty;
+        
+//        if (detection_certainty < 0.2){
+        if (detection_certainty < -0.2){
+            faceEnergy = faceEnergy * 0.9 + 0.1 * 1.0;
+        } else {
+            faceEnergy = faceEnergy * 0.9 + 0.1 * 0.0;
+        }
+        //cout << clm_model->detection_certainty << " cert " << endl;
+        
+        if(faceEnergy > 0.1)
+            faceFound = true;
+        else
+            faceFound = false;
+
+        
+        ofPoint avg;
+        if (pts.size() > 0){
+            faceMouth.set(0,0);
+            faceRightEye.set(0,0);
+            faceLeftEye.set(0,0);
+            faceNose.set(0, 0);
+            
+            for (int i = 0; i < pts.size(); i++){
+                if (i >= 36 && i <= 41){
+                    faceLeftEye += pts[i];
+                }
+                else if (i >= 42 && i <= 47){
+                    faceRightEye += pts[i];
+                }
+                else if (i >= 48 && i <= 60){
+                    faceMouth += pts[i];
+                }
+                else if (i >= 29 && i <= 35){
+                    faceNose += pts[i];
+                }
+                avg += pts[i];
+                //ofDrawBitmapString(ofToString(i), pts[i].x, pts[i].y);
+            }
+            faceLeftEye /= 6.0;
+            faceRightEye /= 6.0;
+            faceMouth /= 13.0;
+            faceNose /= 7.0;
+            
+            avg /= (float) pts.size();
+            //ofCircle(pts[ mouseX % 68 ], 2);
+            //        ofPoint diff = pts[0] - avg;
+        }
+        
+        
+        
+        
+        // get face bouding box
+        // to be replaced by smallest enclosing circle
+        ofPolyline poly;
+        for(int i = 0; i < pts.size(); i++)
+            poly.addVertex(pts[i]);
+        faceRect = poly.getBoundingBox();
+                
+        // smooth face zooming scale
+        float targetScale = 1.0;
+        if(faceFound && faceRect.getHeight() > 0)
+            targetScale = ofGetHeight()*.1 / faceRect.getHeight();
+        faceScaleSmooth = faceScaleSmooth * .95 + targetScale * 0.05;
+        
+        // smooth face x y tracking
+        ofPoint faceNoseCenter = ofPoint(0, 0);
+        if(faceFound)
+            faceNoseCenter = faceNose;//-(faceNose - center);
+        faceCenterSmooth = faceCenterSmooth * .95 + faceNoseCenter * .05;
+    }
+}
+
+void clmFaceTracker::drawCameraFeed(){
+    ofPushMatrix();
+    grabber.draw(0, 0);
+    ofPopMatrix();
+}
+
+//----------------------------------------------------------------
+void clmFaceTracker::draw(){
+    ofPushMatrix();
+//    ofTranslate(RESOLUTION_SCREEN_HEIGHT, RESOLUTION_SCREEN_WIDTH);
+//    ofRotate(90);
+//    ofTranslate(RESOLUTION_CAMERA_HEIGHT, -RESOLUTION_CAMERA_WIDTH);
+    float scaleW = 1.0;//RESOLUTION_SCREEN_WIDTH / (float) RESOLUTION_FACE_DETECTOR_WIDTH;
+    float scaleH = 1.0;//RESOLUTION_SCREEN_HEIGHT / (float) RESOLUTION_FACE_DETECTOR_HEIGHT;
+//    ofScale(-(scaleW), (scaleH));
+    ofFill();
+    ofSetColor(0, 255, 128, 100);
+    ofDrawRectangle(0, 0, RESOLUTION_CAMERA_HEIGHT, RESOLUTION_CAMERA_WIDTH);
+    ofSetColor(255, 255);
+    ofNoFill();
+    int idx = clm_model->patch_experts.GetViewIdx(clm_model->params_global, 0);
+    Draw(clm_model->detected_landmarks, clm_model->patch_experts.visibilities[0][idx]);
+    ofPopMatrix();
+}
+//void clmFaceTracker::draw(){
+//
+//    fbo.begin();
+//    grabber.draw(0,0);
+//   
+//    ofCamera cam;
+//    cam.setupPerspective();
+//
+//    int idx = clm_model->patch_experts.GetViewIdx(clm_model->params_global, 0);
+//    
+//     Because we only draw visible points, need to find which points patch experts consider visible at a certain orientation
+//    Draw(clm_model->detected_landmarks, clm_model->patch_experts.visibilities[0][idx]);
+    
+//    Vec6d pose_estimate_to_draw = CLMTracker::GetCorrectedPoseCameraPlane(*clm_model, cam.getPosition().z, cam.getPosition().z, grabber.getWidth()/2, grabber.getHeight()/2);
+//    
+//    ofDrawBitmapStringHighlight("certainty: " + ofToString(detection_certainty), 20,40);
+//    ofDrawBitmapStringHighlight("faceEnergy: " + ofToString(faceEnergy), 20,60);
+//    
+//    fbo.end();
+//    fbo.draw(0,0);
+//    
+//}
+
 

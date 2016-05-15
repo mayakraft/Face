@@ -7,15 +7,11 @@ void ofApp::setup(){
     
     // MASKS
     CLMFT.setup();
-    ofSetWindowShape(CLMFT.grabber.getWidth(), CLMFT.grabber.getHeight());
+//    ofSetWindowShape(CLMFT.grabber.getWidth(), CLMFT.grabber.getHeight());
     ofSetFrameRate(60);
     ofSetVerticalSync(false);
-    maskEnergy = 0;
-    
-    faceScaleSmooth = 1.0;
-    faceCenterSmooth = ofPoint(ofGetWidth() * .5, ofGetHeight()*.5);
-    
-    windowCenter = ofPoint(ofGetWidth()*.5, ofGetHeight()*.5);
+        
+    windowCenter = ofPoint(ofGetScreenWidth()*.5, ofGetScreenHeight()*.5);
     
     ofSetFullscreen(true);
 }
@@ -24,153 +20,77 @@ void ofApp::setup(){
 void ofApp::update(){
     // SCENES
     sceneManager.update();
-   
-    // MASKS
-    ofPoint avg;
-    if (CLMFT.pts.size() > 0){
-        faceMouth.set(0,0);
-        faceRightEye.set(0,0);
-        faceLeftEye.set(0,0);
-        faceNose.set(0, 0);
-        
-        for (int i = 0; i < CLMFT.pts.size(); i++){
-            if (i >= 36 && i <= 41){
-                faceLeftEye += CLMFT.pts[i];
-            }
-            else if (i >= 42 && i <= 47){
-                faceRightEye += CLMFT.pts[i];
-            }
-            else if (i >= 48 && i <= 60){
-                faceMouth += CLMFT.pts[i];
-            }
-            else if (i >= 29 && i <= 35){
-                faceNose += CLMFT.pts[i];
-            }
-            avg += CLMFT.pts[i];
-            //ofDrawBitmapString(ofToString(i), CLMFT.pts[i].x, CLMFT.pts[i].y);
-        }
-        faceLeftEye /= 6.0;
-        faceRightEye /= 6.0;
-        faceMouth /= 13.0;
-        faceNose /= 7.0;
-        
-        avg /= (float) CLMFT.pts.size();
-        //ofCircle(CLMFT.pts[ mouseX % 68 ], 2);
-//        ofPoint diff = CLMFT.pts[0] - avg;
-    }
-    
     CLMFT.update();
-    
-    if (CLMFT.detection_certainty < 0.2){
-        maskEnergy = 0.9f * maskEnergy + 0.1 * 1.0;
-    } else {
-        maskEnergy = 0.9f * maskEnergy + 0.1 * 0.0;
-    }
-    
-    if(maskEnergy > 0.1)
-        faceFound = true;
-    else
-        faceFound = false;
-    
-    
-    
-    // get face bouding box
-    // to be replaced by smallest enclosing circle
-    ofPolyline poly;
-    for(int i = 0; i < CLMFT.pts.size(); i++)
-        poly.addVertex(CLMFT.pts[i]);
-    faceRect = poly.getBoundingBox();
-    
-    
-    // build face rotation/scale matrix to put the face in the center of the screen
-    
-    // smooth face zooming scale
-    float targetScale = 1.0;
-    if(faceFound && faceRect.getHeight() > 0)
-        targetScale = ofGetHeight()*.1 / faceRect.getHeight();
-    faceScaleSmooth = faceScaleSmooth * .95 + targetScale * 0.05;
-    
-    // smooth face x y tracking
-    ofPoint faceNoseCenter = ofPoint(0, 0);
-    if(faceFound)
-        faceNoseCenter = -(faceNose - windowCenter);
-    faceCenterSmooth = faceCenterSmooth * .95 + faceNoseCenter * .05;
 
+    // MASKS
+
+    // build face rotation/scale matrix to put the face in the center of the screen
     faceScaleMatrix.makeIdentityMatrix();
     faceScaleMatrix.translate(-windowCenter);
-    faceScaleMatrix.scale(faceScaleSmooth, faceScaleSmooth, faceScaleSmooth);
+    faceScaleMatrix.scale(CLMFT.faceScaleSmooth, CLMFT.faceScaleSmooth, CLMFT.faceScaleSmooth);
     faceScaleMatrix.translate(windowCenter);
-    faceScaleMatrix.translate( faceCenterSmooth );
+    faceScaleMatrix.translate( CLMFT.faceCenterSmooth );
     
 
     // deliver info to the scene manager
-    sceneManager.faceFound = faceFound;
+    sceneManager.faceFound = CLMFT.faceFound;
     sceneManager.faceScaleMatrix = faceScaleMatrix;
-    sceneManager.faceCenterSmooth = faceCenterSmooth;
-    sceneManager.faceScaleSmooth = faceScaleSmooth;
+    sceneManager.faceCenterSmooth = CLMFT.faceCenterSmooth;
+    sceneManager.faceScaleSmooth = CLMFT.faceScaleSmooth;
     // face parts
-    sceneManager.faceNose = faceNose;// - center;
-    sceneManager.faceMouth = faceMouth;// - center;
-    sceneManager.faceLeftEye = faceLeftEye;// - center;
-    sceneManager.faceRightEye = faceRightEye;// - center;
+    sceneManager.faceNose = CLMFT.faceNose;// - center;
+    sceneManager.faceMouth = CLMFT.faceMouth;// - center;
+    sceneManager.faceLeftEye = CLMFT.faceLeftEye;// - center;
+    sceneManager.faceRightEye = CLMFT.faceRightEye;// - center;
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-   
-//    ofTranslate(ofGetMouseX() * 3, ofGetMouseY() * 3);
+
+    ofPushMatrix();
+    // this sequence happens in reverse, bottom -> up
+    ofPoint center = ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
+    ofTranslate(center);
+    // scale as needed
+    ofScale(ofGetMouseX() / (float)ofGetWidth(), ofGetMouseX() / (float)ofGetWidth());
+    // rotate to display sideways
+    ofRotate(90 * SCREEN_ROTATION);
+    // move center of fbo to 0, 0
+//    ofTranslate(-ofGetScreenWidth()*.5, -ofGetScreenHeight()*.5);
+//    ofTranslate(-CLMFT.grabber.getWidth()*.5, -CLMFT.grabber.getHeight()*.5);
+    // flip across the x=y diagonal line
+//    ofScale(-1, -1, 1);
+    // draw it
+    CLMFT.drawCameraFeed();
+    CLMFT.draw();
+//    edgeImage.draw(0, 0, fbo.getWidth(), fbo.getHeight());
+    ofNoFill();
+    ofSetColor(92, 168, 255);
+    ofDrawRectangle(0, 0, ofGetScreenWidth(), ofGetScreenHeight());
+    ofSetColor(255);
+    ofPopMatrix();
 
     
-//    ofTranslate(ofGetScreenHeight() * .5, ofGetScreenWidth()*.5);
-//    ofRotate(90);
-//    ofTranslate(-ofGetScreenWidth() * .5, -ofGetScreenHeight()*.5);
-    ofPushMatrix();
-    ofTranslate(ofGetScreenWidth()*.55,
-                -ofGetScreenHeight()*2.1);
-    ofScale(4, 4, 4);
-    ofRotate(90);
-    ofTranslate(-CLMFT.grabber.getWidth()*.5,
-                -CLMFT.grabber.getHeight()*.5);
-    
-    ofScale(-1, 1, 1);
-    ofTranslate(-ofGetScreenWidth() * .5, 0);
-    
-    ofPushMatrix();
-        ofMultMatrix(faceScaleMatrix);
-    
-        // MASKS
-        ofBackground(0);
-        ofSetColor( 255 - maskEnergy * 200);
+//    ofPushMatrix();
+////        ofMultMatrix(faceScaleMatrix);
+//        // MASKS
+//        ofBackground(0);
+//        ofSetColor( 255 - CLMFT.faceEnergy * 200);
 //        ofSetColor( 255, 255 );
-        CLMFT.grabber.draw(0,0);
-        ofSetColor(255);
+//        CLMFT.grabber.draw(0,0);
+//        ofSetColor(255);
 //        CLMFT.draw();
-    
-    
-//        ofSetColor(0, 255, 0, 100);
-//        ofDrawSphere(sceneManager.faceNose, 10);
-//        ofDrawSphere(sceneManager.faceMouth, 10);
-//        ofDrawSphere(sceneManager.faceLeftEye, 10);
-//        ofDrawSphere(sceneManager.faceRightEye, 10);
-
-
-    ofPopMatrix();
-    
-    ofPopMatrix();
+//    ofPopMatrix();
 
     
-    ofPushMatrix();
-    // SCENES
-    ofScale(4.2, 4.2, 4.2);
-
-    ofTranslate(900, 0);
-    ofRotate(90);
-    
+//    ofPushMatrix();
+//    // SCENES
+//    ofScale(4.2, 4.2, 4.2);
+//    ofTranslate(900, 0);
+//    ofRotate(90);
 //    ofTranslate(0, 900-800);
-    
-    sceneManager.draw();
-    
-    ofPopMatrix();
+//    sceneManager.draw();
+//    ofPopMatrix();
     
     
     // DEBUG TEXT
