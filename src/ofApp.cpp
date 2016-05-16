@@ -19,8 +19,8 @@ void ofApp::setup(){
     gui.add(showFace.setup("show face", true));
     gui.add(enableMasterScale.setup("scale window", false));
     gui.add(masterScale.setup("  - scale", 1, .1, 2));
-    gui.add(screenRotation.setup("flip rotation", true));
-    screenRotation.addListener(this, &ofApp::screenRotationListener);
+    gui.add(cameraRotationToggle.setup("flip camera", true));
+    cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
     gui.setPosition(windowCenter);
 
     edgeImage.load("faded-edge.png");
@@ -30,6 +30,9 @@ void ofApp::setup(){
     float sh = (RESOLUTION_SCREEN_HEIGHT/(float)RESOLUTION_CAMERA_HEIGHT);
     if(sw > sh)   minCameraFitScale = sw;
     else          minCameraFitScale = sh;
+    
+    facePointsFrameScale = ofPoint(RESOLUTION_CAMERA_HEIGHT * minCameraFitScale,
+                                   RESOLUTION_CAMERA_WIDTH * minCameraFitScale);
 }
 
 //--------------------------------------------------------------
@@ -70,6 +73,7 @@ void ofApp::draw(){
     // scale as needed
     if(enableMasterScale)
         ofScale(masterScale, masterScale);
+    
     // rotate to display sideways
 //    ofRotate(90 * SCREEN_ROTATION);
     // move center of fbo to 0, 0
@@ -82,12 +86,23 @@ void ofApp::draw(){
     // scale camera to fit inside of screen
     ofScale(minCameraFitScale, minCameraFitScale);
     CLMFT.drawCameraFeed();
-    edgeImage.draw(-RESOLUTION_CAMERA_WIDTH * .5, -RESOLUTION_CAMERA_HEIGHT * .5, RESOLUTION_CAMERA_WIDTH, RESOLUTION_CAMERA_HEIGHT);
+    edgeImage.draw(-RESOLUTION_CAMERA_WIDTH * .5,
+                   -RESOLUTION_CAMERA_HEIGHT * .5,
+                   RESOLUTION_CAMERA_WIDTH,
+                   RESOLUTION_CAMERA_HEIGHT);
     if(showFace)
         CLMFT.drawFacePoints();
     ofPopMatrix();
-
     
+    ofPushMatrix();
+    ofRotate(-90 * CLMFT.cameraRotation);
+    ofSetColor(0, 128, 255);
+    ofDrawCircle(CLMFT.faceLeftEye * facePointsFrameScale, 10);
+    ofDrawCircle(CLMFT.faceRightEye * facePointsFrameScale, 10);
+    ofDrawCircle(CLMFT.faceNose * facePointsFrameScale, 10);
+    ofDrawCircle(CLMFT.faceMouth * facePointsFrameScale, 10);
+    ofPopMatrix();
+
     ofNoFill();
     ofSetLineWidth(3);
     ofSetColor(0, 255);
@@ -147,8 +162,11 @@ ofVec3f ofApp::worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform) 
     return ScreenXYZ;
 }
 
-void ofApp::screenRotationListener(bool &screenRotation){
-    printf("%d\n", screenRotation);
+void ofApp::cameraRotationToggleListener(bool &cameraRotationToggle){
+    if(cameraRotationToggle == 1)
+        CLMFT.cameraRotation = 1;
+    else if(cameraRotationToggle == 0)
+        CLMFT.cameraRotation = -1;
 }
 
 //--------------------------------------------------------------

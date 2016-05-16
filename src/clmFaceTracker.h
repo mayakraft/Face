@@ -26,6 +26,9 @@ public:
     ofPoint faceLeftEye;
     ofPoint faceNose;
     
+    // (1) or (-1) which means 90 or -90 degrees
+    // 0 means no rotation, horizontally wide aspect
+    int cameraRotation = -1;
     
     // smoothed face data
     ofPoint faceCenterSmooth;  // the smoothed position of the face as it tracks

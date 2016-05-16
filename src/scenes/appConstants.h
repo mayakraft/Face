@@ -5,8 +5,9 @@
 // and also assuming our screen is square :)
 
 // (1) or (-1)
-#define SCREEN_ROTATION (-1)
+//#define SCREEN_ROTATION (-1)
 //int SCREEN_ROTATION = -1;
+//#define CAMERA_ROTATION (-1)
 
 // to make it easy, everything here inputted as width = longer, height = shorter
 // rotations handled in code

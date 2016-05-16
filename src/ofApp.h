@@ -32,14 +32,15 @@ class ofApp : public ofBaseApp{
     // press spacebar to bring up the GUI
     bool showGUI;
     ofxPanel gui;
-    ofxToggle screenRotation;
-    void screenRotationListener(bool & screenRotation);
+    ofxToggle cameraRotationToggle;
+    void cameraRotationToggleListener(bool & cameraRotationToggle);
     ofxToggle showFace;
     ofxToggle enableMasterScale;
     ofxFloatSlider masterScale;
     
     // scales and transformations
     float minCameraFitScale;
+    ofPoint facePointsFrameScale;
     
     ofVec3f worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform);
 

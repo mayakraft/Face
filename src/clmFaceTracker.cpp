@@ -255,7 +255,7 @@ void clmFaceTracker::update(){
 
         ofPixels pixels = grabber.getPixels();
         // rotate pixels, switch widths and heights
-        pixels.rotate90To(videoRotatedPixels, SCREEN_ROTATION);
+        pixels.rotate90To(videoRotatedPixels, cameraRotation);
         videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_HEIGHT, RESOLUTION_FACE_DETECTOR_WIDTH);
         //        videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_WIDTH, RESOLUTION_FACE_DETECTOR_HEIGHT);
         // also mirror it
@@ -330,6 +330,17 @@ void clmFaceTracker::update(){
             //        ofPoint diff = pts[0] - avg;
         }
         
+        ofPoint detFrameCenter = ofPoint(RESOLUTION_FACE_DETECTOR_HEIGHT * .5, RESOLUTION_FACE_DETECTOR_WIDTH * .5);
+        faceLeftEye -= detFrameCenter;
+        faceRightEye -= detFrameCenter;
+        faceMouth -= detFrameCenter;
+        faceNose -= detFrameCenter;
+        
+        ofPoint detFrame = ofPoint(RESOLUTION_FACE_DETECTOR_HEIGHT, RESOLUTION_FACE_DETECTOR_WIDTH);
+        faceLeftEye /= detFrame;
+        faceRightEye /= detFrame;
+        faceMouth /= detFrame;
+        faceNose /= detFrame;
         
         
         
@@ -370,9 +381,10 @@ void clmFaceTracker::drawFacePoints(){
     ofScale( (RESOLUTION_CAMERA_WIDTH/(float)RESOLUTION_FACE_DETECTOR_WIDTH),
              (RESOLUTION_CAMERA_HEIGHT/(float)RESOLUTION_FACE_DETECTOR_HEIGHT));
     // reverse the rotation that happened to the openCV camera pixels
-    ofRotate(-90 * SCREEN_ROTATION);
+    ofRotate(-90 * cameraRotation);
 //    ofTranslate(-RESOLUTION_CAMERA_HEIGHT * .5, -RESOLUTION_CAMERA_WIDTH * .5);
-    ofTranslate(-RESOLUTION_FACE_DETECTOR_HEIGHT * .5, -RESOLUTION_FACE_DETECTOR_WIDTH * .5);
+    ofTranslate(-RESOLUTION_FACE_DETECTOR_HEIGHT * .5,
+                -RESOLUTION_FACE_DETECTOR_WIDTH * .5);
     
     // draw an optional filled boundary plane
     ofFill();
