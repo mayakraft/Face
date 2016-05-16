@@ -15,10 +15,12 @@ void ofApp::setup(){
     
     ofSetFullscreen(true);
     
-    gui.setup(); // most of the time you don't need a name
+    gui.setup();
     gui.add(showFace.setup("show face", true));
     gui.add(enableMasterScale.setup("scale window", false));
     gui.add(masterScale.setup("  - scale", 1, .1, 2));
+    gui.add(screenRotation.setup("flip rotation", true));
+    screenRotation.addListener(this, &ofApp::screenRotationListener);
     gui.setPosition(windowCenter);
 
     edgeImage.load("faded-edge.png");
@@ -143,6 +145,10 @@ ofVec3f ofApp::worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform) 
     ScreenXYZ.y = (1.0f - CameraXYZ.y) / 2.0f * viewport.height + viewport.y;
     ScreenXYZ.z = CameraXYZ.z;
     return ScreenXYZ;
+}
+
+void ofApp::screenRotationListener(bool &screenRotation){
+    printf("%d\n", screenRotation);
 }
 
 //--------------------------------------------------------------

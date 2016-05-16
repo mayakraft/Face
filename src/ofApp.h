@@ -28,8 +28,12 @@ class ofApp : public ofBaseApp{
     
     ofPoint windowCenter;
 
+    
+    // press spacebar to bring up the GUI
     bool showGUI;
     ofxPanel gui;
+    ofxToggle screenRotation;
+    void screenRotationListener(bool & screenRotation);
     ofxToggle showFace;
     ofxToggle enableMasterScale;
     ofxFloatSlider masterScale;

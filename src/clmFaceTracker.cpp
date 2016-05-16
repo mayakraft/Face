@@ -259,7 +259,7 @@ void clmFaceTracker::update(){
         videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_HEIGHT, RESOLUTION_FACE_DETECTOR_WIDTH);
         //        videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_WIDTH, RESOLUTION_FACE_DETECTOR_HEIGHT);
         // also mirror it
-//        videoRotatedPixels.mirror(1, 0);
+        videoRotatedPixels.mirror(0, 1);
         
         cvtColor( ofxCv::toCv(videoRotatedPixels), grayscale_image, CV_BGR2GRAY);
         bool detection_success = CLMTracker::DetectLandmarksInVideo(grayscale_image, depth_image, *clm_model, *clm_parameters);
@@ -356,6 +356,7 @@ void clmFaceTracker::update(){
 
 void clmFaceTracker::drawCameraFeed(){
     ofPushMatrix();
+    ofScale(1, -1);
     ofTranslate(-grabber.getWidth()*.5,
                 -grabber.getHeight()*.5);
     grabber.draw(0, 0);
