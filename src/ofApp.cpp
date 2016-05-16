@@ -14,6 +14,20 @@ void ofApp::setup(){
     windowCenter = ofPoint(ofGetScreenWidth()*.5, ofGetScreenHeight()*.5);
     
     ofSetFullscreen(true);
+    
+    gui.setup(); // most of the time you don't need a name
+    gui.add(showFace.setup("show face", true));
+    gui.add(enableMasterScale.setup("scale window", false));
+    gui.add(masterScale.setup("  - scale", 1, .1, 2));
+    gui.setPosition(windowCenter);
+
+    edgeImage.load("faded-edge.png");
+    
+    // resolution fitting math
+    float sw = (RESOLUTION_SCREEN_WIDTH/(float)RESOLUTION_CAMERA_WIDTH);
+    float sh = (RESOLUTION_SCREEN_HEIGHT/(float)RESOLUTION_CAMERA_HEIGHT);
+    if(sw > sh)   minCameraFitScale = sw;
+    else          minCameraFitScale = sh;
 }
 
 //--------------------------------------------------------------
@@ -52,23 +66,37 @@ void ofApp::draw(){
     ofPoint center = ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
     ofTranslate(center);
     // scale as needed
-    ofScale(ofGetMouseX() / (float)ofGetWidth(), ofGetMouseX() / (float)ofGetWidth());
+    if(enableMasterScale)
+        ofScale(masterScale, masterScale);
     // rotate to display sideways
-    ofRotate(90 * SCREEN_ROTATION);
+//    ofRotate(90 * SCREEN_ROTATION);
     // move center of fbo to 0, 0
 //    ofTranslate(-ofGetScreenWidth()*.5, -ofGetScreenHeight()*.5);
 //    ofTranslate(-CLMFT.grabber.getWidth()*.5, -CLMFT.grabber.getHeight()*.5);
     // flip across the x=y diagonal line
 //    ofScale(-1, -1, 1);
     // draw it
+    ofPushMatrix();
+    // scale camera to fit inside of screen
+    ofScale(minCameraFitScale, minCameraFitScale);
     CLMFT.drawCameraFeed();
-    CLMFT.drawFacePoints();
-//    edgeImage.draw(0, 0, fbo.getWidth(), fbo.getHeight());
-    ofNoFill();
-    ofSetColor(92, 168, 255);
-    ofDrawRectangle(0, 0, ofGetScreenWidth(), ofGetScreenHeight());
-    ofSetColor(255);
+    edgeImage.draw(-RESOLUTION_CAMERA_WIDTH * .5, -RESOLUTION_CAMERA_HEIGHT * .5, RESOLUTION_CAMERA_WIDTH, RESOLUTION_CAMERA_HEIGHT);
+    if(showFace)
+        CLMFT.drawFacePoints();
     ofPopMatrix();
+
+    
+    ofNoFill();
+    ofSetLineWidth(3);
+    ofSetColor(0, 255);
+    ofDrawRectangle(-ofGetScreenWidth() * .5, -ofGetScreenHeight() * .5, ofGetScreenWidth(), ofGetScreenHeight());
+    ofSetColor(255);
+    
+    ofPopMatrix();
+    
+    if(showGUI){
+        gui.draw();
+    }
 
     
 //    ofPushMatrix();
@@ -119,7 +147,9 @@ ofVec3f ofApp::worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform) 
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if(key == ' '){
+        showGUI = !showGUI;
+    }
 }
 
 //--------------------------------------------------------------

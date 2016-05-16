@@ -28,8 +28,14 @@ class ofApp : public ofBaseApp{
     
     ofPoint windowCenter;
 
-    ofParameterGroup group;
-    ofxPanel panel;
+    bool showGUI;
+    ofxPanel gui;
+    ofxToggle showFace;
+    ofxToggle enableMasterScale;
+    ofxFloatSlider masterScale;
+    
+    // scales and transformations
+    float minCameraFitScale;
     
     ofVec3f worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform);
 
@@ -38,5 +44,6 @@ class ofApp : public ofBaseApp{
     
     // MASKS
     clmFaceTracker CLMFT;
-    ofMatrix4x4 faceScaleMatrix;    
+    ofMatrix4x4 faceScaleMatrix;
+    ofImage edgeImage; // faded border around camera
 };
