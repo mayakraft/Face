@@ -8,7 +8,7 @@ public:
     
     void setup();
     void update();
-    void draw();
+    void drawFacePoints();
     void drawCameraFeed();
     
     // video capture

@@ -62,7 +62,7 @@ void ofApp::draw(){
 //    ofScale(-1, -1, 1);
     // draw it
     CLMFT.drawCameraFeed();
-    CLMFT.draw();
+    CLMFT.drawFacePoints();
 //    edgeImage.draw(0, 0, fbo.getWidth(), fbo.getHeight());
     ofNoFill();
     ofSetColor(92, 168, 255);

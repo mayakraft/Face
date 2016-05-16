@@ -256,7 +256,7 @@ void clmFaceTracker::update(){
         ofPixels pixels = grabber.getPixels();
         // rotate pixels, switch widths and heights
         pixels.rotate90To(videoRotatedPixels, SCREEN_ROTATION);
-//        videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_HEIGHT, RESOLUTION_FACE_DETECTOR_WIDTH);
+        videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_HEIGHT, RESOLUTION_FACE_DETECTOR_WIDTH);
         //        videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_WIDTH, RESOLUTION_FACE_DETECTOR_HEIGHT);
         // also mirror it
 //        videoRotatedPixels.mirror(1, 0);
@@ -356,24 +356,31 @@ void clmFaceTracker::update(){
 
 void clmFaceTracker::drawCameraFeed(){
     ofPushMatrix();
+    ofTranslate(-grabber.getWidth()*.5,
+                -grabber.getHeight()*.5);
     grabber.draw(0, 0);
     ofPopMatrix();
 }
 
 //----------------------------------------------------------------
-void clmFaceTracker::draw(){
+void clmFaceTracker::drawFacePoints(){
     ofPushMatrix();
-//    ofTranslate(RESOLUTION_SCREEN_HEIGHT, RESOLUTION_SCREEN_WIDTH);
-//    ofRotate(90);
-//    ofTranslate(RESOLUTION_CAMERA_HEIGHT, -RESOLUTION_CAMERA_WIDTH);
-    float scaleW = 1.0;//RESOLUTION_SCREEN_WIDTH / (float) RESOLUTION_FACE_DETECTOR_WIDTH;
-    float scaleH = 1.0;//RESOLUTION_SCREEN_HEIGHT / (float) RESOLUTION_FACE_DETECTOR_HEIGHT;
-//    ofScale(-(scaleW), (scaleH));
+    // scale face detection plane up to camera (face detection screen can be smaller for efficiency)
+    ofScale( (RESOLUTION_CAMERA_WIDTH/(float)RESOLUTION_FACE_DETECTOR_WIDTH),
+             (RESOLUTION_CAMERA_HEIGHT/(float)RESOLUTION_FACE_DETECTOR_HEIGHT));
+    // reverse the rotation that happened to the openCV camera pixels
+    ofRotate(-90 * SCREEN_ROTATION);
+//    ofTranslate(-RESOLUTION_CAMERA_HEIGHT * .5, -RESOLUTION_CAMERA_WIDTH * .5);
+    ofTranslate(-RESOLUTION_FACE_DETECTOR_HEIGHT * .5, -RESOLUTION_FACE_DETECTOR_WIDTH * .5);
+    
+    // draw an optional filled boundary plane
     ofFill();
     ofSetColor(0, 255, 128, 100);
-    ofDrawRectangle(0, 0, RESOLUTION_CAMERA_HEIGHT, RESOLUTION_CAMERA_WIDTH);
+    ofDrawRectangle(0, 0, RESOLUTION_FACE_DETECTOR_HEIGHT, RESOLUTION_FACE_DETECTOR_WIDTH);
     ofSetColor(255, 255);
     ofNoFill();
+    
+    // draw face points
     int idx = clm_model->patch_experts.GetViewIdx(clm_model->params_global, 0);
     Draw(clm_model->detected_landmarks, clm_model->patch_experts.visibilities[0][idx]);
     ofPopMatrix();
