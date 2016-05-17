@@ -20,9 +20,9 @@ void ofApp::setup(){
     
     gui.add(attractScreenWaitTime.setup("attract delay", 15, 5, 120));
     gui.add(sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30));
-    gui.add(screenBrightness.setup("camera brightness", .5, 0, 1));
-    gui.add(faceDarkeningScale.setup("face causes dimming", 0, 0, 1));
-    gui.add(faceFoundZoomScale.setup("zoom in on face", .1, .02, .6));
+    gui.add(screenBrightness.setup("camera brightness", .7, 0, 1));
+    gui.add(faceDarkeningScale.setup("face causes dimming", .85, 0, 1));
+    gui.add(faceFoundZoomScale.setup("zoom in on face", .05, .02, .6));
     
     gui.add(cameraRotationToggle.setup("flip camera", false));
     gui.add(showFace.setup("show face", false));
@@ -33,7 +33,7 @@ void ofApp::setup(){
     faceFoundZoomScale.addListener(this, &ofApp::faceFoundZoomScaleListener);
     cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
 
-    gui.setPosition(ofPoint(0, 0));
+    gui.setPosition(windowCenter);
     
     CLMFT.faceFoundZoomScale = faceFoundZoomScale;
 
@@ -65,11 +65,8 @@ void ofApp::update(){
     faceScaleMatrix.translate( CLMFT.faceCenterSmooth.y * facePointsFrameScale.y,
                               -CLMFT.faceCenterSmooth.x * facePointsFrameScale.x,
                               0.0);
-//    faceScaleMatrix.translate(-windowCenter);
     faceScaleMatrix.scale(CLMFT.faceScaleSmooth, CLMFT.faceScaleSmooth, CLMFT.faceScaleSmooth);
-//    faceScaleMatrix.translate(windowCenter);
     
-
     // deliver info to the scene manager
     sceneManager.faceFound = CLMFT.faceFound;
     sceneManager.faceScaleMatrix = faceScaleMatrix;
@@ -116,7 +113,10 @@ void ofApp::draw(){
             // scale camera to fit inside of screen
             ofScale(minCameraFitScale, minCameraFitScale);
 //            ofSetColor( 255 - CLMFT.faceEnergy * 200, 255);
-            ofSetColor(255 * screenBrightness - 255 * screenBrightness * faceDarkeningScale * CLMFT.faceEnergy, 255);
+    
+    ofSetColor(255 * screenBrightness - (sceneManager.masterFade) * 255 * screenBrightness * faceDarkeningScale, 255);
+    
+//            ofSetColor(255 * screenBrightness - 255 * screenBrightness * faceDarkeningScale * (1-sceneManager.masterFade), 255);
             CLMFT.drawCameraFeed();
             ofSetColor(255, 255);
             edgeImage.draw(-RESOLUTION_CAMERA_WIDTH * .5,
@@ -180,9 +180,9 @@ void ofApp::draw(){
 
     if(showGUI){
         ofPushMatrix();
-        ofTranslate(windowCenter);
-        ofRotate(90);
-        ofScale(3, 3);
+//        ofTranslate(windowCenter);
+//        ofRotate(90);
+//        ofScale(3, 3);
         ofSetColor(255, 255);
         gui.draw();
         ofPopMatrix();
@@ -197,7 +197,6 @@ void ofApp::draw(){
 //    ofDrawBitmapString(ofToString(faceScaleSmooth), 20, 80);
 //    ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
 //    ofDrawBitmapString(ofToString(ofGetWidth()*.5), 20, 120);
-
 }
 
 

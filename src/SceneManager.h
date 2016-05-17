@@ -57,9 +57,11 @@ public:
     ofPoint faceMouth;
     ofPoint faceNose;
     
-private:
     
     float masterFade; // 0 to 1
+
+private:
+    
 
 
 
