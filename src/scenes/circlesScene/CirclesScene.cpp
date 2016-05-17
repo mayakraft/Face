@@ -113,6 +113,95 @@ void CircleFromThreePoints::init( const ofPoint& b, const ofPoint& c,
 }
 
 
+int CirclesScene::ClockWise(vector < ofPoint > pts){
+    int i,j,k;
+    int count = 0;
+    double z;
+    int n = pts.size();
+    
+    if (n < 3)
+        return(0);
+    
+    for (i=0;i<n;i++) {
+        j = (i + 1) % n;
+        k = (i + 2) % n;
+        z  = (pts[j].x - pts[i].x) * (pts[k].y - pts[j].y);
+        z -= (pts[j].y - pts[i].y) * (pts[k].x - pts[j].x);
+        if (z < 0)
+            count--;
+        else if (z > 0)
+            count++;
+    }
+    if (count > 0)
+        return(COUNTERCLOCKWISE);
+    else if (count < 0)
+        return(CLOCKWISE);
+    else
+        return(0);
+}
+
+
+
+void CirclesScene::traceAngleToAngle(circle & circle, ofPoint from, ofPoint to, ofPolyline & line, bool bClockwise, string name){
+    
+    
+    vector < ofPoint > pts;
+    pts.push_back(from);
+    pts.push_back(circle.pos);
+    pts.push_back(to);
+    
+    int clockwise = ClockWise(pts);
+    
+    ///ofDrawBitmapStringHighlight(name +  " " + (clockwise == CLOCKWISE ? "clockwise" : "counter") + " want " + (bClockwise ? "clockwise" : "counter"), circle.pos);
+    
+    
+    ofPoint diffA = (from - circle.pos);
+    ofPoint diffB = (to - circle.pos);
+    
+    float angleA = atan2( diffA.y, diffA.x );
+    float  angleB = atan2( diffB.y, diffB.x );
+    
+    float angleDiff = angleB - angleA;
+    if (angleDiff < -PI) angleDiff += TWO_PI;
+    if (angleDiff > PI) angleDiff -= TWO_PI;
+    
+    if ( (clockwise == CLOCKWISE && !bClockwise) ||
+        (clockwise == COUNTERCLOCKWISE && bClockwise)){
+        
+        
+        float diff = TWO_PI - fabs(angleDiff);
+        if (angleDiff > 0){
+            diff *= -1;
+        }
+        angleDiff = diff;
+    }
+    //    if (angleDiff < -PI) angleDiff += TWO_PI;
+    //    if (angleDiff > PI) angleDiff -= TWO_PI;
+    //
+    //
+    //    if (det > 0 && !bClockwise){
+    //
+    //        if (angleDiff > 0){
+    //            angleDiff = -TWO_PI + angleDiff;
+    //        } else {
+    //             //angleDiff = -TWO_PI + angleDiff;
+    //        }
+    //
+    //        //angleDiff *= -1;
+    //    }
+    //
+    //
+    //    ofDrawBitmapStringHighlight(name +  " " + (bClockwise ? "clockwise" : "counter"), circle.pos);
+    //
+    for (int i = 0; i < 100; i++){
+        float angle = angleA + (angleDiff/100.0) * i;
+        line.addVertex(  circle.pos + circle.radius * ofPoint(cos(angle), sin(angle)));
+    }
+}
+
+
+
+
 
 
 
@@ -184,102 +273,26 @@ void CirclesScene::update(){
 
 }
 
-
-int CirclesScene::ClockWise(vector < ofPoint > pts){
-    int i,j,k;
-    int count = 0;
-    double z;
-    int n = pts.size();
-    
-    if (n < 3)
-        return(0);
-    
-    for (i=0;i<n;i++) {
-        j = (i + 1) % n;
-        k = (i + 2) % n;
-        z  = (pts[j].x - pts[i].x) * (pts[k].y - pts[j].y);
-        z -= (pts[j].y - pts[i].y) * (pts[k].x - pts[j].x);
-        if (z < 0)
-            count--;
-        else if (z > 0)
-            count++;
-    }
-    if (count > 0)
-        return(COUNTERCLOCKWISE);
-    else if (count < 0)
-        return(CLOCKWISE);
-    else
-        return(0);
-}
-
-
-
-void CirclesScene::traceAngleToAngle(circle & circle, ofPoint from, ofPoint to, ofPolyline & line, bool bClockwise, string name){
-    
-    
-    vector < ofPoint > pts;
-    pts.push_back(from);
-    pts.push_back(circle.pos);
-    pts.push_back(to);
-    
-    int clockwise = ClockWise(pts);
-    
-    ///ofDrawBitmapStringHighlight(name +  " " + (clockwise == CLOCKWISE ? "clockwise" : "counter") + " want " + (bClockwise ? "clockwise" : "counter"), circle.pos);
-    
-    
-    ofPoint diffA = (from - circle.pos);
-    ofPoint diffB = (to - circle.pos);
-    
-    float angleA = atan2( diffA.y, diffA.x );
-    float  angleB = atan2( diffB.y, diffB.x );
-
-    float angleDiff = angleB - angleA;
-    if (angleDiff < -PI) angleDiff += TWO_PI;
-    if (angleDiff > PI) angleDiff -= TWO_PI;
-    
-    if ( (clockwise == CLOCKWISE && !bClockwise) ||
-        (clockwise == COUNTERCLOCKWISE && bClockwise)){
-        
-        
-        float diff = TWO_PI - fabs(angleDiff);
-        if (angleDiff > 0){
-            diff *= -1;
-        }
-        angleDiff = diff;
-    }
-//    if (angleDiff < -PI) angleDiff += TWO_PI;
-//    if (angleDiff > PI) angleDiff -= TWO_PI;
-//    
-// 
-//    if (det > 0 && !bClockwise){
-//        
-//        if (angleDiff > 0){
-//            angleDiff = -TWO_PI + angleDiff;
-//        } else {
-//             //angleDiff = -TWO_PI + angleDiff;
-//        }
-//        
-//        //angleDiff *= -1;
-//    }
-//    
-//    
-//    ofDrawBitmapStringHighlight(name +  " " + (bClockwise ? "clockwise" : "counter"), circle.pos);
-//    
-    for (int i = 0; i < 100; i++){
-        float angle = angleA + (angleDiff/100.0) * i;
-        line.addVertex(  circle.pos + circle.radius * ofPoint(cos(angle), sin(angle)));
-    }
-}
-
 //--------------------------------------------------------------
 void CirclesScene::draw(){
 
 //    ofBackground(0);
-    ofClear(0);
+    ofClear(255);
     
 //    ofScale(0.5, 0.5);
-    ofTranslate(-70, -100);
- 
+//    ofTranslate(-70, -100);
+    
+    ofPoint faceOffset = ofPoint(640, 400);
+    
+    ofPushMatrix();
+    ofSetColor(0, 128, 255);
+    ofDrawCircle(faceLeftEye * faceScaleMatrix + faceOffset, 10);
+    ofDrawCircle(faceRightEye * faceScaleMatrix + faceOffset, 10);
+    ofDrawCircle(faceNose * faceScaleMatrix + faceOffset, 10);
+    ofDrawCircle(faceMouth * faceScaleMatrix + faceOffset, 10);
+    ofPopMatrix();
+    
+    
     ofSetColor(255,255,255,90);
     for (int i = 0; i < circles.size(); i++){
         circles[i].draw();

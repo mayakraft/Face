@@ -16,7 +16,7 @@ void ofApp::setup(){
     ofSetFullscreen(true);
     
     gui.setup();
-    gui.add(showFace.setup("show face", true));
+    gui.add(showFace.setup("show face", false));
     gui.add(enableMasterScale.setup("scale window", true));
     gui.add(masterScale.setup("  - scale", 1, .1, 2));
     gui.add(cameraRotationToggle.setup("flip camera", false));
@@ -55,7 +55,6 @@ void ofApp::update(){
 //    faceScaleMatrix.translate(-windowCenter);
     faceScaleMatrix.scale(CLMFT.faceScaleSmooth, CLMFT.faceScaleSmooth, CLMFT.faceScaleSmooth);
 //    faceScaleMatrix.translate(windowCenter);
-//    printf("%f\n", CLMFT.faceCenterSmooth.x);
     
 
     // deliver info to the scene manager
@@ -92,6 +91,7 @@ void ofApp::draw(){
         ofPushMatrix();
             // scale camera to fit inside of screen
             ofScale(minCameraFitScale, minCameraFitScale);
+            ofSetColor( 255 - CLMFT.faceEnergy * 200, 255);
             CLMFT.drawCameraFeed();
             edgeImage.draw(-RESOLUTION_CAMERA_WIDTH * .5,
                            -RESOLUTION_CAMERA_HEIGHT * .5,

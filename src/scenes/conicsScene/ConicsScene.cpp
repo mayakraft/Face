@@ -87,7 +87,7 @@ void ConicsScene::reset(){
 //--------------------------------------------------------------
 void ConicsScene::draw(){
     
-    ofClear(0);
+    ofClear(255);
     
 //    ofMultMatrix(faceScaleMatrix);
     
@@ -124,6 +124,18 @@ void ConicsScene::draw(){
     //    ofSetColor(255, 0, 0, 255);
     //    for(int i = 0 ;i < NUM_CONES; i++)
     //        conics[i].drawIntersectionsWithPlane(movingPlane, movingPlaneNormal);
+    
+    
+    
+    ofPoint faceOffset = ofPoint(640, 400);
+    
+    ofPushMatrix();
+    ofSetColor(0, 128, 255);
+    ofDrawCircle(faceLeftEye * faceScaleMatrix + faceOffset, 10);
+    ofDrawCircle(faceRightEye * faceScaleMatrix + faceOffset, 10);
+    ofDrawCircle(faceNose * faceScaleMatrix + faceOffset, 10);
+    ofDrawCircle(faceMouth * faceScaleMatrix + faceOffset, 10);
+    ofPopMatrix();
     
 //    for(int i = 0 ;i < numCones; i++){
 //        if(coneAnimate){

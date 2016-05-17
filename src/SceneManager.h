@@ -21,9 +21,8 @@ private:
     
 public:
     
-    ~SceneManager();
     vector<BaseScene*> scenes;
-    int currentScene, lastScene;
+    int currentScene;
     
     void setup();
     void update();
@@ -34,9 +33,8 @@ public:
     void startScene(int whichScene);
     
     ofFbo sceneFbo;
-    ofFbo lastSceneFbo;
 
-    ofShader dimmerShader;
+//    ofShader dimmerShader;
     
     
     // scene transition stuff

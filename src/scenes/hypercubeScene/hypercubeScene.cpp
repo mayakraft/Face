@@ -128,7 +128,7 @@ bool HypercubeScene::pointInHotspot(ofPoint hotSpot, ofPoint point){
 
 //--------------------------------------------------------------
 void HypercubeScene::draw(){
-    ofClear(0);
+    ofClear(255);
 
     ofSetColor(255);
 //    ofDrawBitmapString(ofToString(ofGetFrameRate()),20,20);
@@ -187,6 +187,17 @@ void HypercubeScene::draw(){
         }
         ofPopMatrix();
     }
+
+    
+    ofPoint faceOffset = ofPoint(640, 400);
+    
+    ofPushMatrix();
+    ofSetColor(0, 128, 255);
+    ofDrawCircle(faceLeftEye * faceScaleMatrix + faceOffset, 10);
+    ofDrawCircle(faceRightEye * faceScaleMatrix + faceOffset, 10);
+    ofDrawCircle(faceNose * faceScaleMatrix + faceOffset, 10);
+    ofDrawCircle(faceMouth * faceScaleMatrix + faceOffset, 10);
+    ofPopMatrix();
 
     ofPopMatrix();
     cam.end();
