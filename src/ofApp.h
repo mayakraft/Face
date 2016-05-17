@@ -66,4 +66,5 @@ class ofApp : public ofBaseApp{
     AttractScreen attractScreen;
     unsigned long lastFaceDetection;
     unsigned long attractBeginTime;
+    float attractScreenBrightness;
 };

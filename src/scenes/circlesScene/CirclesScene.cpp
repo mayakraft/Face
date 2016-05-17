@@ -297,6 +297,11 @@ void CirclesScene::draw(){
 //    ofDrawCircle(faceMouth * faceScaleMatrix + faceOffset, 10);
 //    ofPopMatrix();
     
+    // BIG SCREEN FIXES HERE
+    ofTranslate(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
+    ofTranslate(-faceOffset - ofPoint(400, 400));
+    ofScale(2, 2);
+    // BIG SCREEN FIXES END
     
     ofSetColor(255,255,255,90);
     for (int i = 0; i < circles.size(); i++){

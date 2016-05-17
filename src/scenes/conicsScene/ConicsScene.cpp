@@ -144,6 +144,11 @@ void ConicsScene::draw(){
 //    for(int i = 0 ;i < NUM_CONES; i++)
 //        conics[i].draw();
     
+    // BIG SCREEN FIXES
+    ofTranslate(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
+    ofScale(2, 2);
+    // END BIG SCREEN FIXES
+    
     ofSetColor(255, 255);
     
 //    plane = faceNose;

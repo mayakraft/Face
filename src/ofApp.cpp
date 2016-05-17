@@ -18,11 +18,11 @@ void ofApp::setup(){
     
     gui.setup();
     
-    gui.add(attractScreenWaitTime.setup("attract screen wait", 5, 5, 120));
-    gui.add(sceneDurationSlider.setup("scene duration (sec)", sceneManager.SCENE_INTERVAL, 5, 30));
+    gui.add(attractScreenWaitTime.setup("attract delay", 15, 5, 120));
+    gui.add(sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30));
     gui.add(screenBrightness.setup("camera brightness", .5, 0, 1));
     gui.add(faceDarkeningScale.setup("face causes dimming", 0, 0, 1));
-    gui.add(faceFoundZoomScale.setup("zoom in on face", .3, .02, .6));
+    gui.add(faceFoundZoomScale.setup("zoom in on face", .1, .02, .6));
     
     gui.add(cameraRotationToggle.setup("flip camera", false));
     gui.add(showFace.setup("show face", false));
@@ -34,6 +34,8 @@ void ofApp::setup(){
     cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
 
     gui.setPosition(windowCenter);
+    
+    CLMFT.faceFoundZoomScale = faceFoundZoomScale;
 
     
     edgeImage.load("faded-edge.png");
@@ -88,6 +90,16 @@ void ofApp::update(){
     
     if(CLMFT.faceFound)
         lastFaceDetection = ofGetElapsedTimef();
+    
+    if(ofGetElapsedTimef() > lastFaceDetection + attractScreenWaitTime){
+        attractScreenBrightness = (ofGetElapsedTimef() - (lastFaceDetection + attractScreenWaitTime)) / 3.0;
+    }
+    else if(attractScreenBrightness > 0.0){
+        attractScreenBrightness -= .05;
+    }
+
+    if(attractScreenBrightness < 0) attractScreenBrightness = 0;
+    if(attractScreenBrightness > 1.0) attractScreenBrightness = 1.0;
 }
 
 //--------------------------------------------------------------
@@ -163,15 +175,15 @@ void ofApp::draw(){
     ofPopMatrix();
     
     
-    if(ofGetElapsedTimef() > lastFaceDetection + attractScreenWaitTime){
-        float fadeIn = (ofGetElapsedTimef() - (lastFaceDetection + attractScreenWaitTime)) / 3.0;
-        if(fadeIn < 0) fadeIn = 0;
-        if(fadeIn > 1.0) fadeIn = 1.0;
-        ofSetColor(255, 50 * fadeIn);
+    if(attractScreenBrightness != 0.0){
+        if(enableMasterScale)
+            ofScale(masterScale, masterScale);
+        ofSetColor(255, 100 * attractScreenBrightness);
         attractScreen.draw();
     }
 
     if(showGUI){
+        ofSetColor(255, 255);
         gui.draw();
     }
     

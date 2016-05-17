@@ -170,6 +170,8 @@ void HypercubeScene::draw(){
     
     ofRotate(faceCenterSmooth.x * 0.02, 1, 0, 0);
     ofRotate(faceCenterSmooth.y * 0.02, 0, 1, 0);
+    
+    ofScale(4, 4);
 
     ofSetColor(0, 255);
 
