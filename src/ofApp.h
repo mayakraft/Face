@@ -5,6 +5,8 @@
 #include "clmFaceTracker.h"
 #include "SceneManager.h"
 
+#include "attractScreen.h"
+
 #include "appConstants.h"
 
 class ofApp : public ofBaseApp{
@@ -36,6 +38,9 @@ class ofApp : public ofBaseApp{
     ofxFloatSlider faceDarkeningScale;
     ofxToggle cameraRotationToggle;
     void cameraRotationToggleListener(bool & cameraRotationToggle);
+
+    ofxFloatSlider attractScreenWaitTime;
+
     ofxToggle showFace;
     ofxToggle enableMasterScale;
     ofxFloatSlider masterScale;
@@ -57,4 +62,8 @@ class ofApp : public ofBaseApp{
     clmFaceTracker CLMFT;
     ofMatrix4x4 faceScaleMatrix;
     ofImage edgeImage; // faded border around camera
+    
+    AttractScreen attractScreen;
+    unsigned long lastFaceDetection;
+    unsigned long attractBeginTime;
 };

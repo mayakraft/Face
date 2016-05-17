@@ -28,18 +28,41 @@ void ConicsScene::update(){
     plane = faceCenterSmooth;// + ofVec3f( 0, -43, 0);
 //    printf("%d\n", -100 + 200*ofGetMouseX() / ofGetWidth());
     
+    
+    ofPoint vel = faceNose - lastFacePosition;
+    float d = sqrt( powf(vel.x, 2) + powf(vel.y, 2) );
+    
+    //    if (d > smoothFaceVelocity)
+    //        smoothFaceVelocity = d;
+    
+    smoothFaceMotionNoise += d;
+    
+    smoothFaceMotionNoise *= .95;
+    if(smoothFaceMotionNoise < 0)
+        smoothFaceMotionNoise = 0;
+    
+    lastFacePosition = faceNose;
+
+    
+    
+    
+    float mag = smoothFaceMotionNoise / MAX_NOISE_VALUE; //ofGetMouseX() / (float)ofGetScreenWidth();
+    
     float SPEED = .2;
     float diff = .3 * sinf(ofGetElapsedTimef()*.2);
-    for(int i = 0 ;i < numCones; i++){
+    for(int i = 0; i < numCones; i++){
         conics[i].setPosition( ofPoint(i * 10,
                                        0,
-                                       200 + 190 * sin(ofGetElapsedTimef() + i/100.0)));
-//        conics[i].setHeight(300 + 250 * sinf(2*i+ofGetElapsedTimef()));
-//                conics[i].setRadius(ofGetMouseX() + (ofGetMouseX()*0.9) * ofSignedNoise(ofGetElapsedTimef()*.3, i/10.0));
+                                       200 + mag * 190 * sin(ofGetElapsedTimef() + i/100.0)
+                                        + 190 * sin(ofGetElapsedTimef()*.2 + i/100.0)));
         
-        conics[i].setLookAt( ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0),
-                                     0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0),
-                                     0 + 300 * cos(ofGetElapsedTimef() + i/10.0)));
+//        conics[i].setHeight(300 + 250 * sinf(2*i+ofGetElapsedTimef()));
+//        conics[i].setRadius(ofGetMouseX() + (ofGetMouseX()*0.9) * ofSignedNoise(ofGetElapsedTimef()*.3, i/10.0));
+        
+        conics[i].setLookAt( ofPoint(200 + mag * 100 * sin(ofGetElapsedTimef() + i/100.0)
+                                               + 100 * sin(ofGetElapsedTimef()*.2 + i/100.0),
+                                     0 + mag * 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0),
+                                     0 + mag * 300 * cos(ofGetElapsedTimef() + i/10.0)));
     }
     
 //    float SPEED = .2;
@@ -71,7 +94,7 @@ void ConicsScene::update(){
         
 //    }
     if(numCones < NUM_CONES){
-        numConesFloat *= 1.2;
+        numConesFloat *= 1.1;
         numCones = numConesFloat;
         if(numCones > NUM_CONES)
             numCones = NUM_CONES;
@@ -82,6 +105,8 @@ void ConicsScene::reset(){
     resetMoment = ofGetElapsedTimef();
     numCones = 1;
     numConesFloat = 1.0;
+    lastFacePosition = faceNose;
+    smoothFaceMotionNoise = 0;
 }
 
 //--------------------------------------------------------------
@@ -91,9 +116,13 @@ void ConicsScene::draw(){
     
 //    ofMultMatrix(faceScaleMatrix);
     
-    ofSetLineWidth(1);
+//    ofSetLineWidth(1);
     
     ofSetColor(255, 255);
+
+//    ofSetColor(255);
+//    ofDrawBitmapString(ofToString(smoothFaceMotionNoise),20,20);
+    
 //    ofDrawAxis(20);
 //    ofSetColor(0, 255, 0, 255);
 //    ofDrawSphere(ofVec3f(0, 0, 0), 10);
@@ -109,11 +138,11 @@ void ConicsScene::draw(){
 //    ofDrawSphere(plane, 10);
 
     
-    //    ofDrawAxis(20);
-    
-    //    ofSetColor(255, 10);
-    //    for(int i = 0 ;i < NUM_CONES; i++)
-    //        conics[i].draw();
+//    ofDrawAxis(20);
+
+//    ofSetColor(255, 10);
+//    for(int i = 0 ;i < NUM_CONES; i++)
+//        conics[i].draw();
     
     ofSetColor(255, 255);
     
@@ -127,15 +156,16 @@ void ConicsScene::draw(){
     
     
     
-    ofPoint faceOffset = ofPoint(640, 400);
+//    ofPoint faceOffset = ofPoint(640, 400);
+//    ofPushMatrix();
+//    ofSetColor(0, 128, 255);
+//    ofDrawCircle(faceLeftEye * faceScaleMatrix + faceOffset, 10);
+//    ofDrawCircle(faceRightEye * faceScaleMatrix + faceOffset, 10);
+//    ofDrawCircle(faceNose * faceScaleMatrix + faceOffset, 10);
+//    ofDrawCircle(faceMouth * faceScaleMatrix + faceOffset, 10);
+//    ofPopMatrix();
     
-    ofPushMatrix();
-    ofSetColor(0, 128, 255);
-    ofDrawCircle(faceLeftEye * faceScaleMatrix + faceOffset, 10);
-    ofDrawCircle(faceRightEye * faceScaleMatrix + faceOffset, 10);
-    ofDrawCircle(faceNose * faceScaleMatrix + faceOffset, 10);
-    ofDrawCircle(faceMouth * faceScaleMatrix + faceOffset, 10);
-    ofPopMatrix();
+    
     
 //    for(int i = 0 ;i < numCones; i++){
 //        if(coneAnimate){

@@ -245,14 +245,23 @@ void CirclesScene::update(){
         }
         
     }
+    ofPoint diff = faceNose - lastFacePosition;
+    float d = sqrt( powf(diff.x, 2) + powf(diff.y, 2) );
+    
+    if (d > smoothFaceVelocity)
+        smoothFaceVelocity = d;
+//    printf("%f\n", smoothFaceVelocity);
+    float a = 1;
+    float b = 1;
+    float c = 1;
+    
+    circles[0].radius = 200 + 100 * a * sin(ofGetElapsedTimef()*0.8+1.0) + 20 * sin(ofGetElapsedTimef()*0.8+1.0);
+    circles[1].radius = 100 + 90 * b * sin(ofGetElapsedTimef())          + 17.5 * sin(ofGetElapsedTimef());
+    circles[2].radius = 100 + 80 * c * sin(ofGetElapsedTimef()*1.2)      + 15 * sin(ofGetElapsedTimef()*1.2);
+    
+    lastFacePosition = faceNose;
+    smoothFaceVelocity -= 1;
 
-    
-    circles[0].radius = 200 + 100 * sin(ofGetElapsedTimef()*0.8+1.0);
-    
-    circles[1].radius = 100 + 90 * sin(ofGetElapsedTimef());
-    circles[2].radius = 100 + 80 * sin(ofGetElapsedTimef()*1.2);
-    
-    
     for (int i = 0; i < circles.size(); i++){
         circles[i].updateEnd();
     }
@@ -270,13 +279,12 @@ void CirclesScene::update(){
             circles[randomOrder[i]].repelFrom(circles[randomOrder[j]]);
         }
     }
-
+    
 }
 
 //--------------------------------------------------------------
 void CirclesScene::draw(){
 
-//    ofBackground(0);
     ofClear(255);
     
     ofPoint faceOffset = ofPoint(640, 400);
@@ -423,18 +431,18 @@ void CirclesScene::draw(){
     ofFill();
     ofSetColor(255, 255, 255, 120);
 
+    ///
+    //
+    //
     
-//
-//
-//
     tempLine.draw();
 
-//    ofBeginShape();
-//    for (int i = 0; i < tempLine.size(); i++){
-//        ofVertex(tempLine[i].x, tempLine[i].y);
-//    }
-//
-//    ofEndShape();
+    ofBeginShape();
+    for (int i = 0; i < tempLine.size(); i++){
+        ofVertex(tempLine[i].x, tempLine[i].y);
+    }
+
+    ofEndShape();
     
 //    tempLine.getVertices().erase(tempLine.getVertices().begin() + 200, tempLine.getVertices().end());
 //

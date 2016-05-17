@@ -105,6 +105,7 @@
 		B6840996567E78436F7ECFAB /* ETF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B047FF96258DC01792B272DB /* ETF.cpp */; };
 		C602002DE761F9B52DB4400A /* ObjectFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE75A3FBA2C2D87D14F06FE6 /* ObjectFinder.cpp */; };
 		D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A4DD23693DFAB8EC05FAA5D /* ofxCvShortImage.cpp */; };
+		D56EE9861CEB82F1002E0533 /* attractScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D56EE9841CEB82F1002E0533 /* attractScreen.cpp */; };
 		D5838B8B1CDFDB5400AC2911 /* BaseScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5838B871CDFDB5400AC2911 /* BaseScene.cpp */; };
 		D5838B8C1CDFDB5400AC2911 /* SceneManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5838B891CDFDB5400AC2911 /* SceneManager.cpp */; };
 		D5838BA81CDFDB7800AC2911 /* particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D5838B921CDFDB7800AC2911 /* particle.cpp */; };
@@ -540,6 +541,8 @@
 		CE9C7160245B19131DAE6128 /* ofxCvColorImage.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxCvColorImage.cpp; path = ../../../addons/ofxOpenCv/src/ofxCvColorImage.cpp; sourceTree = SOURCE_ROOT; };
 		D29DD28C195CD81267F3C8A1 /* Distance.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = Distance.h; path = ../../../addons/ofxCv/libs/ofxCv/include/ofxCv/Distance.h; sourceTree = SOURCE_ROOT; };
 		D347FB65D19015303863922A /* Wrappers.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = Wrappers.cpp; path = ../../../addons/ofxCv/libs/ofxCv/src/Wrappers.cpp; sourceTree = SOURCE_ROOT; };
+		D56EE9841CEB82F1002E0533 /* attractScreen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = attractScreen.cpp; sourceTree = "<group>"; };
+		D56EE9851CEB82F1002E0533 /* attractScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = attractScreen.h; sourceTree = "<group>"; };
 		D5838B871CDFDB5400AC2911 /* BaseScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseScene.cpp; sourceTree = "<group>"; };
 		D5838B881CDFDB5400AC2911 /* BaseScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseScene.h; sourceTree = "<group>"; };
 		D5838B891CDFDB5400AC2911 /* SceneManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneManager.cpp; sourceTree = "<group>"; };
@@ -1573,6 +1576,15 @@
 			name = src;
 			sourceTree = "<group>";
 		};
+		D56EE9831CEB82F1002E0533 /* attractScreen */ = {
+			isa = PBXGroup;
+			children = (
+				D56EE9841CEB82F1002E0533 /* attractScreen.cpp */,
+				D56EE9851CEB82F1002E0533 /* attractScreen.h */,
+			);
+			path = attractScreen;
+			sourceTree = "<group>";
+		};
 		D5838B8D1CDFDB5800AC2911 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
@@ -1588,6 +1600,7 @@
 		D5838B8E1CDFDB7800AC2911 /* scenes */ = {
 			isa = PBXGroup;
 			children = (
+				D56EE9831CEB82F1002E0533 /* attractScreen */,
 				D5838B901CDFDB7800AC2911 /* arcsScene */,
 				D5838B981CDFDB7800AC2911 /* circlesScene */,
 				D5838B9B1CDFDB7800AC2911 /* conicsScene */,
@@ -1841,6 +1854,7 @@
 				5CC34D433F5806179935B89D /* Flow.cpp in Sources */,
 				92FD732C1CA742F4004C1496 /* ofxOscBundle.cpp in Sources */,
 				2023EF517ED2D8B397511D4B /* Helpers.cpp in Sources */,
+				D56EE9861CEB82F1002E0533 /* attractScreen.cpp in Sources */,
 				311DF864378748129984EA1D /* Kalman.cpp in Sources */,
 				C602002DE761F9B52DB4400A /* ObjectFinder.cpp in Sources */,
 				7CDAD32BE4FA46701E3552C7 /* RunningBackground.cpp in Sources */,

@@ -18,6 +18,7 @@ void ofApp::setup(){
     
     gui.setup();
     
+    gui.add(attractScreenWaitTime.setup("attract screen wait", 5, 5, 120));
     gui.add(sceneDurationSlider.setup("scene duration (sec)", sceneManager.SCENE_INTERVAL, 5, 30));
     gui.add(screenBrightness.setup("camera brightness", .5, 0, 1));
     gui.add(faceDarkeningScale.setup("face causes dimming", 0, 0, 1));
@@ -44,7 +45,9 @@ void ofApp::setup(){
     else          minCameraFitScale = sh;
     
     facePointsFrameScale = ofPoint(RESOLUTION_CAMERA_HEIGHT * minCameraFitScale,
-                                   RESOLUTION_CAMERA_WIDTH * minCameraFitScale);    
+                                   RESOLUTION_CAMERA_WIDTH * minCameraFitScale);
+    
+    attractScreen.setup();
 }
 
 //--------------------------------------------------------------
@@ -52,6 +55,8 @@ void ofApp::update(){
     // SCENES
     sceneManager.update();
     CLMFT.update();
+    
+    attractScreen.update();
 
     // MASKS
 
@@ -80,6 +85,9 @@ void ofApp::update(){
                                        CLMFT.faceLeftEye.x * facePointsFrameScale.x);// - center;
     sceneManager.faceRightEye = ofPoint(-CLMFT.faceRightEye.y * facePointsFrameScale.y,
                                         CLMFT.faceRightEye.x * facePointsFrameScale.x);// - center;
+    
+    if(CLMFT.faceFound)
+        lastFaceDetection = ofGetElapsedTimef();
 }
 
 //--------------------------------------------------------------
@@ -153,10 +161,20 @@ void ofApp::draw(){
             ofScale(masterScale, masterScale);
         sceneManager.draw();
     ofPopMatrix();
+    
+    
+    if(ofGetElapsedTimef() > lastFaceDetection + attractScreenWaitTime){
+        float fadeIn = (ofGetElapsedTimef() - (lastFaceDetection + attractScreenWaitTime)) / 3.0;
+        if(fadeIn < 0) fadeIn = 0;
+        if(fadeIn > 1.0) fadeIn = 1.0;
+        ofSetColor(255, 50 * fadeIn);
+        attractScreen.draw();
+    }
 
     if(showGUI){
         gui.draw();
     }
+    
 
     // DEBUG TEXT
 //    ofSetColor(255,255,255,255);

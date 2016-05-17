@@ -27,4 +27,11 @@ public:
     float numConesFloat;
     
     ofPoint center;
+    
+    float smoothFaceMotionNoise;
+    float smoothFaceVelocity;
+    ofPoint lastFacePosition;
+    
+    float MAX_NOISE_VALUE = 200;
+    
 };
