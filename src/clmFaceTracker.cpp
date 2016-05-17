@@ -238,7 +238,7 @@ void clmFaceTracker::setup(){
     bDetectionSuccess = false;
     
     faceScaleSmooth = 1.0;
-    faceCenterSmooth = ofPoint(camWidth * .5, camHeight*.5);
+    faceCenterSmooth = ofPoint(0, 0);
 
     faceEnergy = 0;
     faceFound = false;
@@ -257,7 +257,7 @@ void clmFaceTracker::update(){
         // rotate pixels, switch widths and heights
         pixels.rotate90To(videoRotatedPixels, cameraRotation);
         videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_HEIGHT, RESOLUTION_FACE_DETECTOR_WIDTH);
-        //        videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_WIDTH, RESOLUTION_FACE_DETECTOR_HEIGHT);
+//        videoRotatedPixels.resize(RESOLUTION_FACE_DETECTOR_WIDTH, RESOLUTION_FACE_DETECTOR_HEIGHT);
         // also mirror it
         videoRotatedPixels.mirror(0, 1);
         
@@ -354,13 +354,13 @@ void clmFaceTracker::update(){
         // smooth face zooming scale
         float targetScale = 1.0;
         if(faceFound && faceRect.getHeight() > 0)
-            targetScale = ofGetHeight()*.1 / faceRect.getHeight();
+            targetScale = (RESOLUTION_SCREEN_WIDTH * faceFoundZoomScale) / faceRect.getHeight();
         faceScaleSmooth = faceScaleSmooth * .95 + targetScale * 0.05;
-        
+
         // smooth face x y tracking
         ofPoint faceNoseCenter = ofPoint(0, 0);
         if(faceFound)
-            faceNoseCenter = faceNose;//-(faceNose - center);
+            faceNoseCenter = faceNose;//(faceNose - center);
         faceCenterSmooth = faceCenterSmooth * .95 + faceNoseCenter * .05;
     }
 }
@@ -386,18 +386,22 @@ void clmFaceTracker::drawFacePoints(){
     ofTranslate(-RESOLUTION_FACE_DETECTOR_HEIGHT * .5,
                 -RESOLUTION_FACE_DETECTOR_WIDTH * .5);
     
-    // draw an optional filled boundary plane
-    ofFill();
-    ofSetColor(0, 255, 128, 100);
-    ofDrawRectangle(0, 0, RESOLUTION_FACE_DETECTOR_HEIGHT, RESOLUTION_FACE_DETECTOR_WIDTH);
-    ofSetColor(255, 255);
-    ofNoFill();
+//    // draw an optional filled boundary plane
+//    ofFill();
+//    ofSetColor(0, 255, 128, 100);
+//    ofDrawRectangle(0, 0, RESOLUTION_FACE_DETECTOR_HEIGHT, RESOLUTION_FACE_DETECTOR_WIDTH);
+//    ofSetColor(255, 255);
+//    ofNoFill();
     
     // draw face points
     int idx = clm_model->patch_experts.GetViewIdx(clm_model->params_global, 0);
     Draw(clm_model->detected_landmarks, clm_model->patch_experts.visibilities[0][idx]);
     ofPopMatrix();
 }
+
+
+
+
 //void clmFaceTracker::draw(){
 //
 //    fbo.begin();

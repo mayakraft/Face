@@ -37,6 +37,10 @@ class ofApp : public ofBaseApp{
     ofxToggle showFace;
     ofxToggle enableMasterScale;
     ofxFloatSlider masterScale;
+    ofxFloatSlider faceFoundZoomScale;
+    void faceFoundZoomScaleListener(float & faceFoundZoomScale);
+    ofxFloatSlider sceneDurationSlider;
+    void sceneDurationSliderListener(float & sceneDurationSlider);
     
     // scales and transformations
     float minCameraFitScale;

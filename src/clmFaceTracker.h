@@ -33,6 +33,9 @@ public:
     // smoothed face data
     ofPoint faceCenterSmooth;  // the smoothed position of the face as it tracks
     float faceScaleSmooth;   //  same, but for zooming
+    
+    // customizable
+    float faceFoundZoomScale = 0.3;
 
 private:
     

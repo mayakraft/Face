@@ -28,11 +28,9 @@ void SceneManager::setup(){
     
     
     SCENE_INTERVAL = 10;
-    
     FADE_DURATION = 3.0;
     
 
- 
     // add all possible scenes to the scenes array
     //    scenes.push_back(new ArcsScene());
 
@@ -40,8 +38,8 @@ void SceneManager::setup(){
     scenes.push_back(new CirclesScene());
     scenes.push_back(new ConicsScene());
 
-    sceneFbo.allocate(VISUALS_WIDTH, VISUALS_HEIGHT, GL_RGBA, 4);
-    lastSceneFbo.allocate(VISUALS_WIDTH, VISUALS_HEIGHT, GL_RGBA, 4);
+    sceneFbo.allocate(RESOLUTION_SCREEN_WIDTH, RESOLUTION_SCREEN_HEIGHT, GL_RGBA, 4);
+    lastSceneFbo.allocate(RESOLUTION_SCREEN_WIDTH, RESOLUTION_SCREEN_HEIGHT, GL_RGBA, 4);
     
     dimmerShader.load("dimmer");
     
@@ -66,7 +64,7 @@ void SceneManager::setup(){
 
     
     for (auto scene : scenes){
-        scene->dimensions.set(0,0,VISUALS_WIDTH, VISUALS_HEIGHT);
+        scene->dimensions.set(0,0,RESOLUTION_SCREEN_WIDTH, RESOLUTION_SCREEN_HEIGHT);
         scene->setup();
     }
     
@@ -185,7 +183,7 @@ void SceneManager::draw(){
         ofSetColor(0);
         ofFill();
         ofClearAlpha();
-        ofDrawRectangle(0, 0, VISUALS_WIDTH+1, VISUALS_HEIGHT);
+        ofDrawRectangle(0, 0, RESOLUTION_SCREEN_WIDTH, RESOLUTION_SCREEN_HEIGHT);
     }
  
     
@@ -195,19 +193,28 @@ void SceneManager::draw(){
     if(isSceneTransition){
         // draw previous scene fading out
         ofSetColor(255, masterFade * 255*(1-sceneTransitionTween) );
-        lastSceneFbo.draw(0, -100);
+        lastSceneFbo.draw(-RESOLUTION_SCREEN_WIDTH * .5, -RESOLUTION_SCREEN_HEIGHT * .5);
         // set current screen fade in color
         // nope. make scene appear
 //        ofSetColor(255, masterFade * 255*sceneTransitionTween);
     }
     
     ofSetColor(255, 255 * masterFade);
-    
-    sceneFbo.draw(0, -100);
+    sceneFbo.draw(-RESOLUTION_SCREEN_WIDTH * .5, -RESOLUTION_SCREEN_HEIGHT * .5);
     
     ofSetColor(255, 255);
-//    ofDrawSphere(faceCenter, 10);
     
-//    gui.draw();
+    ofPushMatrix();
+        ofSetColor(0, 128, 255);
+        ofDrawCircle(faceLeftEye * faceScaleMatrix, 10);
+        ofDrawCircle(faceRightEye * faceScaleMatrix, 10);
+        ofDrawCircle(faceNose * faceScaleMatrix, 10);
+        ofDrawCircle(faceMouth * faceScaleMatrix, 10);
+    ofPopMatrix();
+    
+    
+    ofSetColor(255, 255);
+
+//    ofDrawSphere(faceCenter, 10);
 }
 

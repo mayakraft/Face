@@ -17,10 +17,14 @@ void ofApp::setup(){
     
     gui.setup();
     gui.add(showFace.setup("show face", true));
-    gui.add(enableMasterScale.setup("scale window", false));
+    gui.add(enableMasterScale.setup("scale window", true));
     gui.add(masterScale.setup("  - scale", 1, .1, 2));
-    gui.add(cameraRotationToggle.setup("flip camera", true));
+    gui.add(cameraRotationToggle.setup("flip camera", false));
     cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
+    gui.add(faceFoundZoomScale.setup("face found zoom", .3, .02, .6));
+    faceFoundZoomScale.addListener(this, &ofApp::faceFoundZoomScaleListener);
+    gui.add(sceneDurationSlider.setup("scene duration", 10, 5, 30));
+    sceneDurationSlider.addListener(this, &ofApp::sceneDurationSliderListener);
     gui.setPosition(windowCenter);
 
     edgeImage.load("faded-edge.png");
@@ -32,7 +36,7 @@ void ofApp::setup(){
     else          minCameraFitScale = sh;
     
     facePointsFrameScale = ofPoint(RESOLUTION_CAMERA_HEIGHT * minCameraFitScale,
-                                   RESOLUTION_CAMERA_WIDTH * minCameraFitScale);
+                                   RESOLUTION_CAMERA_WIDTH * minCameraFitScale);    
 }
 
 //--------------------------------------------------------------
@@ -45,77 +49,82 @@ void ofApp::update(){
 
     // build face rotation/scale matrix to put the face in the center of the screen
     faceScaleMatrix.makeIdentityMatrix();
-    faceScaleMatrix.translate(-windowCenter);
+    faceScaleMatrix.translate( CLMFT.faceCenterSmooth.y * facePointsFrameScale.y,
+                              -CLMFT.faceCenterSmooth.x * facePointsFrameScale.x,
+                              0.0);
+//    faceScaleMatrix.translate(-windowCenter);
     faceScaleMatrix.scale(CLMFT.faceScaleSmooth, CLMFT.faceScaleSmooth, CLMFT.faceScaleSmooth);
-    faceScaleMatrix.translate(windowCenter);
-    faceScaleMatrix.translate( CLMFT.faceCenterSmooth );
+//    faceScaleMatrix.translate(windowCenter);
+//    printf("%f\n", CLMFT.faceCenterSmooth.x);
     
 
     // deliver info to the scene manager
     sceneManager.faceFound = CLMFT.faceFound;
     sceneManager.faceScaleMatrix = faceScaleMatrix;
-    sceneManager.faceCenterSmooth = CLMFT.faceCenterSmooth;
+    sceneManager.faceCenterSmooth = ofPoint(-CLMFT.faceCenterSmooth.y * facePointsFrameScale.y,
+                                            CLMFT.faceCenterSmooth.x * facePointsFrameScale.x);
     sceneManager.faceScaleSmooth = CLMFT.faceScaleSmooth;
     // face parts
-    sceneManager.faceNose = CLMFT.faceNose;// - center;
-    sceneManager.faceMouth = CLMFT.faceMouth;// - center;
-    sceneManager.faceLeftEye = CLMFT.faceLeftEye;// - center;
-    sceneManager.faceRightEye = CLMFT.faceRightEye;// - center;
+    sceneManager.faceNose = ofPoint(-CLMFT.faceNose.y * facePointsFrameScale.y,
+                                    CLMFT.faceNose.x * facePointsFrameScale.x);// - center;
+    sceneManager.faceMouth = ofPoint(-CLMFT.faceMouth.y * facePointsFrameScale.y,
+                                     CLMFT.faceMouth.x * facePointsFrameScale.x);// - center;
+    sceneManager.faceLeftEye = ofPoint(-CLMFT.faceLeftEye.y * facePointsFrameScale.y,
+                                       CLMFT.faceLeftEye.x * facePointsFrameScale.x);// - center;
+    sceneManager.faceRightEye = ofPoint(-CLMFT.faceRightEye.y * facePointsFrameScale.y,
+                                        CLMFT.faceRightEye.x * facePointsFrameScale.x);// - center;
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
-    ofPushMatrix();
-    // this sequence happens in reverse, bottom -> up
+    ofBackground(0);
+    
     ofPoint center = ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
-    ofTranslate(center);
-    // scale as needed
-    if(enableMasterScale)
-        ofScale(masterScale, masterScale);
-    
-    // rotate to display sideways
-//    ofRotate(90 * SCREEN_ROTATION);
-    // move center of fbo to 0, 0
-//    ofTranslate(-ofGetScreenWidth()*.5, -ofGetScreenHeight()*.5);
-//    ofTranslate(-CLMFT.grabber.getWidth()*.5, -CLMFT.grabber.getHeight()*.5);
-    // flip across the x=y diagonal line
-//    ofScale(-1, -1, 1);
-    // draw it
+
     ofPushMatrix();
-    // scale camera to fit inside of screen
-    ofScale(minCameraFitScale, minCameraFitScale);
-    CLMFT.drawCameraFeed();
-    edgeImage.draw(-RESOLUTION_CAMERA_WIDTH * .5,
-                   -RESOLUTION_CAMERA_HEIGHT * .5,
-                   RESOLUTION_CAMERA_WIDTH,
-                   RESOLUTION_CAMERA_HEIGHT);
-    if(showFace)
-        CLMFT.drawFacePoints();
+        ofTranslate(center);
+        // scale as needed
+        if(enableMasterScale)
+            ofScale(masterScale, masterScale);
+
+        ofMultMatrix(faceScaleMatrix);
+
+        ofPushMatrix();
+            // scale camera to fit inside of screen
+            ofScale(minCameraFitScale, minCameraFitScale);
+            CLMFT.drawCameraFeed();
+            edgeImage.draw(-RESOLUTION_CAMERA_WIDTH * .5,
+                           -RESOLUTION_CAMERA_HEIGHT * .5,
+                           RESOLUTION_CAMERA_WIDTH,
+                           RESOLUTION_CAMERA_HEIGHT);
+            if(showFace)
+                CLMFT.drawFacePoints();
+        ofPopMatrix();
+    
+//        ofPushMatrix();
+//            ofRotate(-90 * CLMFT.cameraRotation);
+//            ofSetColor(0, 128, 255);
+//            ofDrawCircle(CLMFT.faceLeftEye * facePointsFrameScale, 10);
+//            ofDrawCircle(CLMFT.faceRightEye * facePointsFrameScale, 10);
+//            ofDrawCircle(CLMFT.faceNose * facePointsFrameScale, 10);
+//            ofDrawCircle(CLMFT.faceMouth * facePointsFrameScale, 10);
+//        ofPopMatrix();
+    
     ofPopMatrix();
     
     ofPushMatrix();
-    ofRotate(-90 * CLMFT.cameraRotation);
-    ofSetColor(0, 128, 255);
-    ofDrawCircle(CLMFT.faceLeftEye * facePointsFrameScale, 10);
-    ofDrawCircle(CLMFT.faceRightEye * facePointsFrameScale, 10);
-    ofDrawCircle(CLMFT.faceNose * facePointsFrameScale, 10);
-    ofDrawCircle(CLMFT.faceMouth * facePointsFrameScale, 10);
+        ofTranslate(center);
+        // scale as needed
+        if(enableMasterScale)
+            ofScale(masterScale, masterScale);
+
+        ofNoFill();
+        ofSetLineWidth(3);
+        ofSetColor(0, 255);
+        ofDrawRectangle(-ofGetScreenWidth() * .5, -ofGetScreenHeight() * .5, ofGetScreenWidth(), ofGetScreenHeight());
+        ofSetColor(255);
     ofPopMatrix();
 
-    ofNoFill();
-    ofSetLineWidth(3);
-    ofSetColor(0, 255);
-    ofDrawRectangle(-ofGetScreenWidth() * .5, -ofGetScreenHeight() * .5, ofGetScreenWidth(), ofGetScreenHeight());
-    ofSetColor(255);
-    
-    ofPopMatrix();
-    
-    if(showGUI){
-        gui.draw();
-    }
-
-    
 //    ofPushMatrix();
 ////        ofMultMatrix(faceScaleMatrix);
 //        // MASKS
@@ -126,18 +135,19 @@ void ofApp::draw(){
 //        ofSetColor(255);
 //        CLMFT.draw();
 //    ofPopMatrix();
+    
+    // SCENES
+    ofPushMatrix();
+        ofTranslate(center);
+        if(enableMasterScale)
+            ofScale(masterScale, masterScale);
+        sceneManager.draw();
+    ofPopMatrix();
 
-    
-//    ofPushMatrix();
-//    // SCENES
-//    ofScale(4.2, 4.2, 4.2);
-//    ofTranslate(900, 0);
-//    ofRotate(90);
-//    ofTranslate(0, 900-800);
-//    sceneManager.draw();
-//    ofPopMatrix();
-    
-    
+    if(showGUI){
+        gui.draw();
+    }
+
     // DEBUG TEXT
 //    ofSetColor(255,255,255,255);
 //    ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);
@@ -147,6 +157,7 @@ void ofApp::draw(){
 //    ofDrawBitmapString(ofToString(faceScaleSmooth), 20, 80);
 //    ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
 //    ofDrawBitmapString(ofToString(ofGetWidth()*.5), 20, 120);
+
 }
 
 
@@ -162,11 +173,17 @@ ofVec3f ofApp::worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform) 
     return ScreenXYZ;
 }
 
+void ofApp::sceneDurationSliderListener(float &sceneDurationSlider){
+    sceneManager.SCENE_INTERVAL = sceneDurationSlider;
+}
 void ofApp::cameraRotationToggleListener(bool &cameraRotationToggle){
     if(cameraRotationToggle == 1)
         CLMFT.cameraRotation = 1;
     else if(cameraRotationToggle == 0)
         CLMFT.cameraRotation = -1;
+}
+void ofApp::faceFoundZoomScaleListener(float &faceFoundZoomScale){
+    CLMFT.faceFoundZoomScale = faceFoundZoomScale;
 }
 
 //--------------------------------------------------------------
