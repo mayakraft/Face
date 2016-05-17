@@ -23,7 +23,7 @@ void ofApp::setup(){
     cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
     gui.add(faceFoundZoomScale.setup("face found zoom", .3, .02, .6));
     faceFoundZoomScale.addListener(this, &ofApp::faceFoundZoomScaleListener);
-    gui.add(sceneDurationSlider.setup("scene duration", 10, 5, 30));
+    gui.add(sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30));
     sceneDurationSlider.addListener(this, &ofApp::sceneDurationSliderListener);
     gui.setPosition(windowCenter);
 

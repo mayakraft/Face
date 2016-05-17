@@ -44,10 +44,11 @@ void HypercubeScene::reset(){
 //--------------------------------------------------------------
 void HypercubeScene::update(){
     
-    hotSpots[0] = faceLeftEye;
-    hotSpots[1] = faceRightEye;
-    hotSpots[2] = faceMouth;
-    
+    ofPoint faceOffset = ofPoint(640, 400);
+
+    hotSpots[0] = faceLeftEye * faceScaleMatrix + faceOffset;
+    hotSpots[1] = faceRightEye * faceScaleMatrix + faceOffset;
+    hotSpots[2] = faceMouth * faceScaleMatrix + faceOffset;
     
     
     if (ofGetFrameNum() % 60 == 0){
@@ -56,7 +57,7 @@ void HypercubeScene::update(){
     
     float SCALE = .002;
     for(int i = 0; i < NUM_POLY; i++){
-        polychron[i].rotate4DOnly(SCALE * sinf(ofGetElapsedTimef() * rotations[i].x) + (lastFaceNose.x - faceNose.x)*.004,
+        polychron[i].rotate4DOnly(SCALE * sinf(ofGetElapsedTimef() * rotations[i].x),// + (lastFaceNose.x - faceNose.x)*.004,
                                   SCALE * sinf(ofGetElapsedTimef() * rotations[i].y),
                                   SCALE * sinf(ofGetElapsedTimef() * rotations[i].z) );
     }
@@ -134,12 +135,12 @@ void HypercubeScene::draw(){
 //    ofDrawBitmapString(ofToString(ofGetFrameRate()),20,20);
     
     
-    ofMultMatrix(faceScaleMatrix);
+//    ofMultMatrix(faceScaleMatrix);
 
     float camRadius = 100;
     float camSpeed = .1;
-    cam.lookAt(ofPoint(0,0,0));
-    cam.setPosition(camRadius * sin(ofGetElapsedTimef()*camSpeed), camRadius * cosf(ofGetElapsedTimef()*camSpeed), 100);
+//    cam.lookAt(ofPoint(0,0,0));
+//    cam.setPosition(camRadius * sin(ofGetElapsedTimef()*camSpeed), camRadius * cosf(ofGetElapsedTimef()*camSpeed), 100);
     
     
 //    ofSetColor(255, 50);
@@ -157,9 +158,11 @@ void HypercubeScene::draw(){
     ofSetColor(255);
     
     
-    cam.begin();
+//    cam.begin();
 
     ofPushMatrix();
+    
+    ofTranslate(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
 
     for(int i = 0; i < NUM_POLY; i++){
         ofPushMatrix();
@@ -179,9 +182,9 @@ void HypercubeScene::draw(){
             ofMesh myMesh;
             myMesh.setMode(OF_PRIMITIVE_LINES);
             myMesh.addVertex( polychron[i].vertices[ polychron[i].edges[e*2+0] ].threeD() );
-            myMesh.addColor(ofColor( 255* polychron[i].vertexEnergy[ polychron[i].edges[e*2+0] ] ));
+            myMesh.addColor(ofColor(255,  255* polychron[i].vertexEnergy[ polychron[i].edges[e*2+0] ] ));
             myMesh.addVertex( polychron[i].vertices[ polychron[i].edges[e*2+1] ].threeD() );
-            myMesh.addColor(ofColor( 255* polychron[i].vertexEnergy[ polychron[i].edges[e*2+1] ] ));
+            myMesh.addColor(ofColor(255,  255* polychron[i].vertexEnergy[ polychron[i].edges[e*2+1] ] ));
             ofEnableBlendMode(OF_BLENDMODE_ADD);
             myMesh.draw();
         }
@@ -200,5 +203,5 @@ void HypercubeScene::draw(){
     ofPopMatrix();
 
     ofPopMatrix();
-    cam.end();
+//    cam.end();
 }

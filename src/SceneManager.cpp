@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------------
 void SceneManager::setup(){
     
-    SCENE_INTERVAL = 10;
+    SCENE_INTERVAL = 20;
     FADE_DURATION = 3.0;
     
     scenes.push_back(new HypercubeScene());
@@ -126,13 +126,13 @@ void SceneManager::draw(){
     
     sceneFbo.draw(-RESOLUTION_SCREEN_WIDTH * .5, -RESOLUTION_SCREEN_HEIGHT * .5);
   
-    ofPushMatrix();
-    ofSetColor(255, 128, 0);
-    ofDrawCircle(faceLeftEye * faceScaleMatrix, 10);
-    ofDrawCircle(faceRightEye * faceScaleMatrix, 10);
-    ofDrawCircle(faceNose * faceScaleMatrix, 10);
-    ofDrawCircle(faceMouth * faceScaleMatrix, 10);
-    ofPopMatrix();
+//    ofPushMatrix();
+//    ofSetColor(255, 128, 0);
+//    ofDrawCircle(faceLeftEye * faceScaleMatrix, 10);
+//    ofDrawCircle(faceRightEye * faceScaleMatrix, 10);
+//    ofDrawCircle(faceNose * faceScaleMatrix, 10);
+//    ofDrawCircle(faceMouth * faceScaleMatrix, 10);
+//    ofPopMatrix();
 
     ofSetColor(255, 255);
 }
