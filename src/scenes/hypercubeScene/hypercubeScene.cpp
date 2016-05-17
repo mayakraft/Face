@@ -107,6 +107,8 @@ void HypercubeScene::update(){
             numPoly = newNumPoly;
             if(numPoly - 1 >= 0 && numPoly - 1 < NUM_POLY)
                 brightnesses[numPoly-1] = 255;
+            if(numPoly > NUM_POLY)
+                numPoly = NUM_POLY;
         }
     }
     else
@@ -129,7 +131,7 @@ bool HypercubeScene::pointInHotspot(ofPoint hotSpot, ofPoint point){
 
 //--------------------------------------------------------------
 void HypercubeScene::draw(){
-    ofClear(255);
+    ofClear(0);
 
     ofSetColor(255);
 //    ofDrawBitmapString(ofToString(ofGetFrameRate()),20,20);
@@ -163,44 +165,39 @@ void HypercubeScene::draw(){
     ofPushMatrix();
     
     ofTranslate(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
+    
+    ofTranslate( faceCenterSmooth * ofPoint(0.05, 0.05) );
+    
+    ofRotate(faceCenterSmooth.x * 0.02, 1, 0, 0);
+    ofRotate(faceCenterSmooth.y * 0.02, 0, 1, 0);
 
-    for(int i = 0; i < NUM_POLY; i++){
+    ofSetColor(0, 255);
+
+    for(int i = 0; i < numPoly; i++){
         ofPushMatrix();
         
         myShader.begin();
-        myShader.setUniform2f("ptToFadeFrom1", ofVec2f(hotSpots[0].x, ofGetHeight() - hotSpots[0].y));
-        myShader.setUniform2f("ptToFadeFrom2", ofVec2f(hotSpots[1].x, ofGetHeight() - hotSpots[1].y));
-        myShader.setUniform2f("ptToFadeFrom3", ofVec2f(hotSpots[2].x, ofGetHeight() - hotSpots[2].y));
+        myShader.setUniform2f("ptToFadeFrom1", ofVec2f(hotSpots[0].x, hotSpots[0].y));
+        myShader.setUniform2f("ptToFadeFrom2", ofVec2f(hotSpots[1].x, hotSpots[1].y));
+        myShader.setUniform2f("ptToFadeFrom3", ofVec2f(hotSpots[2].x, hotSpots[2].y));
         ofMultMatrix(polyMatrix[i]);
-
+//
 //        ofSetColor(255, brightnesses[i]);
-        ofSetColor(255, 50);
         polychron[i].drawWireframe();
         myShader.end();
         
-        for(int e = 0; e < polychron[i].edges.size() * .5; e++){
-            ofMesh myMesh;
-            myMesh.setMode(OF_PRIMITIVE_LINES);
-            myMesh.addVertex( polychron[i].vertices[ polychron[i].edges[e*2+0] ].threeD() );
-            myMesh.addColor(ofColor(255,  255* polychron[i].vertexEnergy[ polychron[i].edges[e*2+0] ] ));
-            myMesh.addVertex( polychron[i].vertices[ polychron[i].edges[e*2+1] ].threeD() );
-            myMesh.addColor(ofColor(255,  255* polychron[i].vertexEnergy[ polychron[i].edges[e*2+1] ] ));
-            ofEnableBlendMode(OF_BLENDMODE_ADD);
-            myMesh.draw();
-        }
+//        for(int e = 0; e < polychron[i].edges.size() * .5; e++){
+//            ofMesh myMesh;
+//            myMesh.setMode(OF_PRIMITIVE_LINES);
+//            myMesh.addVertex( polychron[i].vertices[ polychron[i].edges[e*2+0] ].threeD() );
+//            myMesh.addColor(ofColor(255,  255* polychron[i].vertexEnergy[ polychron[i].edges[e*2+0] ] ));
+//            myMesh.addVertex( polychron[i].vertices[ polychron[i].edges[e*2+1] ].threeD() );
+//            myMesh.addColor(ofColor(255,  255* polychron[i].vertexEnergy[ polychron[i].edges[e*2+1] ] ));
+//            ofEnableBlendMode(OF_BLENDMODE_ADD);
+//            myMesh.draw();
+//        }
         ofPopMatrix();
     }
-
-    
-    ofPoint faceOffset = ofPoint(640, 400);
-    
-    ofPushMatrix();
-    ofSetColor(0, 128, 255);
-    ofDrawCircle(faceLeftEye * faceScaleMatrix + faceOffset, 10);
-    ofDrawCircle(faceRightEye * faceScaleMatrix + faceOffset, 10);
-    ofDrawCircle(faceNose * faceScaleMatrix + faceOffset, 10);
-    ofDrawCircle(faceMouth * faceScaleMatrix + faceOffset, 10);
-    ofPopMatrix();
 
     ofPopMatrix();
 //    cam.end();

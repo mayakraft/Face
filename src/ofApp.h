@@ -32,6 +32,8 @@ class ofApp : public ofBaseApp{
     // press spacebar to bring up the GUI
     bool showGUI;
     ofxPanel gui;
+    ofxFloatSlider screenBrightness;
+    ofxFloatSlider faceDarkeningScale;
     ofxToggle cameraRotationToggle;
     void cameraRotationToggleListener(bool & cameraRotationToggle);
     ofxToggle showFace;

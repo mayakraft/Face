@@ -15,18 +15,26 @@ void ofApp::setup(){
     
     ofSetFullscreen(true);
     
+    
     gui.setup();
-    gui.add(showFace.setup("show face", false));
-    gui.add(enableMasterScale.setup("scale window", true));
-    gui.add(masterScale.setup("  - scale", 1, .1, 2));
+    
+    gui.add(sceneDurationSlider.setup("scene duration (sec)", sceneManager.SCENE_INTERVAL, 5, 30));
+    gui.add(screenBrightness.setup("camera brightness", .5, 0, 1));
+    gui.add(faceDarkeningScale.setup("face causes dimming", 0, 0, 1));
+    gui.add(faceFoundZoomScale.setup("zoom in on face", .3, .02, .6));
+    
     gui.add(cameraRotationToggle.setup("flip camera", false));
-    cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
-    gui.add(faceFoundZoomScale.setup("face found zoom", .3, .02, .6));
-    faceFoundZoomScale.addListener(this, &ofApp::faceFoundZoomScaleListener);
-    gui.add(sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30));
+    gui.add(showFace.setup("show face", false));
+    gui.add(enableMasterScale.setup("scale window", false));
+    gui.add(masterScale.setup("  - scale", 1, .1, 2));
+    
     sceneDurationSlider.addListener(this, &ofApp::sceneDurationSliderListener);
+    faceFoundZoomScale.addListener(this, &ofApp::faceFoundZoomScaleListener);
+    cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
+
     gui.setPosition(windowCenter);
 
+    
     edgeImage.load("faded-edge.png");
     
     // resolution fitting math
@@ -91,8 +99,10 @@ void ofApp::draw(){
         ofPushMatrix();
             // scale camera to fit inside of screen
             ofScale(minCameraFitScale, minCameraFitScale);
-            ofSetColor( 255 - CLMFT.faceEnergy * 200, 255);
+//            ofSetColor( 255 - CLMFT.faceEnergy * 200, 255);
+            ofSetColor(255 * screenBrightness - 255 * screenBrightness * faceDarkeningScale * CLMFT.faceEnergy, 255);
             CLMFT.drawCameraFeed();
+            ofSetColor(255, 255);
             edgeImage.draw(-RESOLUTION_CAMERA_WIDTH * .5,
                            -RESOLUTION_CAMERA_HEIGHT * .5,
                            RESOLUTION_CAMERA_WIDTH,
