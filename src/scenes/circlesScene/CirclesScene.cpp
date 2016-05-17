@@ -214,7 +214,7 @@ void CirclesScene::setup(){
         circle temp;
         temp.radius = ofRandom(30,200);
         float angle = ofMap(i,0,10, 0, TWO_PI);
-        temp.pos = ofPoint(500,500) + 200 * ofPoint(cos(angle), sin(angle));
+        temp.pos = ofPoint(0,0) + 200 * ofPoint(cos(angle), sin(angle));
        // temp.pos = ofPoint( );
         temp.vel = ofPoint(0,0);
         circles.push_back(temp);
@@ -235,11 +235,11 @@ void CirclesScene::update(){
     }
     for (int i = 0; i < circles.size(); i++){
         // move to center
-        ofPoint diff = ofPoint(500,500) - circles[i].pos;
+        ofPoint diff = ofPoint(0,0) - circles[i].pos;
         circles[i].addForce(diff/300.0);
         
         
-        ofPoint diff2 = ofPoint(500,500) - circles[i].pos;
+        ofPoint diff2 = ofPoint(0,0) - circles[i].pos;
         if (diff2.length() < ofGetMouseX()){
             circles[i].addForce(-diff/600.0);
         }
@@ -258,6 +258,13 @@ void CirclesScene::update(){
     circles[0].radius = 200 + 100 * a * sin(ofGetElapsedTimef()*0.8+1.0) + 20 * sin(ofGetElapsedTimef()*0.8+1.0);
     circles[1].radius = 100 + 90 * b * sin(ofGetElapsedTimef())          + 17.5 * sin(ofGetElapsedTimef());
     circles[2].radius = 100 + 80 * c * sin(ofGetElapsedTimef()*1.2)      + 15 * sin(ofGetElapsedTimef()*1.2);
+    
+    // BIG SCREEN FIXES HERE
+    float screenScale = 2.0;
+    circles[0].radius *= screenScale;
+    circles[1].radius *= screenScale;
+    circles[2].radius *= screenScale;
+    // BIG SCREEN FIXES END
     
     lastFacePosition = faceNose;
     smoothFaceVelocity -= 1;
@@ -287,7 +294,7 @@ void CirclesScene::draw(){
 
     ofClear(255);
     
-    ofPoint faceOffset = ofPoint(640, 400);
+    ofPoint faceOffset = ofPoint(0, 0);//ofPoint(640, 400);
     
 //    ofPushMatrix();
 //    ofSetColor(0, 128, 255);
@@ -297,11 +304,7 @@ void CirclesScene::draw(){
 //    ofDrawCircle(faceMouth * faceScaleMatrix + faceOffset, 10);
 //    ofPopMatrix();
     
-    // BIG SCREEN FIXES HERE
     ofTranslate(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
-    ofTranslate(-faceOffset - ofPoint(400, 400));
-    ofScale(2, 2);
-    // BIG SCREEN FIXES END
     
     ofSetColor(255,255,255,90);
     for (int i = 0; i < circles.size(); i++){
@@ -429,7 +432,7 @@ void CirclesScene::draw(){
 //    
     circle c;
     c.pos = center;
-    c.radius =1.0 / CFT.curvature();
+    c.radius = 1.0 / CFT.curvature();
     traceAngleToAngle(c, ptEnd, ptBegin, tempLine,  false, "0");
     tempLine.setClosed(true);
 

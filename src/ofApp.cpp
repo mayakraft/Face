@@ -33,7 +33,7 @@ void ofApp::setup(){
     faceFoundZoomScale.addListener(this, &ofApp::faceFoundZoomScaleListener);
     cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
 
-    gui.setPosition(windowCenter);
+    gui.setPosition(ofPoint(0, 0));
     
     CLMFT.faceFoundZoomScale = faceFoundZoomScale;
 
@@ -58,8 +58,6 @@ void ofApp::update(){
     sceneManager.update();
     CLMFT.update();
     
-    attractScreen.update();
-
     // MASKS
 
     // build face rotation/scale matrix to put the face in the center of the screen
@@ -106,10 +104,8 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     
-    ofPoint center = ofPoint(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
-
     ofPushMatrix();
-        ofTranslate(center);
+        ofTranslate(windowCenter);
         // scale as needed
         if(enableMasterScale)
             ofScale(masterScale, masterScale);
@@ -143,7 +139,7 @@ void ofApp::draw(){
     ofPopMatrix();
     
     ofPushMatrix();
-        ofTranslate(center);
+        ofTranslate(windowCenter);
         // scale as needed
         if(enableMasterScale)
             ofScale(masterScale, masterScale);
@@ -168,26 +164,30 @@ void ofApp::draw(){
     
     // SCENES
     ofPushMatrix();
-        ofTranslate(center);
+        ofTranslate(windowCenter);
         if(enableMasterScale)
             ofScale(masterScale, masterScale);
         sceneManager.draw();
     ofPopMatrix();
-    
-    
+
     if(attractScreenBrightness != 0.0){
         if(enableMasterScale)
             ofScale(masterScale, masterScale);
         ofSetColor(255, 100 * attractScreenBrightness);
+        attractScreen.update();
         attractScreen.draw();
     }
 
     if(showGUI){
+        ofPushMatrix();
+        ofTranslate(windowCenter);
+        ofRotate(90);
+        ofScale(3, 3);
         ofSetColor(255, 255);
         gui.draw();
+        ofPopMatrix();
     }
     
-
     // DEBUG TEXT
 //    ofSetColor(255,255,255,255);
 //    ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);
