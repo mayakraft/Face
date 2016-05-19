@@ -65,8 +65,6 @@ void ofApp::setup(){
     attractScreen.scaleAmnt = attractScreenScale;
     CLMFT.faceFoundZoomScale = faceFoundZoomScale;
     ofSetLineWidth(lineThicknessSlider);
-    
-    printf("\nHERE: %f\n", minWindowFitScale);
 }
 
 //--------------------------------------------------------------

@@ -260,10 +260,10 @@ void CirclesScene::update(){
     circles[2].radius = 100 + 80 * c * sin(ofGetElapsedTimef()*1.2)      + 15 * sin(ofGetElapsedTimef()*1.2);
     
     // BIG SCREEN FIXES HERE
-    float screenScale = 2.0;
-    circles[0].radius *= screenScale;
-    circles[1].radius *= screenScale;
-    circles[2].radius *= screenScale;
+//    float screenScale = 2.0;
+//    circles[0].radius *= screenScale;
+//    circles[1].radius *= screenScale;
+//    circles[2].radius *= screenScale;
     // BIG SCREEN FIXES END
     
     lastFacePosition = faceNose;

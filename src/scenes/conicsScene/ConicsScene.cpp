@@ -146,7 +146,7 @@ void ConicsScene::draw(){
     
     // BIG SCREEN FIXES
     ofTranslate(RESOLUTION_WINDOW_WIDTH * .5, RESOLUTION_WINDOW_HEIGHT * .5);
-    ofScale(2, 2);
+    ofScale(.5, .5);
     // END BIG SCREEN FIXES
     
     ofSetColor(255, 255);
