@@ -39,7 +39,6 @@ void AttractScreen::update(){
 void AttractScreen::draw(){
     ofPushMatrix();
     
-    ofTranslate(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
     float scaleAmnt = ofGetScreenHeight() * .04;
     ofScale(scaleAmnt, scaleAmnt, scaleAmnt);
     

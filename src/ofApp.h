@@ -44,6 +44,8 @@ class ofApp : public ofBaseApp{
     ofxToggle showFace;
     ofxToggle enableMasterScale;
     ofxFloatSlider masterScale;
+    ofxFloatSlider lineThicknessSlider;
+    void lineThicknessSliderListener(float & lineThicknessSlider);
     ofxFloatSlider faceFoundZoomScale;
     void faceFoundZoomScaleListener(float & faceFoundZoomScale);
     ofxFloatSlider sceneDurationSlider;

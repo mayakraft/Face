@@ -17,18 +17,21 @@ void ofApp::setup(){
     
     
     gui.setup();
-    
-    gui.add(attractScreenWaitTime.setup("attract delay", 15, 5, 120));
-    gui.add(sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30));
+    // appearance
     gui.add(screenBrightness.setup("camera brightness", .7, 0, 1));
-    gui.add(faceDarkeningScale.setup("face causes dimming", .85, 0, 1));
+    gui.add(faceDarkeningScale.setup("face causes dimming", .7, 0, 1));
+    gui.add(lineThicknessSlider.setup("line weight", 2, 0.5, 5));
     gui.add(faceFoundZoomScale.setup("zoom in on face", .05, .02, .6));
-    
+    // animation
+    gui.add(attractScreenWaitTime.setup("scr. saver delay", 15, 5, 120));
+    gui.add(sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30));
+    // admin and debug
     gui.add(cameraRotationToggle.setup("flip camera", false));
-    gui.add(showFace.setup("show face", false));
+    gui.add(showFace.setup("show face dots", false));
     gui.add(enableMasterScale.setup("scale window", false));
     gui.add(masterScale.setup("  - scale", 1, .1, 2));
     
+    lineThicknessSlider.addListener(this, &ofApp::lineThicknessSliderListener);
     sceneDurationSlider.addListener(this, &ofApp::sceneDurationSliderListener);
     faceFoundZoomScale.addListener(this, &ofApp::faceFoundZoomScaleListener);
     cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
@@ -50,6 +53,8 @@ void ofApp::setup(){
                                    RESOLUTION_CAMERA_WIDTH * minCameraFitScale);
     
     attractScreen.setup();
+    
+    ofSetLineWidth(lineThicknessSlider);
 }
 
 //--------------------------------------------------------------
@@ -114,9 +119,8 @@ void ofApp::draw(){
             ofScale(minCameraFitScale, minCameraFitScale);
 //            ofSetColor( 255 - CLMFT.faceEnergy * 200, 255);
     
-    ofSetColor(255 * screenBrightness - (sceneManager.masterFade) * 255 * screenBrightness * faceDarkeningScale, 255);
-    
-//            ofSetColor(255 * screenBrightness - 255 * screenBrightness * faceDarkeningScale * (1-sceneManager.masterFade), 255);
+            ofSetColor(255 * screenBrightness - (sceneManager.masterFade) * 255 * screenBrightness * faceDarkeningScale, 255);
+            ofSetColor(255 * screenBrightness - 255 * screenBrightness * faceDarkeningScale * (CLMFT.faceEnergy), 255);
             CLMFT.drawCameraFeed();
             ofSetColor(255, 255);
             edgeImage.draw(-RESOLUTION_CAMERA_WIDTH * .5,
@@ -145,7 +149,6 @@ void ofApp::draw(){
             ofScale(masterScale, masterScale);
 
         ofNoFill();
-        ofSetLineWidth(3);
         ofSetColor(0, 255);
         ofDrawRectangle(-ofGetScreenWidth() * .5, -ofGetScreenHeight() * .5, ofGetScreenWidth(), ofGetScreenHeight());
         ofSetColor(255);
@@ -171,11 +174,14 @@ void ofApp::draw(){
     ofPopMatrix();
 
     if(attractScreenBrightness != 0.0){
+        ofPushMatrix();
+        ofTranslate(windowCenter);
         if(enableMasterScale)
             ofScale(masterScale, masterScale);
         ofSetColor(255, 100 * attractScreenBrightness);
         attractScreen.update();
         attractScreen.draw();
+        ofPopMatrix();
     }
 
     if(showGUI){
@@ -210,6 +216,10 @@ ofVec3f ofApp::worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform) 
     ScreenXYZ.y = (1.0f - CameraXYZ.y) / 2.0f * viewport.height + viewport.y;
     ScreenXYZ.z = CameraXYZ.z;
     return ScreenXYZ;
+}
+
+void ofApp::lineThicknessSliderListener(float &lineThicknessSlider){
+    ofSetLineWidth(lineThicknessSlider);
 }
 
 void ofApp::sceneDurationSliderListener(float &sceneDurationSlider){
