@@ -38,8 +38,10 @@ class ofApp : public ofBaseApp{
     ofxFloatSlider faceDarkeningScale;
     ofxToggle cameraRotationToggle;
     void cameraRotationToggleListener(bool & cameraRotationToggle);
-
+    // attract screen
     ofxFloatSlider attractScreenWaitTime;
+    ofxFloatSlider attractScreenScale;
+    void attractScreenScaleListener(float & attractScreenScale);
 
     ofxToggle showFace;
     ofxToggle enableMasterScale;

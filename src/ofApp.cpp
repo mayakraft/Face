@@ -35,6 +35,7 @@ void ofApp::setup(){
     gui.add(faceDarkeningScale.setup("face causes dimming", .7, 0, 1));
     gui.add(lineThicknessSlider.setup("line weight", 2, 0.5, 5));
     gui.add(faceFoundZoomScale.setup("zoom in on face", .15, .02, .6));
+    gui.add(attractScreenScale.setup("scr.saver scale", 60, 50, 200));
     // animation
     gui.add(attractScreenWaitTime.setup("scr. saver delay", 15, 5, 120));
     gui.add(sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30));
@@ -44,6 +45,7 @@ void ofApp::setup(){
     gui.add(enableMasterScale.setup("scale window", false));
     gui.add(masterScale.setup("  - scale", 1, .1, 2));
     // handlers
+    attractScreenScale.addListener(this, &ofApp::attractScreenScaleListener);
     lineThicknessSlider.addListener(this, &ofApp::lineThicknessSliderListener);
     sceneDurationSlider.addListener(this, &ofApp::sceneDurationSliderListener);
     faceFoundZoomScale.addListener(this, &ofApp::faceFoundZoomScaleListener);
@@ -52,6 +54,8 @@ void ofApp::setup(){
     gui.setPosition(windowCenter);
     
     
+    // set program properties from GUI
+    attractScreen.scaleAmnt = attractScreenScale;
     CLMFT.faceFoundZoomScale = faceFoundZoomScale;
     ofSetLineWidth(lineThicknessSlider);
 }
@@ -149,14 +153,16 @@ void ofApp::draw(){
             sceneManager.draw();
         ofPopMatrix();
 
-//        // ATTRACT SCREEN
-//        if(attractScreenBrightness != 0.0){
-//            ofPushMatrix();
-//                ofSetColor(255, 100 * attractScreenBrightness);
-//                attractScreen.update();
-//                attractScreen.draw();
-//            ofPopMatrix();
-//        }
+    
+        // ATTRACT SCREEN
+        if(attractScreenBrightness != 0.0){
+            ofPushMatrix();
+                ofSetColor(255, 100 * attractScreenBrightness);
+                attractScreen.update();
+                attractScreen.draw();
+            ofPopMatrix();
+        }
+    
     
         // black border around screen
         if(enableMasterScale){
@@ -197,6 +203,10 @@ ofVec3f ofApp::worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform) 
     ScreenXYZ.y = (1.0f - CameraXYZ.y) / 2.0f * viewport.height + viewport.y;
     ScreenXYZ.z = CameraXYZ.z;
     return ScreenXYZ;
+}
+
+void ofApp::attractScreenScaleListener(float &attractScreenScale){
+    attractScreen.scaleAmnt = attractScreenScale;
 }
 
 void ofApp::lineThicknessSliderListener(float &lineThicknessSlider){

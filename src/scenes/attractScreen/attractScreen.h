@@ -4,6 +4,9 @@
 #include "BaseScene.h"
 #include "Polychron.h"
 
+static const unsigned int AT_COLS = 3;
+static const unsigned int AT_ROWS = 5;
+
 class AttractScreen : public BaseScene{
 
 public:
@@ -11,10 +14,15 @@ public:
     void update();
     void draw();
     
+    float scaleAmnt = 60;
+
+private:
+    
     ofEasyCam cam;
     
-    Polychron polychron[25];
-    ofVec3f rotations[25];
+    
+    Polychron polychron[AT_COLS*AT_ROWS];
+    ofVec3f rotations[AT_COLS*AT_ROWS];
 
     bool grid = true;
     float gridGap = 3.5;

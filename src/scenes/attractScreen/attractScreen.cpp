@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void AttractScreen::setup(){
     
-    for(int i = 0; i < 25; i++){
+    for(int i = 0; i < AT_COLS * AT_ROWS; i++){
         polychron[i].loadVefFile("8cell.ascii.txt");
 
         rotations[i].x = ofRandom(.01, 0.3);
@@ -17,7 +17,7 @@ void AttractScreen::update(){
     
     if(fourDAnimated){
         float SCALE = 0.0001;
-        for(int i = 0; i < 25; i++){
+        for(int i = 0; i < AT_COLS * AT_ROWS; i++){
 //            if(indexed)
 //                polychron[i].rotate4DOnly(SCALE * (i+1) * fourD.x, SCALE * (i+1) * fourD.y, SCALE * (i+1) * fourD.z);
 //            else
@@ -39,41 +39,45 @@ void AttractScreen::update(){
 void AttractScreen::draw(){
     ofPushMatrix();
     
-    float scaleAmnt = ofGetScreenHeight() * .04;
     ofScale(scaleAmnt, scaleAmnt, scaleAmnt);
     
-    for(int i = 0; i < 25; i++){
-        ofPushMatrix();
-        if(grid){
-            ofTranslate( gridGap * (i%5 - 2), gridGap * ((int)(i/5.0) - 2), 0);
+    for(int c = 0; c < AT_COLS; c++){
+        for(int r = 0; r < AT_ROWS; r++){
+            int i  = r+c*AT_ROWS;
+            ofPushMatrix();
+            if(grid){
+                ofTranslate( gridGap * (r - (AT_ROWS-1)*.5),
+                             gridGap * (c - (AT_COLS-1)*.5),
+                             0);
+            }
+            if(indexed){
+                ofScale(1 + radiusScale * i, 1 + radiusScale * i, 1 + radiusScale * i);
+                ofScale(1 + compression.x * (i+1), 1 + compression.y * (i+1), 1 + compression.z * (i+1));
+                ofRotate(i * angleOffset.x, 1, 0, 0);
+                ofRotate(i * angleOffset.y, 0, 1, 0);
+                ofRotate(i * angleOffset.z, 0, 0, 1);
+            }
+            else{
+                ofScale(1 + radiusScale, 1 + radiusScale, 1 + radiusScale);
+                ofScale(1 + compression.x, 1 + compression.y, 1 + compression.z);
+                ofRotate(angleOffset.x, 1, 0, 0);
+                ofRotate(angleOffset.y, 0, 1, 0);
+                ofRotate(angleOffset.z, 0, 0, 1);
+            }
+            if(rotAnimations){
+                ofRotate(rotAnimMag * sinf(ofGetElapsedTimef()*rotations[i].x * rotAnimSpeed), 1, 0, 0);
+                ofRotate(rotAnimMag * sinf(ofGetElapsedTimef()*rotations[i].y * rotAnimSpeed), 0, 1, 0);
+                ofRotate(rotAnimMag * sinf(ofGetElapsedTimef()*rotations[i].z * rotAnimSpeed), 0, 0, 1);
+            }
+            if(posAnimations){
+                ofTranslate(posAnimMag * sinf(ofGetElapsedTimef()*rotations[i].x * posAnimSpeed),
+                            posAnimMag * sinf(ofGetElapsedTimef()*rotations[i].y * posAnimSpeed),
+                            posAnimMag * sinf(ofGetElapsedTimef()*rotations[i].z * posAnimSpeed) );
+            }
+            polychron[i].drawWireframe();
+            
+            ofPopMatrix();
         }
-        if(indexed){
-            ofScale(1 + radiusScale * i, 1 + radiusScale * i, 1 + radiusScale * i);
-            ofScale(1 + compression.x * (i+1), 1 + compression.y * (i+1), 1 + compression.z * (i+1));
-            ofRotate(i * angleOffset.x, 1, 0, 0);
-            ofRotate(i * angleOffset.y, 0, 1, 0);
-            ofRotate(i * angleOffset.z, 0, 0, 1);
-        }
-        else{
-            ofScale(1 + radiusScale, 1 + radiusScale, 1 + radiusScale);
-            ofScale(1 + compression.x, 1 + compression.y, 1 + compression.z);
-            ofRotate(angleOffset.x, 1, 0, 0);
-            ofRotate(angleOffset.y, 0, 1, 0);
-            ofRotate(angleOffset.z, 0, 0, 1);
-        }
-        if(rotAnimations){
-            ofRotate(rotAnimMag * sinf(ofGetElapsedTimef()*rotations[i].x * rotAnimSpeed), 1, 0, 0);
-            ofRotate(rotAnimMag * sinf(ofGetElapsedTimef()*rotations[i].y * rotAnimSpeed), 0, 1, 0);
-            ofRotate(rotAnimMag * sinf(ofGetElapsedTimef()*rotations[i].z * rotAnimSpeed), 0, 0, 1);
-        }
-        if(posAnimations){
-            ofTranslate(posAnimMag * sinf(ofGetElapsedTimef()*rotations[i].x * posAnimSpeed),
-                        posAnimMag * sinf(ofGetElapsedTimef()*rotations[i].y * posAnimSpeed),
-                        posAnimMag * sinf(ofGetElapsedTimef()*rotations[i].z * posAnimSpeed) );
-        }
-        polychron[i].drawWireframe();
-        
-        ofPopMatrix();
     }
     
     ofPopMatrix();
