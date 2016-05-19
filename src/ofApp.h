@@ -55,7 +55,9 @@ class ofApp : public ofBaseApp{
     
     // scales and transformations
     float minCameraFitScale;
-    ofPoint facePointsFrameScale;
+    ofPoint cameraToWindowScale;
+    float minWindowFitScale;
+    ofPoint windowToScreenScale;
     
     ofVec3f worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform);
 

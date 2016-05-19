@@ -11,13 +11,20 @@ void ofApp::setup(){
     
     // SCREEN AND RESOLUTION
     windowCenter = ofPoint(ofGetScreenWidth()*.5, ofGetScreenHeight()*.5);
-    float sw = (RESOLUTION_WINDOW_WIDTH/(float)RESOLUTION_CAMERA_WIDTH);
-    float sh = (RESOLUTION_WINDOW_HEIGHT/(float)RESOLUTION_CAMERA_HEIGHT);
-    if(sw > sh)   minCameraFitScale = sw;
-    else          minCameraFitScale = sh;
-    facePointsFrameScale = ofPoint(RESOLUTION_CAMERA_HEIGHT * minCameraFitScale,
+    float cw = (RESOLUTION_WINDOW_WIDTH/(float)RESOLUTION_CAMERA_WIDTH);
+    float ch = (RESOLUTION_WINDOW_HEIGHT/(float)RESOLUTION_CAMERA_HEIGHT);
+    if(cw > ch)   minCameraFitScale = cw;
+    else          minCameraFitScale = ch;
+    cameraToWindowScale = ofPoint(RESOLUTION_CAMERA_HEIGHT * minCameraFitScale,
                                    RESOLUTION_CAMERA_WIDTH * minCameraFitScale);
     
+    float sw = (ofGetScreenWidth()/(float)RESOLUTION_WINDOW_WIDTH);
+    float sh = (ofGetScreenHeight()/(float)RESOLUTION_WINDOW_HEIGHT);
+    if(sw > sh)   minWindowFitScale = sw;
+    else          minWindowFitScale = sh;
+    windowToScreenScale = ofPoint(RESOLUTION_CAMERA_HEIGHT * minWindowFitScale,
+                                  RESOLUTION_CAMERA_WIDTH * minWindowFitScale);
+
     ofSetFullscreen(true);
 
     
@@ -35,7 +42,7 @@ void ofApp::setup(){
     gui.add(faceDarkeningScale.setup("face causes dimming", .7, 0, 1));
     gui.add(lineThicknessSlider.setup("line weight", 2, 0.5, 5));
     gui.add(faceFoundZoomScale.setup("zoom in on face", .15, .02, .6));
-    gui.add(attractScreenScale.setup("scr.saver scale", 60, 50, 200));
+    gui.add(attractScreenScale.setup("scr.saver scale", 30, 5, 150));
     // animation
     gui.add(attractScreenWaitTime.setup("scr. saver delay", 15, 5, 120));
     gui.add(sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30));
@@ -70,26 +77,26 @@ void ofApp::update(){
 
     // build face rotation/scale matrix to put the face in the center of the screen
     faceScaleMatrix.makeIdentityMatrix();
-    faceScaleMatrix.translate( CLMFT.faceCenterSmooth.y * facePointsFrameScale.y,
-                              -CLMFT.faceCenterSmooth.x * facePointsFrameScale.x,
+    faceScaleMatrix.translate( CLMFT.faceCenterSmooth.y * cameraToWindowScale.y,
+                              -CLMFT.faceCenterSmooth.x * cameraToWindowScale.x,
                               0.0);
     faceScaleMatrix.scale(CLMFT.faceScaleSmooth, CLMFT.faceScaleSmooth, CLMFT.faceScaleSmooth);
     
     // deliver info to the scene manager
     sceneManager.faceFound = CLMFT.faceFound;
     sceneManager.faceScaleMatrix = faceScaleMatrix;
-    sceneManager.faceCenterSmooth = ofPoint(-CLMFT.faceCenterSmooth.y * facePointsFrameScale.y,
-                                            CLMFT.faceCenterSmooth.x * facePointsFrameScale.x);
+    sceneManager.faceCenterSmooth = ofPoint(-CLMFT.faceCenterSmooth.y * cameraToWindowScale.y,
+                                            CLMFT.faceCenterSmooth.x * cameraToWindowScale.x);
     sceneManager.faceScaleSmooth = CLMFT.faceScaleSmooth;
     // face parts
-    sceneManager.faceNose = ofPoint(-CLMFT.faceNose.y * facePointsFrameScale.y,
-                                    CLMFT.faceNose.x * facePointsFrameScale.x);// - center;
-    sceneManager.faceMouth = ofPoint(-CLMFT.faceMouth.y * facePointsFrameScale.y,
-                                     CLMFT.faceMouth.x * facePointsFrameScale.x);// - center;
-    sceneManager.faceLeftEye = ofPoint(-CLMFT.faceLeftEye.y * facePointsFrameScale.y,
-                                       CLMFT.faceLeftEye.x * facePointsFrameScale.x);// - center;
-    sceneManager.faceRightEye = ofPoint(-CLMFT.faceRightEye.y * facePointsFrameScale.y,
-                                        CLMFT.faceRightEye.x * facePointsFrameScale.x);// - center;
+    sceneManager.faceNose = ofPoint(-CLMFT.faceNose.y * cameraToWindowScale.y,
+                                    CLMFT.faceNose.x * cameraToWindowScale.x);// - center;
+    sceneManager.faceMouth = ofPoint(-CLMFT.faceMouth.y * cameraToWindowScale.y,
+                                     CLMFT.faceMouth.x * cameraToWindowScale.x);// - center;
+    sceneManager.faceLeftEye = ofPoint(-CLMFT.faceLeftEye.y * cameraToWindowScale.y,
+                                       CLMFT.faceLeftEye.x * cameraToWindowScale.x);// - center;
+    sceneManager.faceRightEye = ofPoint(-CLMFT.faceRightEye.y * cameraToWindowScale.y,
+                                        CLMFT.faceRightEye.x * cameraToWindowScale.x);// - center;
     
     if(CLMFT.faceFound){
         lastFaceDetection = ofGetElapsedTimef();
@@ -114,11 +121,13 @@ void ofApp::draw(){
         if(enableMasterScale){
             ofScale(masterScale, masterScale);
         }
+    // scale window to fit
+        ofScale(minWindowFitScale, minWindowFitScale);
     
         ofPushMatrix();  // roving face-found zoom
             ofMultMatrix(faceScaleMatrix);
 
-            ofPushMatrix();  // facePointsFrameScale, aspect fit camera onto screen
+            ofPushMatrix();  // cameraToWindowScale, aspect fit camera onto screen
                 // scale camera to fit inside of screen
                 ofScale(minCameraFitScale, minCameraFitScale);
                 // (sceneManager.masterFade)  in place of  (CLMFT.faceEnergy)
@@ -133,15 +142,15 @@ void ofApp::draw(){
                     ofSetColor(255, 255);
                     CLMFT.drawFacePoints();
                 }
-            ofPopMatrix(); // facePointsFrameScale, aspect fit camera onto screen
+            ofPopMatrix(); // cameraToWindowScale, aspect fit camera onto screen
     
 //            ofPushMatrix();
 //                ofRotate(-90 * CLMFT.cameraRotation);
 //                ofSetColor(0, 128, 255);
-//                ofDrawCircle(CLMFT.faceLeftEye * facePointsFrameScale, 10);
-//                ofDrawCircle(CLMFT.faceRightEye * facePointsFrameScale, 10);
-//                ofDrawCircle(CLMFT.faceNose * facePointsFrameScale, 10);
-//                ofDrawCircle(CLMFT.faceMouth * facePointsFrameScale, 10);
+//                ofDrawCircle(CLMFT.faceLeftEye * cameraToWindowScale, 10);
+//                ofDrawCircle(CLMFT.faceRightEye * cameraToWindowScale, 10);
+//                ofDrawCircle(CLMFT.faceNose * cameraToWindowScale, 10);
+//                ofDrawCircle(CLMFT.faceMouth * cameraToWindowScale, 10);
 //            ofPopMatrix();
     
         ofPopMatrix();  // roving face-found zoom
@@ -167,7 +176,7 @@ void ofApp::draw(){
         // black border around screen
         if(enableMasterScale){
             ofNoFill();
-            ofSetColor(0, 255);
+            ofSetColor(255, 0, 100, 255);
             ofDrawRectangle(-RESOLUTION_WINDOW_WIDTH * .5, -RESOLUTION_WINDOW_HEIGHT * .5, RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT);
             ofFill();
         }
