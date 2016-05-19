@@ -59,8 +59,6 @@ class ofApp : public ofBaseApp{
     float minWindowFitScale;
     ofPoint windowToScreenScale;
     
-    ofVec3f worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform);
-
     // SCENES
     SceneManager sceneManager;
     

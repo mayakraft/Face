@@ -6,8 +6,8 @@ void ofApp::setup(){
     // MASKS
     CLMFT.setup();
 //    ofSetWindowShape(CLMFT.grabber.getWidth(), CLMFT.grabber.getHeight());
-    ofSetFrameRate(60);
-    ofSetVerticalSync(false);
+    ofSetFrameRate(30);
+    ofSetVerticalSync(true);
     
     // SCREEN AND RESOLUTION
     windowCenter = ofPoint(ofGetScreenWidth()*.5, ofGetScreenHeight()*.5);
@@ -40,7 +40,7 @@ void ofApp::setup(){
     // appearance
     gui.add(screenBrightness.setup("camera brightness", .7, 0, 1));
     gui.add(faceDarkeningScale.setup("face causes dimming", .7, 0, 1));
-    gui.add(lineThicknessSlider.setup("line weight", 2, 0.5, 5));
+    gui.add(lineThicknessSlider.setup("line weight", 1, 0.25, 5));
     gui.add(faceFoundZoomScale.setup("zoom in on face", .15, .02, .6));
     gui.add(attractScreenScale.setup("scr.saver scale", 30, 5, 150));
     // animation
@@ -65,6 +65,8 @@ void ofApp::setup(){
     attractScreen.scaleAmnt = attractScreenScale;
     CLMFT.faceFoundZoomScale = faceFoundZoomScale;
     ofSetLineWidth(lineThicknessSlider);
+    
+    printf("\nHERE: %f\n", minWindowFitScale);
 }
 
 //--------------------------------------------------------------
@@ -165,11 +167,13 @@ void ofApp::draw(){
     
         // ATTRACT SCREEN
         if(attractScreenBrightness != 0.0){
+            ofSetLineWidth(lineThicknessSlider * minWindowFitScale);
             ofPushMatrix();
                 ofSetColor(255, 100 * attractScreenBrightness);
                 attractScreen.update();
                 attractScreen.draw();
             ofPopMatrix();
+            ofSetLineWidth(lineThicknessSlider);
         }
     
     
@@ -198,20 +202,7 @@ void ofApp::draw(){
     ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 20, 60);
 //    ofDrawBitmapString(ofToString(faceScaleSmooth), 20, 80);
 //    ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
-//    ofDrawBitmapString(ofToString(ofGetWidth()*.5), 20, 120);
-}
-
-
-ofVec3f ofApp::worldToScreen(ofVec3f WorldXYZ, ofMatrix4x4 additionalTransform) {
-    ofRectangle viewport = ofGetCurrentRenderer()->getCurrentViewport();
-    //    OF_MATRIX_MODELVIEW, OF_MATRIX_PROJECTION,
-    ofMatrix4x4 world = ofGetCurrentMatrix(OF_MATRIX_MODELVIEW);
-    ofVec3f CameraXYZ = WorldXYZ * additionalTransform * world;
-    ofVec3f ScreenXYZ;
-    ScreenXYZ.x = (CameraXYZ.x + 1.0f) / 2.0f * viewport.width + viewport.x;
-    ScreenXYZ.y = (1.0f - CameraXYZ.y) / 2.0f * viewport.height + viewport.y;
-    ScreenXYZ.z = CameraXYZ.z;
-    return ScreenXYZ;
+    ofDrawBitmapString(ofToString(minWindowFitScale), 20, 80);
 }
 
 void ofApp::attractScreenScaleListener(float &attractScreenScale){
