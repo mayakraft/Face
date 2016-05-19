@@ -145,7 +145,7 @@ void ConicsScene::draw(){
 //        conics[i].draw();
     
     // BIG SCREEN FIXES
-    ofTranslate(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
+    ofTranslate(RESOLUTION_WINDOW_WIDTH * .5, RESOLUTION_WINDOW_HEIGHT * .5);
     ofScale(2, 2);
     // END BIG SCREEN FIXES
     

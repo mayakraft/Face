@@ -13,7 +13,7 @@ public:
     
     // video capture
     ofVideoGrabber grabber;
-    int camWidth, camHeight;
+//    int camWidth, camHeight;
     
     
     // face data
@@ -39,7 +39,7 @@ public:
 
 private:
     
-    ofFbo fbo;
+//    ofFbo fbo;
 
     vector < ofPoint > pts;
     double detection_certainty;

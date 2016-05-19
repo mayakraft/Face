@@ -164,7 +164,7 @@ void HypercubeScene::draw(){
 
     ofPushMatrix();
     
-    ofTranslate(ofGetScreenWidth() * .5, ofGetScreenHeight() * .5);
+    ofTranslate(RESOLUTION_WINDOW_WIDTH * .5, RESOLUTION_WINDOW_HEIGHT * .5);
     
     ofTranslate( faceCenterSmooth * ofPoint(0.05, 0.05) );
     

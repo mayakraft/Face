@@ -217,13 +217,13 @@ ofQuaternion eulerToQuat(const ofVec3f & rotationEuler) {
 //----------------------------------------------------------------
 void clmFaceTracker::setup(){
     
-    camWidth = RESOLUTION_CAMERA_WIDTH;
-    camHeight = RESOLUTION_CAMERA_HEIGHT;
+//    camWidth = RESOLUTION_CAMERA_WIDTH;
+//    camHeight = RESOLUTION_CAMERA_HEIGHT;
     
-    fbo.allocate(RESOLUTION_SCREEN_WIDTH, RESOLUTION_SCREEN_HEIGHT);
+//    fbo.allocate(RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT);
     
-    grabber.setup(camWidth, camHeight);
-    videoRotatedPixels.allocate(camHeight, camWidth, OF_PIXELS_RGB);
+    grabber.setup(RESOLUTION_CAMERA_WIDTH, RESOLUTION_CAMERA_HEIGHT);
+    videoRotatedPixels.allocate(RESOLUTION_CAMERA_HEIGHT, RESOLUTION_CAMERA_WIDTH, OF_PIXELS_RGB);
 
     vector < string > tempStrings;
     clm_parameters = new CLMTracker::CLMParameters();
@@ -241,10 +241,7 @@ void clmFaceTracker::setup(){
     faceCenterSmooth = ofPoint(0, 0);
 
     faceEnergy = 0;
-    faceFound = false;
-    
-//    center = ofPoint(camWidth * .5, camHeight * .5);
-    
+    faceFound = false;    
 }
 
 //----------------------------------------------------------------
@@ -354,7 +351,7 @@ void clmFaceTracker::update(){
         // smooth face zooming scale
         float targetScale = 1.0;
         if(faceFound && faceRect.getHeight() > 0)
-            targetScale = (RESOLUTION_SCREEN_WIDTH * faceFoundZoomScale) / faceRect.getHeight();
+            targetScale = (RESOLUTION_WINDOW_WIDTH * faceFoundZoomScale) / faceRect.getHeight();
         faceScaleSmooth = faceScaleSmooth * .95 + targetScale * 0.05;
 
         // smooth face x y tracking

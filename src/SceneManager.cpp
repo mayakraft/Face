@@ -28,10 +28,10 @@ void SceneManager::setup(){
     scenes.push_back(new CirclesScene());
     scenes.push_back(new ConicsScene());
 
-    sceneFbo.allocate(RESOLUTION_SCREEN_WIDTH, RESOLUTION_SCREEN_HEIGHT, GL_RGBA, 4);
+    sceneFbo.allocate(RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT, GL_RGBA, 4);
     
     for (auto scene : scenes){
-        scene->dimensions.set(0,0,RESOLUTION_SCREEN_WIDTH, RESOLUTION_SCREEN_HEIGHT);
+        scene->dimensions.set(0,0,RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT);
         scene->setup();
     }
     
@@ -106,7 +106,7 @@ void SceneManager::draw(){
         ofSetColor(255, masterFade * 255*(1-sceneTransitionTween) );
     }
     
-    sceneFbo.draw(-RESOLUTION_SCREEN_WIDTH * .5, -RESOLUTION_SCREEN_HEIGHT * .5);
+    sceneFbo.draw(-RESOLUTION_WINDOW_WIDTH * .5, -RESOLUTION_WINDOW_HEIGHT * .5);
   
 //    ofPushMatrix();
 //    ofDrawCircle(faceLeftEye * faceScaleMatrix, 10);

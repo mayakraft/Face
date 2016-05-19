@@ -11,8 +11,8 @@ void ofApp::setup(){
     
     // SCREEN AND RESOLUTION
     windowCenter = ofPoint(ofGetScreenWidth()*.5, ofGetScreenHeight()*.5);
-    float sw = (RESOLUTION_SCREEN_WIDTH/(float)RESOLUTION_CAMERA_WIDTH);
-    float sh = (RESOLUTION_SCREEN_HEIGHT/(float)RESOLUTION_CAMERA_HEIGHT);
+    float sw = (RESOLUTION_WINDOW_WIDTH/(float)RESOLUTION_CAMERA_WIDTH);
+    float sh = (RESOLUTION_WINDOW_HEIGHT/(float)RESOLUTION_CAMERA_HEIGHT);
     if(sw > sh)   minCameraFitScale = sw;
     else          minCameraFitScale = sh;
     facePointsFrameScale = ofPoint(RESOLUTION_CAMERA_HEIGHT * minCameraFitScale,
@@ -168,7 +168,7 @@ void ofApp::draw(){
         if(enableMasterScale){
             ofNoFill();
             ofSetColor(0, 255);
-            ofDrawRectangle(-ofGetScreenWidth() * .5, -ofGetScreenHeight() * .5, ofGetScreenWidth(), ofGetScreenHeight());
+            ofDrawRectangle(-RESOLUTION_WINDOW_WIDTH * .5, -RESOLUTION_WINDOW_HEIGHT * .5, RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT);
             ofFill();
         }
     

@@ -11,8 +11,5 @@ public:
     void setup();
     void update();
     void draw();
-    
-    ofParameter<float> angle;
-    ofParameter<float> width;
 
 };

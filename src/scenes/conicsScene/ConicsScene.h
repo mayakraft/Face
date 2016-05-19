@@ -3,7 +3,6 @@
 #include "ofMain.h"
 #include "BaseScene.h"
 #include "Conics.h"
-#include "ofxGui.h"
 
 #define NUM_CONES 64
 #define NUM_PLANES 1
