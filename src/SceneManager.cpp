@@ -36,9 +36,9 @@ void SceneManager::setup(){
     }
     
     currentScene = 0;
-    startScene(currentScene);
+    scenes[currentScene]->reset();
     
-    masterFade = 1.0;
+    masterFade = 0.0;
     faceFound = false;
     
     faceLeftEye = ofPoint(0, 0);
@@ -46,19 +46,7 @@ void SceneManager::setup(){
     faceMouth = ofPoint(0, 0);
     faceNose = ofPoint(0, 0);
 }
-//-----------------------------------------------------------------------------------
 
-void SceneManager::startScene(int whichScene){
-    scenes[currentScene]->reset();
-}
-
-void SceneManager::advanceScene(){
-    
-}
-
-void SceneManager::nextScene(bool forward){
-    
-}
 //-----------------------------------------------------------------------------------
 void SceneManager::update(){
     if(faceFound)
@@ -100,40 +88,32 @@ void SceneManager::update(){
 //-----------------------------------------------------------------------------------
 void SceneManager::draw(){
 
-    ofSetColor(255);
-
     // FILL BUFFERS
-    if (true){//shouldDrawScene) {
-        sceneFbo.begin();
-        ofClear(0,255);
-        ofPushStyle();
-        scenes[currentScene]->draw();
-        ofPopStyle();
-        sceneFbo.end();
-    } else {
-        ofSetColor(0);
-        ofFill();
-        ofClearAlpha();
-        ofDrawRectangle(0, 0, RESOLUTION_SCREEN_WIDTH, RESOLUTION_SCREEN_HEIGHT);
-    }
+    sceneFbo.begin();
+    ofClear(0,255);
+    ofSetColor(255,255);
+    ofPushStyle();
+    scenes[currentScene]->draw();
+    ofPopStyle();
+    sceneFbo.end();
+
     
     // DRAW THE SCENES
     ofSetColor(255, 255 * masterFade);
 
-    if(isSceneTransition)
+    if(isSceneTransition){
         // draw scene fading out
         ofSetColor(255, masterFade * 255*(1-sceneTransitionTween) );
+    }
     
     sceneFbo.draw(-RESOLUTION_SCREEN_WIDTH * .5, -RESOLUTION_SCREEN_HEIGHT * .5);
   
 //    ofPushMatrix();
-//    ofSetColor(255, 128, 0);
 //    ofDrawCircle(faceLeftEye * faceScaleMatrix, 10);
 //    ofDrawCircle(faceRightEye * faceScaleMatrix, 10);
 //    ofDrawCircle(faceNose * faceScaleMatrix, 10);
 //    ofDrawCircle(faceMouth * faceScaleMatrix, 10);
 //    ofPopMatrix();
 
-    ofSetColor(255, 255);
 }
 

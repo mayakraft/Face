@@ -436,13 +436,14 @@ void CirclesScene::draw(){
     traceAngleToAngle(c, ptEnd, ptBegin, tempLine,  false, "0");
     tempLine.setClosed(true);
 
-    ofFill();
-    ofSetColor(255, 255, 255, 120);
 
     ///
     //
     //
     
+    ofFill();
+    ofSetColor(255, 255, 255, 120);
+
     tempLine.draw();
 
     ofBeginShape();
@@ -451,6 +452,8 @@ void CirclesScene::draw(){
     }
 
     ofEndShape();
+    
+    ofNoFill();
     
 //    tempLine.getVertices().erase(tempLine.getVertices().begin() + 200, tempLine.getVertices().end());
 //

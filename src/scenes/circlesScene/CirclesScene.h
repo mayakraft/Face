@@ -40,9 +40,9 @@ class circle {
     
     void draw(){
         ofFill();
-        ofCircle(pos,2);
+        ofDrawCircle(pos,2);
         ofNoFill();
-        ofCircle(pos, radius);
+        ofDrawCircle(pos, radius);
     }
     
     void updateStart(){

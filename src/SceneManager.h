@@ -16,8 +16,8 @@
 
 class SceneManager {
     
-private:
-    void nextScene(bool forward);
+//private:
+//    void nextScene(bool forward);
     
 public:
     
@@ -28,14 +28,7 @@ public:
     void update();
     void draw();
     
-    void advanceScene();
-//    void regressScene();
-    void startScene(int whichScene);
-    
-    ofFbo sceneFbo;
-
-//    ofShader dimmerShader;
-    
+    ofFbo sceneFbo;    
     
     // scene transition stuff
     float SCENE_INTERVAL; // seconds
@@ -59,16 +52,6 @@ public:
     
     
     float masterFade; // 0 to 1
-
-private:
-    
-
-
-
-    // nothing here for now
-    ofxPanel gui;
-    ofParameter<bool>drawFacePoints, enableParameterSounds;
-    ofParameter<float> autoadvanceDelay, ofSmoothing;
 
 };
 
