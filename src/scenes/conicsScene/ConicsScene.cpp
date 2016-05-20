@@ -45,7 +45,6 @@ void ConicsScene::update(){
 
     
     
-    
     float mag = smoothFaceMotionNoise / MAX_NOISE_VALUE; //ofGetMouseX() / (float)ofGetScreenWidth();
     
     float SPEED = .2;
@@ -145,12 +144,12 @@ void ConicsScene::draw(){
 //        conics[i].draw();
     
     // BIG SCREEN FIXES
-    ofTranslate(RESOLUTION_WINDOW_WIDTH * .5, RESOLUTION_WINDOW_HEIGHT * .5);
-    ofScale(.5, .5);
+//    ofTranslate(RESOLUTION_WINDOW_WIDTH * .5, RESOLUTION_WINDOW_HEIGHT * .5);
     // END BIG SCREEN FIXES
     
     ofSetColor(255, 255);
-    
+    ofTranslate(-400, -400, 0);
+
 //    plane = faceNose;
     for(int i = 0 ;i < numCones; i++){
         conics[i].drawIntersectionsWithPlane(center + plane, planeNormal);

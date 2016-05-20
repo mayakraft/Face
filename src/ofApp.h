@@ -42,7 +42,6 @@ class ofApp : public ofBaseApp{
     ofxFloatSlider attractScreenWaitTime;
     ofxFloatSlider attractScreenScale;
     void attractScreenScaleListener(float & attractScreenScale);
-
     ofxToggle showFace;
     ofxToggle enableMasterScale;
     ofxFloatSlider masterScale;
@@ -52,6 +51,7 @@ class ofApp : public ofBaseApp{
     void faceFoundZoomScaleListener(float & faceFoundZoomScale);
     ofxFloatSlider sceneDurationSlider;
     void sceneDurationSliderListener(float & sceneDurationSlider);
+    
     
     // scales and transformations
     float minCameraFitScale;

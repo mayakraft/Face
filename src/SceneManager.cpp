@@ -24,9 +24,9 @@ void SceneManager::setup(){
     SCENE_INTERVAL = 15;
     FADE_DURATION = 3.0;
     
-    scenes.push_back(new HypercubeScene());
     scenes.push_back(new CirclesScene());
     scenes.push_back(new ConicsScene());
+    scenes.push_back(new HypercubeScene());
 
     sceneFbo.allocate(RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT, GL_RGBA, 4);
     
@@ -54,21 +54,21 @@ void SceneManager::update(){
     else
         masterFade = masterFade * .95;
 
-    if(ofGetElapsedTimef() > sceneTransitionStartTime + SCENE_INTERVAL - FADE_DURATION){
+    if(ofGetElapsedTimef() - masterLoopStartTime > sceneTransitionStartTime + SCENE_INTERVAL - FADE_DURATION){
         // begin fade transition
-        sceneTransitionStartTime = ofGetElapsedTimef();
+        sceneTransitionStartTime = ofGetElapsedTimef() - masterLoopStartTime;
         isSceneTransition = true;
     }
     if(isSceneTransition){
-        sceneTransitionTween = (ofGetElapsedTimef() - sceneTransitionStartTime) / FADE_DURATION;
+        sceneTransitionTween = (ofGetElapsedTimef() - masterLoopStartTime - sceneTransitionStartTime) / FADE_DURATION;
         if(sceneTransitionTween > 1.0)
             sceneTransitionTween = 1.0;
         if(sceneTransitionTween < 0.0)
             sceneTransitionTween = 0.0;
-        if(ofGetElapsedTimef() > sceneTransitionStartTime + FADE_DURATION){
+        if(ofGetElapsedTimef() - masterLoopStartTime > sceneTransitionStartTime + FADE_DURATION){
             // increment to the next scene
             currentScene = (currentScene + 1)%NUM_SCENES;
-            sceneTransitionStartTime = ofGetElapsedTimef();
+            sceneTransitionStartTime = ofGetElapsedTimef() - masterLoopStartTime;
             isSceneTransition = false;
             scenes[currentScene]->reset();
         }
@@ -105,7 +105,7 @@ void SceneManager::draw(){
         // draw scene fading out
         ofSetColor(255, masterFade * 255*(1-sceneTransitionTween) );
     }
-    
+
     sceneFbo.draw(-RESOLUTION_WINDOW_WIDTH * .5, -RESOLUTION_WINDOW_HEIGHT * .5);
   
 //    ofPushMatrix();

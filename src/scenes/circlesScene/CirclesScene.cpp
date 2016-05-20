@@ -255,9 +255,9 @@ void CirclesScene::update(){
     float b = 1;
     float c = 1;
     
-    circles[0].radius = 200 + 100 * a * sin(ofGetElapsedTimef()*0.8+1.0) + 20 * sin(ofGetElapsedTimef()*0.8+1.0);
-    circles[1].radius = 100 + 90 * b * sin(ofGetElapsedTimef())          + 17.5 * sin(ofGetElapsedTimef());
-    circles[2].radius = 100 + 80 * c * sin(ofGetElapsedTimef()*1.2)      + 15 * sin(ofGetElapsedTimef()*1.2);
+    circles[0].radius = 100 + 50 * a * sin(ofGetElapsedTimef()*0.8+1.0) + 20 * sin(ofGetElapsedTimef()*0.8+1.0);
+    circles[1].radius = 50 + 45 * b * sin(ofGetElapsedTimef())          + 17.5 * sin(ofGetElapsedTimef());
+    circles[2].radius = 50 + 40 * c * sin(ofGetElapsedTimef()*1.2)      + 15 * sin(ofGetElapsedTimef()*1.2);
     
     // BIG SCREEN FIXES HERE
 //    float screenScale = 2.0;

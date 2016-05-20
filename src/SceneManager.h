@@ -52,6 +52,8 @@ public:
     
     
     float masterFade; // 0 to 1
+    
+    unsigned long masterLoopStartTime = 0;
 
 };
 

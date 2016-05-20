@@ -103,6 +103,10 @@ void ofApp::update(){
     }
     if(ofGetElapsedTimef() > lastFaceDetection + attractScreenWaitTime){
         attractScreenBrightness = (ofGetElapsedTimef() - (lastFaceDetection + attractScreenWaitTime)) / 3.0;
+        if(sceneManager.masterFade < 0.1){
+            sceneManager.currentScene = 0;
+            sceneManager.masterLoopStartTime = ofGetElapsedTimef();
+        }
     }
     else if(attractScreenBrightness > 0.0){
         attractScreenBrightness -= .05;
@@ -155,12 +159,14 @@ void ofApp::draw(){
     
         ofPopMatrix();  // roving face-found zoom
     
+//    ofSetLineWidth(1.5);
     
         // SCENES
         ofSetColor(255, 255);
         ofPushMatrix();
             sceneManager.draw();
         ofPopMatrix();
+//    ofSetLineWidth(lineThicknessSlider);
 
     
         // ATTRACT SCREEN
@@ -198,9 +204,9 @@ void ofApp::draw(){
     ofDrawBitmapString(ofToString(CLMFT.faceFound), 20, 40);
 //    ofDrawBitmapString(ofToString(maskEnergy), 20, 60);
     ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 20, 60);
-//    ofDrawBitmapString(ofToString(faceScaleSmooth), 20, 80);
+    ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.x), 20, 80);
 //    ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
-    ofDrawBitmapString(ofToString(minWindowFitScale), 20, 80);
+    ofDrawBitmapString(ofToString(minWindowFitScale), 20, 120);
 }
 
 void ofApp::attractScreenScaleListener(float &attractScreenScale){

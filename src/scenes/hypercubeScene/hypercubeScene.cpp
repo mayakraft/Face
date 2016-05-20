@@ -2,6 +2,9 @@
 
 //--------------------------------------------------------------
 void HypercubeScene::setup(){
+    
+    float MASTER_SCALE = 80;
+    
     for(int i = 0; i < NUM_POLY; i++){
         polychron[i].loadVefFile("8cell.ascii.txt");
         highlighted[i].clear();
@@ -23,7 +26,9 @@ void HypercubeScene::setup(){
     
     for(int i = 0 ;i < NUM_POLY; i++){
         polyMatrix[i] = ofMatrix4x4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
-        polyMatrix[i].scale(100, 100, 100);
+        polyMatrix[i].scale(MASTER_SCALE, MASTER_SCALE, MASTER_SCALE);
+//        polyMatrix[i].rotate(ofRandom(90), 1,0,0);
+//        polyMatrix[i].rotate(ofRandom(90), 0,0,1);
         // add some rotations and scales between polychrons and increasingly scale them up
         polyMatrix[i].translate(i*0.1, i*0, 0);
         polyMatrix[i].rotate(i*45, 1, 0, 0);
@@ -133,60 +138,44 @@ bool HypercubeScene::pointInHotspot(ofPoint hotSpot, ofPoint point){
 void HypercubeScene::draw(){
     ofClear(0);
 
-    ofSetColor(255);
-//    ofDrawBitmapString(ofToString(ofGetFrameRate()),20,20);
+//    cam.setPosition(ofVec3f(0, 0, ofGetMouseX()));
+//    printf("%d\n", ofGetMouseX());
     
+    float xRot = faceCenterSmooth.x * .03;
+    float yRot = faceCenterSmooth.y * .005;
+    float radius = 430;
     
+    cam.setPosition(ofVec3f(0,
+                            radius * sin(xRot),
+                            radius * cos(xRot) ));
+    cam.lookAt(ofVec3f(0, yRot, 0));
 //    ofMultMatrix(faceScaleMatrix);
 
-    float camRadius = 100;
-    float camSpeed = .1;
-//    cam.lookAt(ofPoint(0,0,0));
-//    cam.setPosition(camRadius * sin(ofGetElapsedTimef()*camSpeed), camRadius * cosf(ofGetElapsedTimef()*camSpeed), 100);
-    
-    
-//    ofSetColor(255, 50);
-//    ofNoFill();
-//    for(int i = 0 ;i < 3; i++){
-//        ofDrawCircle(hotSpots[i].x, hotSpots[i].y, hotSpotRadius);
-//    }
-//    ofDrawLine(ofGetWidth()*.5, 0, ofGetWidth()*.5, ofGetHeight());
-//    ofFill();
-//    ofSetColor(255, 180);
 //    ofDrawCircle(hotSpots[0], 30);
 //    ofDrawCircle(hotSpots[1], 30);
 //    ofDrawCircle(hotSpots[2], 30);
     
-    ofSetColor(255);
-    
-    
-//    cam.begin();
-
     ofPushMatrix();
+    cam.begin();
     
-    ofTranslate(RESOLUTION_WINDOW_WIDTH * .5, RESOLUTION_WINDOW_HEIGHT * .5);
+//    ofTranslate(RESOLUTION_WINDOW_WIDTH * .5, RESOLUTION_WINDOW_HEIGHT * .5);
+//    ofRotate(faceCenterSmooth.x * 0.1, 1, 0, 0);
+//    ofRotate(faceCenterSmooth.y * 0.1, 0, 1, 0);
     
-//    ofTranslate( faceCenterSmooth * ofPoint(0.05, 0.05) );
-    
-    ofRotate(faceCenterSmooth.x * 0.1, 1, 0, 0);
-    ofRotate(faceCenterSmooth.y * 0.1, 0, 1, 0);
-    
-//    ofScale(4, 4);
-
-    ofSetColor(0, 255);
+    ofSetColor(255, 255);
 
     for(int i = 0; i < numPoly; i++){
         ofPushMatrix();
         
-        myShader.begin();
-        myShader.setUniform2f("ptToFadeFrom1", ofVec2f(hotSpots[0].x, hotSpots[0].y));
-        myShader.setUniform2f("ptToFadeFrom2", ofVec2f(hotSpots[1].x, hotSpots[1].y));
-        myShader.setUniform2f("ptToFadeFrom3", ofVec2f(hotSpots[2].x, hotSpots[2].y));
+//        myShader.begin();
+//        myShader.setUniform2f("ptToFadeFrom1", ofVec2f(hotSpots[0].x, hotSpots[0].y));
+//        myShader.setUniform2f("ptToFadeFrom2", ofVec2f(hotSpots[1].x, hotSpots[1].y));
+//        myShader.setUniform2f("ptToFadeFrom3", ofVec2f(hotSpots[2].x, hotSpots[2].y));
         ofMultMatrix(polyMatrix[i]);
 //
 //        ofSetColor(255, brightnesses[i]);
         polychron[i].drawWireframe();
-        myShader.end();
+//        myShader.end();
         
 //        for(int e = 0; e < polychron[i].edges.size() * .5; e++){
 //            ofMesh myMesh;
@@ -200,7 +189,6 @@ void HypercubeScene::draw(){
 //        }
         ofPopMatrix();
     }
-
+    cam.end();
     ofPopMatrix();
-//    cam.end();
 }
