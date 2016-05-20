@@ -304,7 +304,7 @@ void CirclesScene::draw(){
 //    ofDrawCircle(faceMouth * faceScaleMatrix + faceOffset, 10);
 //    ofPopMatrix();
     
-    ofTranslate(RESOLUTION_WINDOW_WIDTH * .5, RESOLUTION_WINDOW_HEIGHT * .5);
+    ofTranslate(RESOLUTION_SCENE_WIDTH * .5, RESOLUTION_SCENE_HEIGHT * .5);
     
     ofSetColor(255,255,255,90);
     for (int i = 0; i < circles.size(); i++){

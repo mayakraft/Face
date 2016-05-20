@@ -158,15 +158,13 @@ void ofApp::draw(){
 //            ofPopMatrix();
     
         ofPopMatrix();  // roving face-found zoom
-    
-//    ofSetLineWidth(1.5);
+
     
         // SCENES
         ofSetColor(255, 255);
         ofPushMatrix();
             sceneManager.draw();
         ofPopMatrix();
-//    ofSetLineWidth(lineThicknessSlider);
 
     
         // ATTRACT SCREEN

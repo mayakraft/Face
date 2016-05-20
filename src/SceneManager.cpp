@@ -28,10 +28,10 @@ void SceneManager::setup(){
     scenes.push_back(new ConicsScene());
     scenes.push_back(new HypercubeScene());
 
-    sceneFbo.allocate(RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT, GL_RGBA, 4);
+    sceneFbo.allocate(RESOLUTION_SCENE_WIDTH, RESOLUTION_SCENE_HEIGHT, GL_RGBA, 4);
     
     for (auto scene : scenes){
-        scene->dimensions.set(0,0,RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT);
+//        scene->dimensions.set(0,0,RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT);
         scene->setup();
     }
     
@@ -105,8 +105,14 @@ void SceneManager::draw(){
         // draw scene fading out
         ofSetColor(255, masterFade * 255*(1-sceneTransitionTween) );
     }
+    
+//    ofFill();
+//    ofSetColor(255, 0, 128, 100);
+//    ofDrawRectangle(-RESOLUTION_WINDOW_WIDTH * .5, -RESOLUTION_WINDOW_HEIGHT * .5, RESOLUTION_WINDOW_WIDTH,RESOLUTION_WINDOW_HEIGHT);
+//    ofNoFill();
 
-    sceneFbo.draw(-RESOLUTION_WINDOW_WIDTH * .5, -RESOLUTION_WINDOW_HEIGHT * .5);
+    sceneFbo.draw(-RESOLUTION_WINDOW_WIDTH * .5, -RESOLUTION_WINDOW_HEIGHT * .5, RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT);
+//    sceneFbo.draw(-RESOLUTION_SCENE_WIDTH * .5, -RESOLUTION_SCENE_HEIGHT * .5);
   
 //    ofPushMatrix();
 //    ofDrawCircle(faceLeftEye * faceScaleMatrix, 10);
