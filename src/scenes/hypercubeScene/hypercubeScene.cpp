@@ -136,19 +136,19 @@ bool HypercubeScene::pointInHotspot(ofPoint hotSpot, ofPoint point){
 
 //--------------------------------------------------------------
 void HypercubeScene::draw(){
-    ofClear(0);
 
 //    cam.setPosition(ofVec3f(0, 0, ofGetMouseX()));
 //    printf("%d\n", ofGetMouseX());
     
-    float xRot = faceCenterSmooth.x * .03;
-    float yRot = faceCenterSmooth.y * .005;
+    float xRot = faceCenterSmooth.x * .1;
+    float yRot = faceCenterSmooth.y * .1;
     float radius = 430;
     
-    cam.setPosition(ofVec3f(0,
-                            radius * sin(xRot),
-                            radius * cos(xRot) ));
-    cam.lookAt(ofVec3f(0, yRot, 0));
+//    cam.setPosition(ofVec3f(0,
+//                            radius * sin(xRot),
+//                            radius * cos(xRot) ));
+    cam.setPosition(ofVec3f(radius, faceCenterSmooth.x, faceCenterSmooth.y));
+    cam.lookAt(ofVec3f(-radius, -faceCenterSmooth.x, -faceCenterSmooth.y));
 //    ofMultMatrix(faceScaleMatrix);
 
 //    ofDrawCircle(hotSpots[0], 30);
@@ -162,11 +162,11 @@ void HypercubeScene::draw(){
 //    ofRotate(faceCenterSmooth.x * 0.1, 1, 0, 0);
 //    ofRotate(faceCenterSmooth.y * 0.1, 0, 1, 0);
     
-    ofSetColor(255, 255);
 
     for(int i = 0; i < numPoly; i++){
         ofPushMatrix();
-        
+        ofSetColor(255, 255 - i * 20);
+
 //        myShader.begin();
 //        myShader.setUniform2f("ptToFadeFrom1", ofVec2f(hotSpots[0].x, hotSpots[0].y));
 //        myShader.setUniform2f("ptToFadeFrom2", ofVec2f(hotSpots[1].x, hotSpots[1].y));

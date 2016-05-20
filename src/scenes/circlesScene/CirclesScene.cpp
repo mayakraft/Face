@@ -291,20 +291,20 @@ void CirclesScene::update(){
 
 //--------------------------------------------------------------
 void CirclesScene::draw(){
-
-    ofClear(255);
     
-    ofPoint faceOffset = ofPoint(0, 0);//ofPoint(640, 400);
+    // SCENE TO WINDOW CONVERSION
+    ofTranslate(RESOLUTION_SCENE_WIDTH * .5, RESOLUTION_SCENE_HEIGHT * .5);
+    ofScale(RESOLUTION_SCENE_WIDTH / (float)RESOLUTION_WINDOW_WIDTH,
+            RESOLUTION_SCENE_HEIGHT / (float)RESOLUTION_WINDOW_HEIGHT);
+    
     
 //    ofPushMatrix();
 //    ofSetColor(0, 128, 255);
-//    ofDrawCircle(faceLeftEye * faceScaleMatrix + faceOffset, 10);
-//    ofDrawCircle(faceRightEye * faceScaleMatrix + faceOffset, 10);
-//    ofDrawCircle(faceNose * faceScaleMatrix + faceOffset, 10);
-//    ofDrawCircle(faceMouth * faceScaleMatrix + faceOffset, 10);
+//    ofDrawCircle(faceLeftEye * faceScaleMatrix, 10);
+//    ofDrawCircle(faceRightEye * faceScaleMatrix, 10);
+//    ofDrawCircle(faceNose * faceScaleMatrix, 10);
+//    ofDrawCircle(faceMouth * faceScaleMatrix, 10);
 //    ofPopMatrix();
-    
-    ofTranslate(RESOLUTION_SCENE_WIDTH * .5, RESOLUTION_SCENE_HEIGHT * .5);
     
     ofSetColor(255,255,255,90);
     for (int i = 0; i < circles.size(); i++){
@@ -366,27 +366,27 @@ void CirclesScene::draw(){
     ofPoint slope;
     float angle;
     for(int i = 0; i< circles.size(); i++){
-        slope = circles[i].pos - (faceLeftEye * faceScaleMatrix + faceOffset);
+        slope = circles[i].pos - (faceLeftEye * faceScaleMatrix);
         angle = atan2(-slope.y, slope.x);
         ofSetColor(255,255,255, 100);
-        ofDrawLine(faceLeftEye * faceScaleMatrix + faceOffset,
-                   faceLeftEye * faceScaleMatrix + faceOffset + slope * 800);
+        ofDrawLine(faceLeftEye * faceScaleMatrix,
+                   faceLeftEye * faceScaleMatrix + slope * 800);
         ofSetColor(255,255,255, 180);
         ofCircleSlice(circles[i].pos.x, circles[i].pos.y, circles[i].radius * 1.1, angle - .3, angle + .3, false, true);
         
-        slope = circles[i].pos - (faceRightEye * faceScaleMatrix + faceOffset);
+        slope = circles[i].pos - (faceRightEye * faceScaleMatrix);
         angle = atan2(-slope.y, slope.x);
         ofSetColor(255,255,255, 100);
-        ofDrawLine(faceRightEye * faceScaleMatrix + faceOffset,
-                   faceRightEye * faceScaleMatrix + faceOffset + slope * 800);
+        ofDrawLine(faceRightEye * faceScaleMatrix,
+                   faceRightEye * faceScaleMatrix + slope * 800);
         ofSetColor(255,255,255, 180);
         ofCircleSlice(circles[i].pos.x, circles[i].pos.y, circles[i].radius * 1.1, angle - .3, angle + .3, false, true);
         
-        slope = circles[i].pos - (faceMouth * faceScaleMatrix + faceOffset);
+        slope = circles[i].pos - (faceMouth * faceScaleMatrix);
         angle = atan2(-slope.y, slope.x);
         ofSetColor(255,255,255, 100);
-        ofDrawLine(faceMouth * faceScaleMatrix + faceOffset,
-                   faceMouth * faceScaleMatrix + faceOffset + slope * 800);
+        ofDrawLine(faceMouth * faceScaleMatrix,
+                   faceMouth * faceScaleMatrix + slope * 800);
         ofSetColor(255,255,255, 180);
         ofCircleSlice(circles[i].pos.x, circles[i].pos.y, circles[i].radius * 1.1, angle - .3, angle + .3, false, true);
     }

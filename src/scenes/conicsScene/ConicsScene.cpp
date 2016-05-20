@@ -111,14 +111,10 @@ void ConicsScene::reset(){
 //--------------------------------------------------------------
 void ConicsScene::draw(){
     
-    ofClear(255);
-    
 //    ofMultMatrix(faceScaleMatrix);
     
 //    ofSetLineWidth(1);
     
-    ofSetColor(255, 255);
-
 //    ofSetColor(255);
 //    ofDrawBitmapString(ofToString(smoothFaceMotionNoise),20,20);
     
@@ -148,7 +144,8 @@ void ConicsScene::draw(){
     // END BIG SCREEN FIXES
     
     ofSetColor(255, 255);
-    ofTranslate(-400, -400, 0);
+    ofTranslate(0, -100, 0);
+    ofScale(1, 3, 1);
 
 //    plane = faceNose;
     for(int i = 0 ;i < numCones; i++){
