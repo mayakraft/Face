@@ -24,9 +24,9 @@ void SceneManager::setup(){
     SCENE_INTERVAL = 15;
     FADE_DURATION = 3.0;
     
-    scenes.push_back(new HypercubeScene());
     scenes.push_back(new CirclesScene());
     scenes.push_back(new ConicsScene());
+    scenes.push_back(new HypercubeScene());
 
     sceneFbo.allocate(RESOLUTION_SCENE_WIDTH, RESOLUTION_SCENE_HEIGHT, GL_RGBA, 4);
     
@@ -107,13 +107,13 @@ void SceneManager::draw(){
 //    sceneFbo.draw(-RESOLUTION_SCENE_WIDTH * .5, -RESOLUTION_SCENE_HEIGHT * .5);
 
     
-    ofPushMatrix();
-    ofSetColor(255, 0, 128, 255);
-    ofDrawCircle(faceLeftEye * faceScaleMatrix, 10);
-    ofDrawCircle(faceRightEye * faceScaleMatrix, 10);
-    ofDrawCircle(faceNose * faceScaleMatrix, 10);
-    ofDrawCircle(faceMouth * faceScaleMatrix, 10);
-    ofPopMatrix();
+//    ofPushMatrix();
+//    ofSetColor(255, 0, 128, 255);
+//    ofDrawCircle(faceLeftEye * faceScaleMatrix, 10);
+//    ofDrawCircle(faceRightEye * faceScaleMatrix, 10);
+//    ofDrawCircle(faceNose * faceScaleMatrix, 10);
+//    ofDrawCircle(faceMouth * faceScaleMatrix, 10);
+//    ofPopMatrix();
 
 }
 

@@ -39,7 +39,7 @@ void ofApp::setup(){
     gui.setup();
     // appearance
     gui.add(screenBrightness.setup("camera brightness", .8, 0, 1));
-    gui.add(faceDarkeningScale.setup("face causes dimming", .55, 0, 1));
+    gui.add(faceDarkeningScale.setup("face causes dimming", .66, 0, 1));
     gui.add(lineThicknessSlider.setup("line weight", 1, 0.25, 5));
     gui.add(faceFoundZoomScale.setup("zoom in on face", .2, .02, .6));
     gui.add(attractScreenScale.setup("scr.saver scale", 30, 5, 150));
@@ -103,10 +103,10 @@ void ofApp::update(){
     }
     if(ofGetElapsedTimef() > lastFaceDetection + attractScreenWaitTime){
         attractScreenBrightness = (ofGetElapsedTimef() - (lastFaceDetection + attractScreenWaitTime)) / 3.0;
-        if(sceneManager.masterFade < 0.1){
-            sceneManager.currentScene = 0;
-            sceneManager.masterLoopStartTime = ofGetElapsedTimef();
-        }
+//        if(sceneManager.masterFade < 0.1){
+//            sceneManager.currentScene = 0;
+//            sceneManager.masterLoopStartTime = ofGetElapsedTimef();
+//        }
     }
     else if(attractScreenBrightness > 0.0){
         attractScreenBrightness -= .05;
@@ -201,10 +201,11 @@ void ofApp::draw(){
     ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);
     ofDrawBitmapString(ofToString(CLMFT.faceFound), 20, 40);
 //    ofDrawBitmapString(ofToString(maskEnergy), 20, 60);
-    ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 20, 60);
+    ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 50, 40);
     ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.x), 20, 80);
+    ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.y), 20, 100);
 //    ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
-    ofDrawBitmapString(ofToString(minWindowFitScale), 20, 120);
+//    ofDrawBitmapString(ofToString(minWindowFitScale), 20, 120);
 }
 
 void ofApp::attractScreenScaleListener(float &attractScreenScale){

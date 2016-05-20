@@ -22,10 +22,10 @@ public:
     
     ofVec3f movingPlane, movingPlaneNormal;
     
+    ofPoint faceNoseSmooth1, faceNoseSmooth2;
+    
     int numCones;
     float numConesFloat;
-    
-    ofPoint center;
     
     float smoothFaceMotionNoise;
     float smoothFaceVelocity;
