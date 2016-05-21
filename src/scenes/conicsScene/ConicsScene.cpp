@@ -17,6 +17,14 @@ void ConicsScene::setup(){
 //--------------------------------------------------------------
 void ConicsScene::update(){
     
+    if(numCones < NUM_CONES){
+        numConesFloat *= 1.1;
+        numCones = numConesFloat;
+        if(numCones > NUM_CONES)
+            numCones = NUM_CONES;
+    }
+    
+    
     faceNoseSmooth1 = 0.9 * faceNoseSmooth1 + 0.1 * faceNose;
     faceNoseSmooth2 = 0.5 * faceNoseSmooth1 + 0.5 * faceNose;
     
@@ -55,15 +63,7 @@ void ConicsScene::update(){
 //                                     0 + mag * 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0),
 //                                     0 + mag * 300 * cos(ofGetElapsedTimef() + i/10.0)));
 //    }
-    
 
-    
-    if(numCones < NUM_CONES){
-        numConesFloat *= 1.1;
-        numCones = numConesFloat;
-        if(numCones > NUM_CONES)
-            numCones = NUM_CONES;
-    }
 }
 
 void ConicsScene::reset(){
@@ -95,5 +95,5 @@ void ConicsScene::draw(){
 //    ofDrawCircle(faceNose * faceScaleMatrix, 10);
 //    ofDrawCircle(faceMouth * faceScaleMatrix, 10);
 //    ofPopMatrix();
-    
+//    
 }

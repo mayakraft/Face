@@ -39,9 +39,9 @@ void ofApp::setup(){
     gui.setup();
     // appearance
     gui.add(screenBrightness.setup("camera brightness", .8, 0, 1));
-    gui.add(faceDarkeningScale.setup("face causes dimming", .66, 0, 1));
+    gui.add(faceDarkeningScale.setup("face causes dimming", .75, 0, 1));
     gui.add(lineThicknessSlider.setup("line weight", 1, 0.25, 5));
-    gui.add(faceFoundZoomScale.setup("zoom in on face", .2, .02, .6));
+    gui.add(faceFoundZoomScale.setup("zoom in on face", .28, .02, .6));
     gui.add(attractScreenScale.setup("scr.saver scale", 30, 5, 150));
     // animation
     gui.add(attractScreenWaitTime.setup("scr. saver delay", 15, 5, 120));

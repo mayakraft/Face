@@ -40,4 +40,7 @@ public:
     ofShader myShader;
     
     ofPoint lastFaceNose;
+    
+    ofMatrix4x4 headTiltMatrix;
+    ofMatrix4x4 sceneWindowMatrix;
 };
