@@ -10,13 +10,13 @@ void ConicsScene::setup(){
 
     plane = ofVec3f(0, 0, 100 * sinf(ofGetElapsedTimef()));
     planeNormal = ofVec3f(-100, 0, 100);
-    faceNoseSmooth1 = ofVec3f(0, 0, 0);
-    faceNoseSmooth2 = ofVec3f(0, 0, 0);
+    faceSmoothFast = ofVec3f(0, 0, 0);
+    faceSmoothMedium = ofVec3f(0, 0, 0);
+    faceSmoothSlow = ofVec3f(0, 0, 0);
 }
 
 //--------------------------------------------------------------
 void ConicsScene::update(){
-    
     if(numCones < NUM_CONES){
         numConesFloat *= 1.1;
         numCones = numConesFloat;
@@ -24,24 +24,53 @@ void ConicsScene::update(){
             numCones = NUM_CONES;
     }
     
+    faceSmoothSlow = 0.9 * faceSmoothSlow + 0.1 * faceNose;
+    faceSmoothMedium = 0.6 * faceSmoothMedium + 0.4 * faceNose;
+    faceSmoothFast = 0.3 * faceSmoothFast + 0.7 * faceNose;
     
-    faceNoseSmooth1 = 0.9 * faceNoseSmooth1 + 0.1 * faceNose;
-    faceNoseSmooth2 = 0.5 * faceNoseSmooth1 + 0.5 * faceNose;
+    
+    // PROGRAMS
+    planePos1 = faceSmoothSlow * faceScaleMatrix;
+    planeNorm1 = ofVec3f(-100, 0, 100);
+    
+    planePos2 = faceSmoothSlow * faceScaleMatrix;
+    planeNorm2 = ofVec3f(-100, 0, 100);
+
+    for(int i = 0; i < NUM_CONES; i++){
+        float pctCones = i / ((float)NUM_CONES-1);
+
+        // PROGRAM 1
+        ofVec3f interp = faceSmoothSlow * (pctCones) + faceSmoothMedium * (1-pctCones);
+        conePos1[i] = faceSmoothSlow * faceScaleMatrix + ofPoint(0, 0, 150);
+        coneLook1[i] = interp * faceScaleMatrix;
+
+        // PROGRAM 2
+        conePos2[i] = ofPoint(i * 10,
+                              0,
+                              200 + 190 * sin(ofGetElapsedTimef() + i/100.0));
+        coneLook2[i] = ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0),
+                                               0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0),
+                                               0 + 300 * cos(ofGetElapsedTimef() + i/10.0));
+
+    }
+    
+    float weight = (sinf(ofGetElapsedTimef() * .5) + 1) * .5;
+    float w1 = weight;
+    float w2 = 1.0 - weight;
+    
+    // SET PROGRAM
+    for(int i = 0; i < numCones; i++){
+        conics[i].setPosition( conePos1[i] * w1 + conePos2[i] * w2 );
+        conics[i].setLookAt( coneLook1[i] * w1 + coneLook2[i] * w2 );
+    }
+    plane = planePos1 * w1 + planePos2 * w2;
+    planeNormal = planeNorm1 * w1 + planeNorm2 * w2;
+
+    
     
     // breathing motion
-    ofVec3f breathing = ofVec3f(0, 0, 40 * sinf(ofGetElapsedTimef()));
-    plane = faceNoseSmooth1 * faceScaleMatrix;
-    planeNormal = ofVec3f(-100, 0, 100);
-    
-    for(int i = 0; i < numCones; i++){
-        float pctCones = i / ((float)numCones-1);
-        ofVec3f interp = faceNoseSmooth1 * (pctCones) + faceNoseSmooth2 * (1-pctCones);
-        conics[i].setPosition( faceNoseSmooth1 * faceScaleMatrix + ofPoint(0, 0, 150) );
-        conics[i].setLookAt( interp * faceScaleMatrix );
-    }
+//    plane += ofVec3f(0, 0, 40 * sinf(ofGetElapsedTimef()));
 
-    plane += breathing;
-    
 //    ofPoint vel = faceNose - lastFacePosition;
 //    float d = sqrt( powf(vel.x, 2) + powf(vel.y, 2) );
 //    smoothFaceMotionNoise += d;
@@ -57,7 +86,7 @@ void ConicsScene::update(){
 //                                       0,
 //                                       200 + mag * 190 * sin(ofGetElapsedTimef() + i/100.0)
 //                                        + 190 * sin(ofGetElapsedTimef()*.2 + i/100.0)));
-//        
+//
 //        conics[i].setLookAt( ofPoint(200 + mag * 100 * sin(ofGetElapsedTimef() + i/100.0)
 //                                               + 100 * sin(ofGetElapsedTimef()*.2 + i/100.0),
 //                                     0 + mag * 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0),
@@ -72,6 +101,10 @@ void ConicsScene::reset(){
     numConesFloat = 1.0;
     lastFacePosition = faceNose;
     smoothFaceMotionNoise = 0;
+    faceSmoothFast = faceNose;
+    faceSmoothMedium = faceNose;
+    faceSmoothSlow = faceNose;
+    
 }
 
 //--------------------------------------------------------------

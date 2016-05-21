@@ -22,7 +22,7 @@ public:
     
     ofVec3f movingPlane, movingPlaneNormal;
     
-    ofPoint faceNoseSmooth1, faceNoseSmooth2;
+    ofPoint faceSmoothFast, faceSmoothMedium, faceSmoothSlow;
     
     int numCones;
     float numConesFloat;
@@ -33,4 +33,14 @@ public:
     
     float MAX_NOISE_VALUE = 200;
     
+    ofVec3f conePos1[NUM_CONES];
+    ofVec3f coneLook1[NUM_CONES];
+    ofVec3f planePos1;
+    ofVec3f planeNorm1;
+    
+    ofVec3f conePos2[NUM_CONES];
+    ofVec3f coneLook2[NUM_CONES];
+    ofVec3f planePos2;
+    ofVec3f planeNorm2;
+
 };

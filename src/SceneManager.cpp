@@ -21,12 +21,12 @@
 //-----------------------------------------------------------------------------------
 void SceneManager::setup(){
     
-    SCENE_INTERVAL = 80;//15;
+    SCENE_INTERVAL = 160;//15;
     FADE_DURATION = 3.0;
     
+    scenes.push_back(new ConicsScene());
     scenes.push_back(new HypercubeScene());
     scenes.push_back(new CirclesScene());
-    scenes.push_back(new ConicsScene());
 
     sceneFbo.allocate(RESOLUTION_SCENE_WIDTH, RESOLUTION_SCENE_HEIGHT, GL_RGBA, 4);
     
