@@ -23,6 +23,9 @@ public:
     ofVec3f movingPlane, movingPlaneNormal;
     
     ofPoint faceSmoothFast, faceSmoothMedium, faceSmoothSlow;
+    float speed;
+    float smoothSpeed;
+    
     
     int numCones;
     float numConesFloat;
@@ -42,5 +45,10 @@ public:
     ofVec3f coneLook2[NUM_CONES];
     ofVec3f planePos2;
     ofVec3f planeNorm2;
+
+    ofVec3f conePos3[NUM_CONES];
+    ofVec3f coneLook3[NUM_CONES];
+    ofVec3f planePos3;
+    ofVec3f planeNorm3;
 
 };

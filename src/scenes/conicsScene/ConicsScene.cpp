@@ -13,6 +13,7 @@ void ConicsScene::setup(){
     faceSmoothFast = ofVec3f(0, 0, 0);
     faceSmoothMedium = ofVec3f(0, 0, 0);
     faceSmoothSlow = ofVec3f(0, 0, 0);
+    smoothSpeed = 0;
 }
 
 //--------------------------------------------------------------
@@ -24,17 +25,22 @@ void ConicsScene::update(){
             numCones = NUM_CONES;
     }
     
+    // FACE TRACK
     faceSmoothSlow = 0.9 * faceSmoothSlow + 0.1 * faceNose;
     faceSmoothMedium = 0.6 * faceSmoothMedium + 0.4 * faceNose;
     faceSmoothFast = 0.3 * faceSmoothFast + 0.7 * faceNose;
-    
+    speed = ofDist(faceSmoothFast.x, faceSmoothFast.y, faceSmoothSlow.x, faceSmoothSlow.y);
+    smoothSpeed = .9 * smoothSpeed + .1 * speed;
     
     // PROGRAMS
     planePos1 = faceSmoothSlow * faceScaleMatrix;
     planeNorm1 = ofVec3f(-100, 0, 100);
     
     planePos2 = faceSmoothSlow * faceScaleMatrix;
-    planeNorm2 = ofVec3f(-100, 0, 100);
+    planeNorm2 = ofVec3f(100, 0, 100);
+
+    planePos3 = faceSmoothSlow * faceScaleMatrix;
+    planeNorm3 = ofVec3f(-100, 0, 100);
 
     for(int i = 0; i < NUM_CONES; i++){
         float pctCones = i / ((float)NUM_CONES-1);
@@ -52,19 +58,26 @@ void ConicsScene::update(){
                                                0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0),
                                                0 + 300 * cos(ofGetElapsedTimef() + i/10.0));
 
+        // PROGRAM 3
+//        ofVec3f interp = faceSmoothSlow * (pctCones) + faceSmoothMedium * (1-pctCones);
+        ofVec3f spin = ofVec3f(100 * sinf(i * .1 + .05*smoothSpeed), 100 * cosf(i * .1 + .05*smoothSpeed), 0.0);
+        conePos3[i] = faceSmoothSlow * faceScaleMatrix + ofPoint(0, 0, 150) + spin;
+        coneLook3[i] = interp * faceScaleMatrix;
+
     }
     
     float weight = (sinf(ofGetElapsedTimef() * .5) + 1) * .5;
-    float w1 = weight;
-    float w2 = 1.0 - weight;
+    float w1 = 0.0;//weight;
+    float w2 = 0.0;//1.0 - weight;
+    float w3 = 1.0;
     
     // SET PROGRAM
     for(int i = 0; i < numCones; i++){
-        conics[i].setPosition( conePos1[i] * w1 + conePos2[i] * w2 );
-        conics[i].setLookAt( coneLook1[i] * w1 + coneLook2[i] * w2 );
+        conics[i].setPosition( conePos1[i] * w1 + conePos2[i] * w2 + conePos3[i] * w3 );
+        conics[i].setLookAt( coneLook1[i] * w1 + coneLook2[i] * w2 + coneLook3[i] * w3 );
     }
-    plane = planePos1 * w1 + planePos2 * w2;
-    planeNormal = planeNorm1 * w1 + planeNorm2 * w2;
+    plane = planePos1 * w1 + planePos2 * w2 + planePos3 * w3;
+    planeNormal = planeNorm1 * w1 + planeNorm2 * w2 + planeNorm3 * w3;
 
     
     

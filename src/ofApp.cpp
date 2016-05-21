@@ -202,6 +202,7 @@ void ofApp::draw(){
     ofDrawBitmapString(ofToString(CLMFT.faceFound), 20, 40);
 //    ofDrawBitmapString(ofToString(maskEnergy), 20, 60);
     ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 50, 40);
+    ofDrawBitmapString(ofToString(ofGetMouseX()), 20, 60);
     ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.x), 20, 80);
     ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.y), 20, 100);
 //    ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
