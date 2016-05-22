@@ -203,14 +203,14 @@ void CirclesScene::traceAngleToAngle(circle & circle, ofPoint from, ofPoint to, 
 
 
 
-
+#define C_S_NUM_CIRCLES 3
 
 //--------------------------------------------------------------
 void CirclesScene::setup(){
 
     ofSetCircleResolution(100);
     
-    for (int i = 0; i < 3; i++){
+    for (int i = 0; i < C_S_NUM_CIRCLES; i++){
         circle temp;
         temp.radius = ofRandom(30,200);
         float angle = ofMap(i,0,10, 0, TWO_PI);
@@ -258,13 +258,8 @@ void CirclesScene::update(){
     circles[0].radius = 100 + 50 * a * sin(ofGetElapsedTimef()*0.8+1.0) + 20 * sin(ofGetElapsedTimef()*0.8+1.0);
     circles[1].radius = 50 + 45 * b * sin(ofGetElapsedTimef())          + 17.5 * sin(ofGetElapsedTimef());
     circles[2].radius = 50 + 40 * c * sin(ofGetElapsedTimef()*1.2)      + 15 * sin(ofGetElapsedTimef()*1.2);
-    
-    // BIG SCREEN FIXES HERE
-//    float screenScale = 2.0;
-//    circles[0].radius *= screenScale;
-//    circles[1].radius *= screenScale;
-//    circles[2].radius *= screenScale;
-    // BIG SCREEN FIXES END
+//    circles[3].radius = 50 + 40 * c * sin(ofGetElapsedTimef()*0.5)      + 15 * sin(ofGetElapsedTimef()*0.5);
+//    circles[4].radius = 50 + 40 * c * sin(ofGetElapsedTimef()*0.3)      + 15 * sin(ofGetElapsedTimef()*0.3);
     
     lastFacePosition = faceNose;
     smoothFaceVelocity -= 1;
@@ -419,17 +414,23 @@ void CirclesScene::draw(){
 
     
 //
-//    
-    CircleFromThreePoints CFT(ptEnd,smoothed, ptBegin);
+//
+    
+    int indx = tempLine.getVertices().size()-50;
+    if( indx < 0)
+        indx = tempLine.getVertices().size()-1;
+    ofPoint circle3End = tempLine.getVertices()[indx];
+
+    CircleFromThreePoints CFT(circle3End, smoothed, ptBegin);
 //
     ofPoint center = CFT.center();
     float radius = 1.0 / CFT.curvature();
-//
-//    
-//    ofSetColor(255,255,255,90);
-//    ofCircle(center, radius);
-//    
-//    
+
+    
+    ofSetColor(255,255);
+    ofDrawCircle(center, radius);
+    
+    
     circle c;
     c.pos = center;
     c.radius = 1.0 / CFT.curvature();
@@ -445,6 +446,7 @@ void CirclesScene::draw(){
     ofSetColor(255, 255, 255, 120);
 
     tempLine.draw();
+
 
     ofBeginShape();
     for (int i = 0; i < tempLine.size(); i++){
