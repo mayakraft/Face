@@ -4,7 +4,7 @@
 
 void ConicsScene::setup(){
     for(int i = 0; i < NUM_CONES; i++){
-        conics[i].setRadius(20 + i*5);
+        conics[i].setRadius(5 + i*5);
     }
     numCones = 1;
 
@@ -32,6 +32,17 @@ void ConicsScene::update(){
     speed = ofDist(faceSmoothFast.x, faceSmoothFast.y, faceSmoothSlow.x, faceSmoothSlow.y);
     smoothSpeed = .9 * smoothSpeed + .1 * speed;
     
+    float speedToAdd = speed;
+    if(speedToAdd > 30)
+        speedToAdd = 30;
+    faceEnergy+=speedToAdd*.2;
+    faceEnergy *= .9;
+    
+    if(speedToAdd > 15){
+        faceEnergyHigh += speedToAdd*.2;
+    }
+    faceEnergyHigh *= .9;
+    
     // PROGRAMS
     planePos1 = faceSmoothSlow * faceScaleMatrix;
     planeNorm1 = ofVec3f(-100, 0, 100);
@@ -51,9 +62,9 @@ void ConicsScene::update(){
         coneLook1[i] = interp * faceScaleMatrix;
 
         // PROGRAM 2
-        conePos2[i] = ofPoint(i * 10,
+        conePos2[i] = ofPoint(-200 + i * 10,
                               0,
-                              200 + 190 * sin(ofGetElapsedTimef() + i/100.0));
+                              -200 + 200 + 190 * sin(ofGetElapsedTimef() + i/100.0));
         coneLook2[i] = ofPoint(200 + 100 * sin(ofGetElapsedTimef() + i/100.0),
                                                0 + 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0),
                                                0 + 300 * cos(ofGetElapsedTimef() + i/10.0));
@@ -65,11 +76,22 @@ void ConicsScene::update(){
         coneLook3[i] = interp * faceScaleMatrix;
 
     }
+
+//    prgmWeight = (sinf(ofGetElapsedTimef() * .5) + 1) * .5;
+    float prgmWeight = ofMap(faceEnergy, 0, 100, 0, 1);
+    float prgmWeight2 = ofMap(faceEnergy, 0, 30, 0, 1);
     
-    float weight = (sinf(ofGetElapsedTimef() * .5) + 1) * .5;
-    float w1 = 0.0;//weight;
-    float w2 = 0.0;//1.0 - weight;
-    float w3 = 1.0;
+//    float w1 = 1.0 - prgmWeight;
+//    float w2 = prgmWeight2;
+//    float w3 = prgmWeight;
+    
+//    float w1 = 0.0;
+//    float w2 = 1.0;
+//    float w3 = 0.0;
+    
+    float w1 = 0.0;
+    float w2 = prgmWeight;
+    float w3 = 1.0 - prgmWeight;
     
     // SET PROGRAM
     for(int i = 0; i < numCones; i++){
@@ -83,28 +105,6 @@ void ConicsScene::update(){
     
     // breathing motion
 //    plane += ofVec3f(0, 0, 40 * sinf(ofGetElapsedTimef()));
-
-//    ofPoint vel = faceNose - lastFacePosition;
-//    float d = sqrt( powf(vel.x, 2) + powf(vel.y, 2) );
-//    smoothFaceMotionNoise += d;
-//    smoothFaceMotionNoise *= .95;
-//    if(smoothFaceMotionNoise < 0)
-//        smoothFaceMotionNoise = 0;
-//    lastFacePosition = faceNose;
-//    float mag = smoothFaceMotionNoise / MAX_NOISE_VALUE;
-//    float SPEED = .2;
-//    float diff = .3 * sinf(ofGetElapsedTimef()*.2);
-//    for(int i = 0; i < numCones; i++){
-//        conics[i].setPosition( ofPoint(i * 10,
-//                                       0,
-//                                       200 + mag * 190 * sin(ofGetElapsedTimef() + i/100.0)
-//                                        + 190 * sin(ofGetElapsedTimef()*.2 + i/100.0)));
-//
-//        conics[i].setLookAt( ofPoint(200 + mag * 100 * sin(ofGetElapsedTimef() + i/100.0)
-//                                               + 100 * sin(ofGetElapsedTimef()*.2 + i/100.0),
-//                                     0 + mag * 50 * ofNoise(ofGetElapsedTimef()*0.1, i/200.0),
-//                                     0 + mag * 300 * cos(ofGetElapsedTimef() + i/10.0)));
-//    }
 
 }
 
@@ -131,6 +131,7 @@ void ConicsScene::draw(){
     ofSetColor(255, 255);
 
     for(int i = 0; i < numCones; i++){
+        ofSetColor(255, 128+128.0*i/(float)NUM_CONES);
         conics[i].drawIntersectionsWithPlane(plane, planeNormal);
     }
     

@@ -4,7 +4,7 @@
 #include "BaseScene.h"
 #include "Conics.h"
 
-#define NUM_CONES 64
+#define NUM_CONES 48
 #define NUM_PLANES 1
 
 class ConicsScene : public BaseScene{
@@ -25,8 +25,9 @@ public:
     ofPoint faceSmoothFast, faceSmoothMedium, faceSmoothSlow;
     float speed;
     float smoothSpeed;
-    
-    
+    float faceEnergy;
+    float faceEnergyHigh;
+        
     int numCones;
     float numConesFloat;
     
