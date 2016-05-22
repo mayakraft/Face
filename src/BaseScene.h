@@ -26,10 +26,7 @@ public:
     
     BaseScene(){};
     ~BaseScene(){}
-    
-    ofRectangle dimensions;     // this is the dimensions of
-    // the surface you are drawing into.
-    
+        
     // face orientation stuff
     ofMatrix4x4 faceScaleMatrix;
     ofPoint faceCenterSmooth;

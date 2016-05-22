@@ -36,8 +36,9 @@ class ofApp : public ofBaseApp{
     ofxPanel gui;
     ofxFloatSlider screenBrightness;
     ofxFloatSlider faceDarkeningScale;
-    ofxToggle cameraRotationToggle;
-    void cameraRotationToggleListener(bool & cameraRotationToggle);
+    ofxToggle flipScreenOrientation;
+//    ofxToggle cameraRotationToggle;
+//    void cameraRotationToggleListener(bool & cameraRotationToggle);
     // attract screen
     ofxFloatSlider attractScreenWaitTime;
     ofxFloatSlider attractScreenScale;

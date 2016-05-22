@@ -19,7 +19,7 @@ public:
     
     int numPoly;
     
-    int brightnesses[NUM_POLY];
+    float brightnesses[NUM_POLY];
 
     Polychron polychron[NUM_POLY];
     vector<unsigned int> highlighted[NUM_POLY];

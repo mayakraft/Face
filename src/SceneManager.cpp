@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------------
 void SceneManager::setup(){
     
-    SCENE_INTERVAL = 160;//15;
+    SCENE_INTERVAL = 15;
     FADE_DURATION = 3.0;
     
     scenes.push_back(new CirclesScene());
@@ -31,7 +31,6 @@ void SceneManager::setup(){
     sceneFbo.allocate(RESOLUTION_SCENE_WIDTH, RESOLUTION_SCENE_HEIGHT, GL_RGBA, 4);
     
     for (auto scene : scenes){
-//        scene->dimensions.set(0,0,RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT);
         scene->setup();
     }
     
@@ -45,6 +44,12 @@ void SceneManager::setup(){
     faceRightEye = ofPoint(0, 0);
     faceMouth = ofPoint(0, 0);
     faceNose = ofPoint(0, 0);
+}
+
+void SceneManager::resetSequence(){
+    currentScene = 0;
+    masterLoopStartTime = ofGetElapsedTimef();
+    sceneTransitionStartTime = 0;
 }
 
 //-----------------------------------------------------------------------------------
@@ -104,16 +109,6 @@ void SceneManager::draw(){
         ofSetColor(255, masterFade * 255*(1-sceneTransitionTween) );
     }
     sceneFbo.draw(-RESOLUTION_WINDOW_WIDTH * .5, -RESOLUTION_WINDOW_HEIGHT * .5, RESOLUTION_WINDOW_WIDTH, RESOLUTION_WINDOW_HEIGHT);
-//    sceneFbo.draw(-RESOLUTION_SCENE_WIDTH * .5, -RESOLUTION_SCENE_HEIGHT * .5);
-
-    
-//    ofPushMatrix();
-//    ofSetColor(255, 0, 128, 255);
-//    ofDrawCircle(faceLeftEye * faceScaleMatrix, 10);
-//    ofDrawCircle(faceRightEye * faceScaleMatrix, 10);
-//    ofDrawCircle(faceNose * faceScaleMatrix, 10);
-//    ofDrawCircle(faceMouth * faceScaleMatrix, 10);
-//    ofPopMatrix();
 
 }
 

@@ -98,4 +98,9 @@ public:
     
     float smoothFaceVelocity;
     ofPoint lastFacePosition;
+    
+    ofPoint faceSmoothFast, faceSmoothSlow;
+    float speed;
+    float faceEnergy;
+
 };

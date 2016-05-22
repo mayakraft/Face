@@ -47,7 +47,8 @@ void ofApp::setup(){
     gui.add(attractScreenWaitTime.setup("scr. saver delay", 15, 5, 120));
     gui.add(sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30));
     // admin and debug
-    gui.add(cameraRotationToggle.setup("flip camera", false));
+    gui.add(flipScreenOrientation.setup("flip screen", false));
+//    gui.add(cameraRotationToggle.setup("flip camera", false));
     gui.add(showFace.setup("show face dots", false));
     gui.add(enableMasterScale.setup("scale window", false));
     gui.add(masterScale.setup("  - scale", 1, .1, 2));
@@ -56,7 +57,7 @@ void ofApp::setup(){
     lineThicknessSlider.addListener(this, &ofApp::lineThicknessSliderListener);
     sceneDurationSlider.addListener(this, &ofApp::sceneDurationSliderListener);
     faceFoundZoomScale.addListener(this, &ofApp::faceFoundZoomScaleListener);
-    cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
+//    cameraRotationToggle.addListener(this, &ofApp::cameraRotationToggleListener);
     // gui position
     gui.setPosition(windowCenter);
     
@@ -103,10 +104,6 @@ void ofApp::update(){
     }
     if(ofGetElapsedTimef() > lastFaceDetection + attractScreenWaitTime){
         attractScreenBrightness = (ofGetElapsedTimef() - (lastFaceDetection + attractScreenWaitTime)) / 3.0;
-//        if(sceneManager.masterFade < 0.1){
-//            sceneManager.currentScene = 0;
-//            sceneManager.masterLoopStartTime = ofGetElapsedTimef();
-//        }
     }
     else if(attractScreenBrightness > 0.0){
         attractScreenBrightness -= .05;
@@ -114,6 +111,12 @@ void ofApp::update(){
 
     if(attractScreenBrightness < 0) attractScreenBrightness = 0;
     if(attractScreenBrightness > 1.0) attractScreenBrightness = 1.0;
+    
+    if (ofGetFrameNum() % 60 == 0){
+        if(attractScreenBrightness == 1.0){
+            sceneManager.resetSequence();
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -125,6 +128,8 @@ void ofApp::draw(){
         if(enableMasterScale){
             ofScale(masterScale, masterScale);
         }
+        if(flipScreenOrientation)
+            ofRotate(180);
     // scale window to fit
         ofScale(minWindowFitScale, minWindowFitScale);
     
@@ -147,15 +152,6 @@ void ofApp::draw(){
                     CLMFT.drawFacePoints();
                 }
             ofPopMatrix(); // cameraToWindowScale, aspect fit camera onto screen
-    
-//            ofPushMatrix();
-//                ofRotate(-90 * CLMFT.cameraRotation);
-//                ofSetColor(0, 128, 255);
-//                ofDrawCircle(CLMFT.faceLeftEye * cameraToWindowScale, 10);
-//                ofDrawCircle(CLMFT.faceRightEye * cameraToWindowScale, 10);
-//                ofDrawCircle(CLMFT.faceNose * cameraToWindowScale, 10);
-//                ofDrawCircle(CLMFT.faceMouth * cameraToWindowScale, 10);
-//            ofPopMatrix();
     
         ofPopMatrix();  // roving face-found zoom
 
@@ -203,8 +199,9 @@ void ofApp::draw(){
 //    ofDrawBitmapString(ofToString(maskEnergy), 20, 60);
     ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 50, 40);
     ofDrawBitmapString(ofToString(ofGetMouseX()), 20, 60);
-    ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.x), 20, 80);
-    ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.y), 20, 100);
+    ofDrawBitmapString(ofToString(attractScreenBrightness), 20, 80);
+//    ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.x), 20, 80);
+//    ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.y), 20, 100);
 //    ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);
 //    ofDrawBitmapString(ofToString(minWindowFitScale), 20, 120);
 }
@@ -220,12 +217,12 @@ void ofApp::lineThicknessSliderListener(float &lineThicknessSlider){
 void ofApp::sceneDurationSliderListener(float &sceneDurationSlider){
     sceneManager.SCENE_INTERVAL = sceneDurationSlider;
 }
-void ofApp::cameraRotationToggleListener(bool &cameraRotationToggle){
-    if(cameraRotationToggle == 1)
-        CLMFT.cameraRotation = 1;
-    else if(cameraRotationToggle == 0)
-        CLMFT.cameraRotation = -1;
-}
+//void ofApp::cameraRotationToggleListener(bool &cameraRotationToggle){
+//    if(cameraRotationToggle == 1)
+//        CLMFT.cameraRotation = 1;
+//    else if(cameraRotationToggle == 0)
+//        CLMFT.cameraRotation = -1;
+//}
 void ofApp::faceFoundZoomScaleListener(float &faceFoundZoomScale){
     CLMFT.faceFoundZoomScale = faceFoundZoomScale;
 }

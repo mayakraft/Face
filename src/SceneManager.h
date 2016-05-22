@@ -53,6 +53,7 @@ public:
     
     float masterFade; // 0 to 1
     
+    void resetSequence();
     unsigned long masterLoopStartTime = 0;
 
 };

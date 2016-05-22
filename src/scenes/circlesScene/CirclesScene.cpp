@@ -201,8 +201,6 @@ void CirclesScene::traceAngleToAngle(circle & circle, ofPoint from, ofPoint to, 
 
 
 
-
-
 #define C_S_NUM_CIRCLES 3
 
 //--------------------------------------------------------------
@@ -224,12 +222,27 @@ void CirclesScene::setup(){
 
 void CirclesScene::reset(){
     resetMoment = ofGetElapsedTimef();
+    faceSmoothSlow = faceNose;
+    faceSmoothFast = faceNose;
+    faceEnergy = 0;
 }
 
 
 //--------------------------------------------------------------
 void CirclesScene::update(){
 
+    // FACE TRACK
+    faceSmoothSlow = 0.9 * faceSmoothSlow + 0.1 * faceNose;
+    faceSmoothFast = 0.3 * faceSmoothFast + 0.7 * faceNose;
+    speed = ofDist(faceSmoothFast.x, faceSmoothFast.y, faceSmoothSlow.x, faceSmoothSlow.y);
+    float speedToAdd = speed;
+    if(speedToAdd > 30)
+        speedToAdd = 30;
+    faceEnergy+=speedToAdd*.2;
+    faceEnergy *= .9;
+
+    
+    
     for (int i = 0; i < circles.size(); i++){
         circles[i].updateStart();
     }
@@ -255,9 +268,9 @@ void CirclesScene::update(){
     float b = 1;
     float c = 1;
     
-    circles[0].radius = 100 + 50 * a * sin(ofGetElapsedTimef()*0.8+1.0) + 20 * sin(ofGetElapsedTimef()*0.8+1.0);
-    circles[1].radius = 50 + 45 * b * sin(ofGetElapsedTimef())          + 17.5 * sin(ofGetElapsedTimef());
-    circles[2].radius = 50 + 40 * c * sin(ofGetElapsedTimef()*1.2)      + 15 * sin(ofGetElapsedTimef()*1.2);
+    circles[0].radius = 100 + .05*faceEnergy * 50 * a * sin(ofGetElapsedTimef()*0.8+1.0);
+    circles[1].radius = 50 +  .05*faceEnergy * 45 * b * sin(ofGetElapsedTimef());
+    circles[2].radius = 50 +  .05*faceEnergy * 40 * c * sin(ofGetElapsedTimef()*1.2);
 //    circles[3].radius = 50 + 40 * c * sin(ofGetElapsedTimef()*0.5)      + 15 * sin(ofGetElapsedTimef()*0.5);
 //    circles[4].radius = 50 + 40 * c * sin(ofGetElapsedTimef()*0.3)      + 15 * sin(ofGetElapsedTimef()*0.3);
     
@@ -281,7 +294,6 @@ void CirclesScene::update(){
             circles[randomOrder[i]].repelFrom(circles[randomOrder[j]]);
         }
     }
-    
 }
 
 //--------------------------------------------------------------
@@ -416,7 +428,7 @@ void CirclesScene::draw(){
 //
 //
     
-    int indx = tempLine.getVertices().size()-50;
+    int indx = tempLine.getVertices().size()-150;
     if( indx < 0)
         indx = tempLine.getVertices().size()-1;
     ofPoint circle3End = tempLine.getVertices()[indx];

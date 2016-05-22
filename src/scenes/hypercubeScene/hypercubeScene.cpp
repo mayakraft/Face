@@ -21,10 +21,10 @@ void HypercubeScene::setup(){
         rotations[i].y = ofRandom(.01, 0.3);
         rotations[i].z = ofRandom(.01, 0.3);
         
-        brightnesses[i] = 50;
+        brightnesses[i] = 0;
     }
     
-    for(int i = 0 ;i < NUM_POLY; i++){
+    for(int i = 0; i < NUM_POLY; i++){
         polyMatrix[i] = ofMatrix4x4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
         polyMatrix[i].scale(MASTER_SCALE, MASTER_SCALE, MASTER_SCALE);
 //        polyMatrix[i].rotate(ofRandom(90), 1,0,0);
@@ -48,34 +48,42 @@ void HypercubeScene::setup(){
 void HypercubeScene::reset(){
     resetMoment = ofGetElapsedTimef();
     numPoly = 0;
+    for(int i = 0; i < NUM_POLY; i++){
+        brightnesses[i] = 0;
+    }
 }
-
 
 //--------------------------------------------------------------
 void HypercubeScene::update(){
+    if (ofGetFrameNum() % 60 == 0){
+        myShader.load("gradient");
+    }
+
     
     if(numPoly < NUM_POLY){
         int newNumPoly = powf((ofGetElapsedTimef() - (float)resetMoment),2) * 2.0;
+        if(newNumPoly > NUM_POLY)
+            newNumPoly = NUM_POLY;
+        
         if(numPoly != newNumPoly){
+            for(int i = numPoly; i < newNumPoly; i++){
+                brightnesses[i] = 1;
+            }
             numPoly = newNumPoly;
-            if(numPoly - 1 >= 0 && numPoly - 1 < NUM_POLY)
-                brightnesses[numPoly-1] = 255;
-            if(numPoly > NUM_POLY)
-                numPoly = NUM_POLY;
         }
     }
     else
         numPoly = NUM_POLY;
     
-
     
-    if (ofGetFrameNum() % 60 == 0){
-        myShader.load("gradient");
+    for(int i = 0; i < NUM_POLY; i++){
+        brightnesses[i] *= 0.8;
     }
+
     
     float SCALE = .002;
     for(int i = 0; i < NUM_POLY; i++){
-        polychron[i].rotate4DOnly(SCALE * sinf(ofGetElapsedTimef() * rotations[i].x),// + (lastFaceNose.x - faceNose.x)*.004,
+        polychron[i].rotate4DOnly(SCALE * sinf(ofGetElapsedTimef() * rotations[i].x),
                                   SCALE * sinf(ofGetElapsedTimef() * rotations[i].y),
                                   SCALE * sinf(ofGetElapsedTimef() * rotations[i].z) );
     }
@@ -104,24 +112,12 @@ void HypercubeScene::update(){
             }
         }
     }
-
-    
-    static float dBrightness = -4;
-    for(int i = 0; i < NUM_POLY; i++){
-        if(brightnesses[i] > 50){
-            brightnesses[i] += dBrightness;
-        }
-        if(brightnesses[i] < 50)
-            brightnesses[i] = 50;
-    }
-    
-    
-    
+        
     lastFaceNose = faceNose;
     
-    float closeness = 100;//ofGetMouseX();
-    float xRot = faceCenterSmooth.x * .1;
-    float yRot = faceCenterSmooth.y * .1;
+    float closeness = 100;
+    float xRot = faceCenterSmooth.x * .5;
+    float yRot = faceCenterSmooth.y * .5;
 
     headTiltMatrix.makeIdentityMatrix();
     headTiltMatrix.rotate(xRot, 0, 1, 0);
@@ -147,12 +143,9 @@ bool HypercubeScene::pointInHotspot(ofPoint hotSpot, ofPoint point){
 //--------------------------------------------------------------
 void HypercubeScene::draw(){
     ofVec3f center = ofVec3f(RESOLUTION_SCENE_WIDTH * .5, RESOLUTION_SCENE_HEIGHT * .5, 0);
-//    hotSpots[0] = faceLeftEye  * sceneWindowMatrix * faceScaleMatrix + center;
-//    hotSpots[1] = faceRightEye * sceneWindowMatrix * faceScaleMatrix + center;
-//    hotSpots[2] = faceMouth    * sceneWindowMatrix * faceScaleMatrix + center;
-    hotSpots[0] = faceLeftEye  * faceScaleMatrix * sceneWindowMatrix * headTiltMatrix + center;
-    hotSpots[1] = faceRightEye * faceScaleMatrix * sceneWindowMatrix * headTiltMatrix + center;
-    hotSpots[2] = faceMouth    * faceScaleMatrix * sceneWindowMatrix * headTiltMatrix + center;
+    hotSpots[0] = faceLeftEye  * faceScaleMatrix * sceneWindowMatrix + center;
+    hotSpots[1] = faceRightEye * faceScaleMatrix * sceneWindowMatrix + center;
+    hotSpots[2] = faceMouth    * faceScaleMatrix * sceneWindowMatrix + center;
    
 //    ofPushMatrix();
 //    ofSetColor(255, 0, 128);
@@ -177,7 +170,7 @@ void HypercubeScene::draw(){
     
     ofMultMatrix(headTiltMatrix);
 
-    ofSetColor(255, 100);
+    ofSetColor(255, 255);
 
     for(int i = 0; i < numPoly; i++){
         ofPushMatrix();
@@ -193,6 +186,7 @@ void HypercubeScene::draw(){
         polychron[i].drawWireframe();
         myShader.end();
 
+        ofSetColor(255, 125 + 125*brightnesses[i]);
         polychron[i].drawWireframe();
 
 //        for(int e = 0; e < polychron[i].edges.size() * .5; e++){

@@ -71,7 +71,7 @@ void ConicsScene::update(){
 
         // PROGRAM 3
 //        ofVec3f interp = faceSmoothSlow * (pctCones) + faceSmoothMedium * (1-pctCones);
-        ofVec3f spin = ofVec3f(100 * sinf(i * .1 + .05*smoothSpeed), 100 * cosf(i * .1 + .05*smoothSpeed), 0.0);
+        ofVec3f spin = ofVec3f(100 * sinf(i * .1 + .05*smoothSpeed), 100 * sinf(i * .1 + .05*smoothSpeed), 0.0);
         conePos3[i] = faceSmoothSlow * faceScaleMatrix + ofPoint(0, 0, 150) + spin;
         coneLook3[i] = interp * faceScaleMatrix;
 
@@ -102,9 +102,8 @@ void ConicsScene::update(){
     planeNormal = planeNorm1 * w1 + planeNorm2 * w2 + planeNorm3 * w3;
 
     
-    
     // breathing motion
-//    plane += ofVec3f(0, 0, 40 * sinf(ofGetElapsedTimef()));
+    plane += ofVec3f(0, 0, 40 * sinf(ofGetElapsedTimef()));
 
 }
 
