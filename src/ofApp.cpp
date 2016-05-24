@@ -2,6 +2,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+        
+    ofSetWindowPosition(1500, 10);
+    ofSetFullscreen(true);
     
     // MASKS
     CLMFT.setup();
@@ -25,7 +28,6 @@ void ofApp::setup(){
     windowToScreenScale = ofPoint(RESOLUTION_CAMERA_HEIGHT * minWindowFitScale,
                                   RESOLUTION_CAMERA_WIDTH * minWindowFitScale);
 
-    ofSetFullscreen(true);
 
     
     // SCENES
@@ -40,18 +42,17 @@ void ofApp::setup(){
     // appearance
     gui.add(screenBrightness.setup("camera brightness", .8, 0, 1));
     gui.add(faceDarkeningScale.setup("face causes dimming", .75, 0, 1));
-    gui.add(lineThicknessSlider.setup("line weight", 1, 0.25, 5));
-    gui.add(faceFoundZoomScale.setup("zoom in on face", .28, .02, .6));
-    gui.add(attractScreenScale.setup("scr.saver scale", 30, 5, 150));
+    lineThicknessSlider.setup("line weight", 1, 0.25, 5);
+    faceFoundZoomScale.setup("zoom in on face", .28, .02, .6);
+    attractScreenScale.setup("scr.saver scale", 30, 5, 150);
     // animation
-    gui.add(attractScreenWaitTime.setup("scr. saver delay", 15, 5, 120));
-    gui.add(sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30));
+    attractScreenWaitTime.setup("scr. saver delay", 8, 5, 120);
+    sceneDurationSlider.setup("scene duration", sceneManager.SCENE_INTERVAL, 5, 30);
     // admin and debug
     gui.add(flipScreenOrientation.setup("flip screen", false));
-//    gui.add(cameraRotationToggle.setup("flip camera", false));
-    gui.add(showFace.setup("show face dots", false));
-    gui.add(enableMasterScale.setup("scale window", false));
-    gui.add(masterScale.setup("  - scale", 1, .1, 2));
+    showFace.setup("show face dots", false);
+    enableMasterScale.setup("scale window", false);
+    masterScale.setup("  - scale", 1, .1, 2);
     // handlers
     attractScreenScale.addListener(this, &ofApp::attractScreenScaleListener);
     lineThicknessSlider.addListener(this, &ofApp::lineThicknessSliderListener);
@@ -193,13 +194,13 @@ void ofApp::draw(){
     }
     
     // DEBUG TEXT
-    ofSetColor(255,255);
-    ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);
-    ofDrawBitmapString(ofToString(CLMFT.faceFound), 20, 40);
+//    ofSetColor(255,255);
+//    ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);
+//    ofDrawBitmapString(ofToString(CLMFT.faceFound), 20, 40);
 //    ofDrawBitmapString(ofToString(maskEnergy), 20, 60);
-    ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 50, 40);
-    ofDrawBitmapString(ofToString(ofGetMouseX()), 20, 60);
-    ofDrawBitmapString(ofToString(attractScreenBrightness), 20, 80);
+//    ofDrawBitmapString(ofToString(CLMFT.faceEnergy), 50, 40);
+//    ofDrawBitmapString(ofToString(ofGetMouseX()), 20, 60);
+//    ofDrawBitmapString(ofToString(attractScreenBrightness), 20, 80);
 //    ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.x), 20, 80);
 //    ofDrawBitmapString(ofToString(sceneManager.faceCenterSmooth.y), 20, 100);
 //    ofDrawBitmapString(ofToString(faceRect.getCenter().x), 20, 100);

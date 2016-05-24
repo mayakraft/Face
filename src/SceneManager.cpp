@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------------
 void SceneManager::setup(){
     
-    SCENE_INTERVAL = 15;
+    SCENE_INTERVAL = 16;
     FADE_DURATION = 3.0;
     
     scenes.push_back(new CirclesScene());

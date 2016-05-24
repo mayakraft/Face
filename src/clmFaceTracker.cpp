@@ -288,7 +288,7 @@ void clmFaceTracker::update(){
         }
         //cout << clm_model->detection_certainty << " cert " << endl;
         
-        if(faceEnergy > 0.1)
+        if(faceEnergy > 0.02)
             faceFound = true;
         else
             faceFound = false;
